@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TIDINDI: kommer snart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rufina:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sumi:  #1C1C1A; --kuro:  #2E2D2B; --nori:  #3D4438;
+    --take:  #6B7562; --hai:   #8C8880; --yu:    #C4B9A8;
+    --shiro: #F5F2EC; --washi: #EAE5DC;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    background: var(--shiro); color: var(--sumi);
+    font-family: 'DM Mono', monospace; font-weight: 300;
+    display: flex; flex-direction: column; min-height: 100vh;
+  }
+
+  .top-rule { width: 100%; height: 1px; background: rgba(28,28,26,0.1); }
+
+  .layout {
+    flex: 1; display: grid; grid-template-columns: 1fr 1px 1fr;
+    max-width: 1200px; margin: 0 auto; width: 100%; padding: 0 64px;
+  }
+
+  .divider-line { background: rgba(28,28,26,0.1); margin: 80px 0; }
+
+  /* LEFT */
+  .col-left {
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 80px 72px 80px 0;
+  }
+
+  .wordmark {
+    font-family: 'Rufina', serif; font-weight: 700;
+    font-size: 56px; letter-spacing: 0.08em; color: var(--sumi); line-height: 1;
+  }
+
+  .tagline-top {
+    font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 300;
+    letter-spacing: 0.3em; text-transform: uppercase; color: var(--hai); margin-top: 14px;
+  }
+
+  .hero-headline {
+    font-family: 'Cormorant Garamond', serif; font-weight: 300;
+    font-size: clamp(36px, 4.5vw, 54px); line-height: 1.15;
+    color: var(--sumi); letter-spacing: -0.01em;
+    margin-top: auto; margin-bottom: 32px;
+  }
+
+  .hero-headline em { font-style: italic; color: var(--take); }
+
+  .bottom-meta {
+    font-family: 'DM Mono', monospace; font-size: 9px;
+    letter-spacing: 0.15em; color: var(--hai); text-transform: uppercase;
+  }
+
+  /* RIGHT */
+  .col-right {
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 80px 0 80px 72px; gap: 36px;
+  }
+
+  .benefit-item { display: flex; align-items: flex-start; gap: 20px; }
+
+  .benefit-nr {
+    font-family: 'DM Mono', monospace; font-size: 10px; color: var(--take);
+    letter-spacing: 0.1em; margin-top: 3px; flex-shrink: 0; min-width: 20px;
+  }
+
+  .benefit-title {
+    font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400;
+    color: var(--sumi); letter-spacing: 0.01em; margin-bottom: 5px;
+  }
+
+  .benefit-body {
+    font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 300;
+    color: var(--hai); letter-spacing: 0.08em; line-height: 1.7;
+  }
+
+  /* USP-stripe */
+  .usp-strip {
+    display: flex; gap: 0;
+    border-top: 1px solid rgba(28,28,26,0.08);
+    border-bottom: 1px solid rgba(28,28,26,0.08);
+    padding: 16px 0; margin-bottom: 4px;
+  }
+
+  .usp-item {
+    flex: 1; display: flex; flex-direction: column; gap: 4px;
+    padding: 0 16px 0 0;
+    border-right: 1px solid rgba(28,28,26,0.08);
+  }
+
+  .usp-item:last-child { border-right: none; padding-right: 0; padding-left: 16px; }
+
+  .usp-label {
+    font-family: 'DM Mono', monospace; font-size: 8px; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--take);
+  }
+
+  .usp-value {
+    font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 300;
+    font-style: italic; color: var(--sumi); line-height: 1.3;
+  }
+
+  /* FORM */
+  .form-section { border-top: 1px solid rgba(28,28,26,0.1); padding-top: 36px; }
+
+  .form-label {
+    font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.25em;
+    text-transform: uppercase; color: var(--take); margin-bottom: 16px; display: block;
+  }
+
+  .form-row { display: flex; }
+
+  .form-input {
+    flex: 1; background: var(--washi); border: 1px solid rgba(28,28,26,0.12);
+    border-right: none; color: var(--sumi); font-family: 'DM Mono', monospace;
+    font-size: 11px; font-weight: 300; letter-spacing: 0.08em; padding: 14px 20px; outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-input::placeholder { color: rgba(140,136,128,0.5); }
+  .form-input:focus { border-color: rgba(107,117,98,0.5); background: var(--shiro); }
+
+  .form-btn {
+    background: var(--nori); border: 1px solid rgba(28,28,26,0.15); color: var(--shiro);
+    font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 300;
+    letter-spacing: 0.22em; text-transform: uppercase; padding: 14px 28px;
+    cursor: pointer; transition: background 0.2s; white-space: nowrap;
+  }
+
+  .form-btn:hover { background: var(--take); }
+
+  .form-note {
+    font-family: 'DM Mono', monospace; font-size: 8.5px; color: var(--hai);
+    letter-spacing: 0.1em; margin-top: 12px; line-height: 1.7;
+  }
+
+  /* BOTTOM */
+  .bottom-bar {
+    border-top: 1px solid rgba(28,28,26,0.08); padding: 24px 64px;
+    max-width: 1200px; margin: 0 auto; width: 100%;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+
+  .bottom-bar-logo {
+    font-family: 'Rufina', serif; font-weight: 700;
+    font-size: 15px; letter-spacing: 0.1em; color: var(--hai);
+  }
+
+  .bottom-bar-url {
+    font-family: 'DM Mono', monospace; font-size: 9px; color: var(--hai); letter-spacing: 0.12em;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .layout { grid-template-columns: 1fr; padding: 0 32px; }
+    .divider-line { display: none; }
+    .col-left { padding: 60px 0 40px; gap: 40px; }
+    .col-right { padding: 0 0 60px; }
+    .hero-headline { font-size: 36px; }
+    .bottom-bar { padding: 24px 32px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-rule"></div>
+
+<div class="layout">
+  <div class="col-left">
+    <div>
+      <div class="wordmark">TIDINDI</div>
+      <div class="tagline-top">Fra norrønt <span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;">tíðindi</span> — viktig tidende</div>
+    </div>
+
+    <div>
+      <div class="hero-headline">
+        Norges første<br>
+        <em>plattformuavhengige</em><br>
+        nyhetsoversikt.
+      </div>
+      <div class="bottom-meta">tidindi.no · Lanseres 2026</div>
+    </div>
+  </div>
+
+  <div class="divider-line"></div>
+
+  <div class="col-right">
+
+    <div class="usp-strip">
+      <div class="usp-item">
+        <div class="usp-label">Start på dagen</div>
+        <div class="usp-value">En informert start på dagen</div>
+      </div>
+      <div class="usp-item">
+        <div class="usp-label">Kuratert</div>
+        <div class="usp-value">Kuratert for deg</div>
+      </div>
+    </div>
+
+    <div class="benefit-item">
+      <div class="benefit-nr">01</div>
+      <div>
+        <div class="benefit-title">Ingen mediehus i ryggen</div>
+        <div class="benefit-body">Kuratert på tvers av alle kilder —<br>uten redaksjonell binding.</div>
+      </div>
+    </div>
+
+    <div class="benefit-item">
+      <div class="benefit-nr">02</div>
+      <div>
+        <div class="benefit-title">Levert kl. 06:30</div>
+        <div class="benefit-body">Dagen begynner med oversikt, ikke støy.</div>
+      </div>
+    </div>
+
+    <div class="benefit-item">
+      <div class="benefit-nr">03</div>
+      <div>
+        <div class="benefit-title">Fra 79 kr/mnd</div>
+        <div class="benefit-body">Ingen reklame. Ingen skjulte agendaer.</div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <span class="form-label" id="form-label">Få beskjed ved lansering</span>
+      <div class="form-row" id="form-row">
+        <input type="email" id="mc-email" class="form-input" placeholder="din@epost.no">
+        <button type="button" class="form-btn" onclick="submitToMailchimp()">Varsle meg</button>
+      </div>
+      <div class="form-note" id="form-note">
+        Vi sender deg én e-post når Tidindi åpner.<br>Ingen spam. Ingen videreformidling.
+      </div>
+      <div id="form-success" style="display:none;">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--take);margin-bottom:10px;">Registrert</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--sumi);line-height:1.5;">Du hører fra oss når Tidindi åpner.</div>
+      </div>
+      <div id="form-error" style="display:none;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.12em;color:var(--hai);margin-top:12px;"></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="bottom-bar">
+  <div class="bottom-bar-logo">TIDINDI</div>
+  <div class="bottom-bar-url">tidindi.no</div>
+</div>
+
+<script>
+function submitToMailchimp() {
+  var email = document.getElementById('mc-email').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('form-error').style.display = 'block';
+    document.getElementById('form-error').textContent = 'Skriv inn en gyldig e-postadresse.';
+    return;
+  }
+  var url = 'https://tidindi.us8.list-manage.com/subscribe/post-json?u=a055116dec4275f0dcf179e3a&id=6840709820&f_id=00a52de3f0&EMAIL=' + encodeURIComponent(email) + '&b_a055116dec4275f0dcf179e3a_6840709820=&c=mailchimpCallback';
+  document.querySelector('.form-btn').textContent = '...';
+  document.querySelector('.form-btn').disabled = true;
+  var script = document.createElement('script');
+  script.src = url;
+  document.body.appendChild(script);
+}
+
+function mailchimpCallback(data) {
+  if (data.result === 'success') {
+    document.getElementById('form-row').style.display = 'none';
+    document.getElementById('form-note').style.display = 'none';
+    document.getElementById('form-label').style.display = 'none';
+    document.getElementById('form-success').style.display = 'block';
+  } else {
+    var msg = data.msg || 'Noe gikk galt. Prøv igjen.';
+    if (msg.includes('already subscribed')) msg = 'Denne adressen er allerede registrert.';
+    document.getElementById('form-error').style.display = 'block';
+    document.getElementById('form-error').textContent = msg;
+    document.querySelector('.form-btn').textContent = 'Varsle meg';
+    document.querySelector('.form-btn').disabled = false;
+  }
+}
+</script>
+
+</body>
+</html>
