@@ -30,4 +30,9 @@ import Logo from './Logo.astro';
   }
   ul a { display: inline-flex; align-items: center; min-height: 44px; color: var(--tekst-mork-flate); }
   ul a:hover { color: var(--neon); }
+  @media (max-width: 600px) {
+    .bunn-inner { flex-direction: column; align-items: flex-start; gap: var(--s4); }
+    ul { flex-direction: column; gap: 0; }
+    ul a { min-height: 40px; }
+  }
 </style>

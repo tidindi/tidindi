@@ -30,7 +30,6 @@ const siste = artikler.slice(0, 5); // allerede sortert med nyeste først
           <a href={artikkelUrl(hovedsak)} tabindex="-1" aria-hidden="true">
             <Bilde bilde={hovedsak.bilde} alt="" format="16-9" laster="eager" storrelser="(max-width: 900px) 100vw, 790px" />
           </a>
-          {hovedsak.bilde?.kreditering && <figcaption class="meta">Foto: {hovedsak.bilde.kreditering}</figcaption>}
         </figure>
         <Seksjonsmerke seksjon={hovedsak.seksjon} storrelse="stor" />
         <h1 class="h-hoved"><a href={artikkelUrl(hovedsak)}>{hovedsak.tittel}</a></h1>
@@ -84,7 +83,6 @@ const siste = artikler.slice(0, 5); // allerede sortert med nyeste først
   /* Hovedsak: bilde → etikett → tittel → ingress, med jevn rytme */
   .hovedsak { gap: var(--s4); }
   .hovedsak-figur { display: flex; flex-direction: column; gap: var(--s2); margin-bottom: var(--s1); }
-  .hovedsak-figur figcaption { font-size: 12px; }
   .hovedsak .ingress { max-width: 40em; }
 
   /* Siste: starter på samme høyde som bildet, kolonnen står over tredje kolonne under */
@@ -99,5 +97,6 @@ const siste = artikler.slice(0, 5); // allerede sortert med nyeste først
 
   @media (max-width: 900px) {
     .siste { margin-top: var(--blokk); }
+    .bildesaker { row-gap: var(--blokk); }
   }
 </style>
