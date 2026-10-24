@@ -109,7 +109,7 @@ export function Forhandsvisning(props: { document: { displayed: any } }) {
               );
               if (b.type === 'fakta') return (
                 <aside key={i} className="tf-fakta">
-                  <div className="tf-etikett tf-merke"><span className="tf-rombe" aria-hidden="true" />{b.tittel ?? 'Fakta'}</div>
+                  <div className="tf-etikett">{b.tittel ?? 'Fakta'}</div>
                   <ul>{b.punkter.map((p, j) => <li key={j}>{p}</li>)}</ul>
                 </aside>
               );

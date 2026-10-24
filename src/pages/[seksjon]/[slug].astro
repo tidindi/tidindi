@@ -70,7 +70,7 @@ const lesOgsa = artikler.filter((x) => x.slug !== a.slug && x.seksjon !== a.seks
           );
           if (b.type === 'fakta') return (
             <aside class="art-fakta" aria-label={b.tittel ?? 'Fakta'}>
-              <div class="etikett seksjon-merke"><span class="rombe" aria-hidden="true"></span>{b.tittel ?? 'Fakta'}</div>
+              <div class="etikett">{b.tittel ?? 'Fakta'}</div>
               <ul>{b.punkter.map((p) => <li>{p}</li>)}</ul>
             </aside>
           );
