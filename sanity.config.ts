@@ -4,7 +4,7 @@ import { nbNOLocale } from '@sanity/locale-nb-no';
 import { artikkel } from './studio/skjema/artikkel';
 import { skribent } from './studio/skjema/skribent';
 import { forside } from './studio/skjema/forside';
-import { struktur } from './studio/struktur';
+import { struktur, standardvisning } from './studio/struktur';
 import { medPubliseringstid } from './studio/handlinger';
 import { seksjoner } from './src/data/seksjoner';
 
@@ -17,7 +17,7 @@ export default defineConfig({
   dataset: 'production',
   basePath: '/studio',
 
-  plugins: [structureTool({ structure: struktur, title: 'Innhold' }), nbNOLocale()],
+  plugins: [structureTool({ structure: struktur, defaultDocumentNode: standardvisning, title: 'Innhold' }), nbNOLocale()],
 
   schema: {
     types: [artikkel, skribent, forside],

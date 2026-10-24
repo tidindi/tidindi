@@ -1,4 +1,5 @@
-import type { StructureResolver } from 'sanity/structure';
+import type { DefaultDocumentNodeResolver, StructureResolver } from 'sanity/structure';
+import { Forhandsvisning } from './forhandsvisning/Forhandsvisning';
 import { seksjoner } from '../src/data/seksjoner';
 
 const API = '2025-02-19';
@@ -38,3 +39,9 @@ export const struktur: StructureResolver = (S) =>
       S.divider(),
       S.documentTypeListItem('skribent').title('Skribenter'),
     ]);
+
+// Artikler får to faner: skjemaet du skriver i, og forhåndsvisningen av utkastet.
+export const standardvisning: DefaultDocumentNodeResolver = (S, { schemaType }) =>
+  schemaType === 'artikkel'
+    ? S.document().views([S.view.form().title('Rediger'), S.view.component(Forhandsvisning).title('Forhåndsvisning')])
+    : S.document();
