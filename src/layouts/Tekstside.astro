@@ -1,0 +1,23 @@
+---
+// Enkel side for faste tekster: Om Tidindi, Redaksjonelle prinsipper, Personvern.
+import Base from './Base.astro';
+import Hovedmeny from '../components/Hovedmeny.astro';
+import Bunn from '../components/Bunn.astro';
+interface Props { tittel: string; beskrivelse?: string }
+const { tittel, beskrivelse } = Astro.props;
+---
+<Base tittel={tittel} beskrivelse={beskrivelse}>
+  <Hovedmeny />
+  <main class="wrap tekstside">
+    <h1>{tittel}</h1>
+    <div class="tekst"><slot /></div>
+  </main>
+  <Bunn />
+</Base>
+
+<style>
+  .tekstside { max-width: 760px; padding-top: 56px; padding-bottom: 72px; display: flex; flex-direction: column; gap: 28px; }
+  h1 { font-family: var(--overskrift); font-weight: 700; font-size: clamp(2.25rem, 5vw, 3.25rem); line-height: 1.08; letter-spacing: -0.01em; }
+  .tekst { display: flex; flex-direction: column; gap: 18px; font-size: 1.125rem; line-height: 1.7; color: var(--brodtekst); }
+  .tekst :global(h2) { font-family: var(--overskrift); font-size: 24px; color: var(--kull); margin-top: 10px; }
+</style>

@@ -1,0 +1,39 @@
+---
+// Sort stripe øverst på forsiden: dato og abonnementsknapp.
+import { datoLang } from '../data/format';
+const iDag = datoLang(new Date());
+---
+<div class="topplinje">
+  <div class="wrap topplinje-inner">
+    <span class="topplinje-dato" data-dagens-dato>{iDag}</span>
+    <a class="knapp-neon" href="/morgenbrief/">Abonner på Tidindi morgenbrief</a>
+  </div>
+</div>
+
+<script is:inline>
+  // Siden bygges statisk; datoen oppdateres i nettleseren så den alltid er dagens.
+  (function () {
+    var el = document.querySelector('[data-dagens-dato]');
+    if (!el) return;
+    try {
+      var s = new Intl.DateTimeFormat('nb-NO', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Oslo' }).format(new Date());
+      el.textContent = s.charAt(0).toUpperCase() + s.slice(1);
+    } catch (e) {}
+  })();
+</script>
+
+<style>
+  .topplinje { background: var(--kull); color: var(--tekst-mork-flate); }
+  .topplinje-inner {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+    gap: 8px 24px; padding-top: 8px; padding-bottom: 8px;
+  }
+  .topplinje-dato {
+    font-family: var(--etikett); font-size: 14px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  @media (max-width: 560px) {
+    .topplinje-inner { justify-content: center; }
+    .topplinje-dato { display: none; }
+  }
+</style>

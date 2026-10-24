@@ -1,0 +1,12 @@
+---
+import { seksjonsnavn } from '../data/seksjoner';
+interface Props { seksjon: string; storrelse?: 'liten' | 'stor' }
+const { seksjon, storrelse = 'liten' } = Astro.props;
+---
+<span class={`etikett seksjon-merke ${storrelse}`}><span class="rombe" aria-hidden="true"></span>{seksjonsnavn(seksjon)}</span>
+
+<style>
+  .liten { font-size: 13px; }
+  .stor { font-size: 15px; }
+  .liten .rombe { width: 7px; height: 7px; }
+</style>

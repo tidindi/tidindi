@@ -1,0 +1,39 @@
+---
+// Den neongule rammen som presenterer Tidindi morgenbrief. Teksten styres fra forsideoppsettet.
+import Logo from './Logo.astro';
+interface Props { tittel: string; tekst: string; knapp: string }
+const { tittel, tekst, knapp } = Astro.props;
+---
+<section class="mb-ramme" aria-labelledby="mb-tittel">
+  <div class="mb-venstre">
+    <div class="mb-lockup">
+      <span class="mb-logo"><Logo /></span>
+      <span class="mb-navn">morgenbrief</span>
+    </div>
+    <h2 id="mb-tittel" class="mb-tittel">{tittel}</h2>
+  </div>
+  <div class="mb-hoyre">
+    <p>{tekst}</p>
+    <a class="knapp-sort mb-knapp" href="/morgenbrief/">{knapp}</a>
+  </div>
+</section>
+
+<style>
+  .mb-ramme {
+    background: var(--neon); color: var(--kull);
+    padding: 44px clamp(24px, 4vw, 40px);
+    display: flex; flex-wrap: wrap; gap: 28px 48px; align-items: flex-start;
+  }
+  .mb-venstre { flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+  .mb-hoyre { flex: 1.4 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 20px; }
+  .mb-lockup { display: flex; align-items: baseline; gap: 10px; }
+  .mb-logo { font-size: 38px; line-height: 1; }
+  .mb-logo :global(.logo) { height: 1em; }
+  .mb-navn { font-family: var(--overskrift); font-style: italic; font-size: 22px; line-height: 1; }
+  .mb-tittel {
+    font-family: var(--overskrift); font-weight: 700; letter-spacing: -0.01em;
+    font-size: clamp(2rem, 3.6vw, 2.875rem); line-height: 1.08;
+  }
+  .mb-hoyre p { font-size: 18px; line-height: 1.6; }
+  .mb-knapp { align-self: flex-start; min-height: 48px; padding: 0 24px; font-size: 16px; }
+</style>

@@ -1,0 +1,32 @@
+---
+import Logo from './Logo.astro';
+---
+<footer class="bunn">
+  <div class="wrap bunn-inner">
+    <a href="/" class="bunn-logo" aria-label="Tidindi – til forsiden"><Logo /></a>
+    <ul>
+      <li><a href="/om/">Om Tidindi</a></li>
+      <li><a href="/redaksjonelle-prinsipper/">Redaksjonelle prinsipper</a></li>
+      <li><a href="/morgenbrief/">Varde for virksomheter</a></li>
+      <li><a href="/personvern/">Personvern</a></li>
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .bunn { background: var(--kull); color: var(--blyhvit); margin-top: auto; }
+  .bunn-inner {
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+    gap: 16px 32px; padding-top: 36px; padding-bottom: 40px;
+  }
+  .bunn-logo { color: var(--blyhvit); font-size: 40px; line-height: 1; }
+  .bunn-logo:hover { color: var(--blyhvit); }
+  ul {
+    list-style: none; margin: 0; padding: 0;
+    display: flex; flex-wrap: wrap; gap: 0 24px;
+    font-family: var(--etikett); font-size: 14px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  ul a { display: inline-block; padding: 10px 0; color: var(--tekst-mork-flate); }
+  ul a:hover { color: var(--neon); }
+</style>

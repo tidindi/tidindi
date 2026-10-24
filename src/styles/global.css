@@ -1,0 +1,120 @@
+/* ──────────────────────────────────────────────────────────────
+   TIDINDI – designtokens og grunnstiler
+   Farger og skrifter endres her, og slår gjennom på alle sider.
+   Fasit: claude/visuell-identitet.md i TIDINDI-prosjektet.
+   ────────────────────────────────────────────────────────────── */
+:root {
+  /* Farger */
+  --blyhvit: #F5F4EF;
+  --kull: #1C1E20;
+  --kull-lys: #828892;
+  --neon: #E6FF2B;
+  --neon-hover: #F0FF6A;
+  --tekst-2: #5C616A;
+  --tekst-mork-flate: #A9ADB3;
+  --linje: #D3D5D8;
+  --flate: #E3E4E6;
+  --brodtekst: #2A2A28;
+
+  /* Skrifter */
+  --overskrift: "Playfair Display", Georgia, serif;
+  --tekst: "Source Serif 4", Georgia, serif;
+  --etikett: "Barlow Condensed", "Arial Narrow", sans-serif;
+
+  /* Mål */
+  --maks: 1200px;
+  --gutter: clamp(16px, 4vw, 24px);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--blyhvit);
+  color: var(--kull);
+  font-family: var(--tekst);
+  font-size: 18px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+main { flex: 1 0 auto; }
+a { color: var(--kull); text-decoration: none; }
+a:hover { color: var(--tekst-2); }
+:focus-visible { outline: 3px solid var(--kull); outline-offset: 3px; }
+img { display: block; max-width: 100%; }
+h1, h2, h3, p, figure, blockquote { margin: 0; }
+
+.wrap { max-width: var(--maks); margin: 0 auto; padding-left: var(--gutter); padding-right: var(--gutter); width: 100%; }
+.skjult { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Logo */
+.logo { display: block; height: 1em; width: auto; }
+
+/* Etiketter og markører */
+.etikett {
+  font-family: var(--etikett);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.meta {
+  font-family: var(--etikett);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tekst-2);
+}
+.rombe {
+  display: inline-block;
+  width: 8px; height: 8px;
+  background: currentColor;
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+.seksjon-merke { display: inline-flex; align-items: center; gap: 10px; }
+
+/* Overskrifter */
+.h-hoved, .h-stor, .h-mellom, .h-liten, .h-siste {
+  font-family: var(--overskrift);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.h-hoved { font-size: clamp(2.25rem, 4.4vw, 3.75rem); line-height: 1.04; }
+.h-stor { font-size: 26px; line-height: 1.14; }
+.h-mellom { font-size: 21px; line-height: 1.18; }
+.h-siste { font-size: 19px; line-height: 1.25; }
+.ingress { font-size: 1.3125rem; line-height: 1.5; color: var(--brodtekst); }
+
+/* Bilder */
+.bilde { width: 100%; object-fit: cover; background: var(--flate); }
+.bilde-tom {
+  width: 100%;
+  background: var(--flate);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--etikett); font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--tekst-2);
+}
+.r-16-9 { aspect-ratio: 16 / 9; }
+.r-16-8 { aspect-ratio: 16 / 8; }
+.r-3-2 { aspect-ratio: 3 / 2; }
+
+/* Knapper */
+.knapp-neon, .knapp-sort {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 44px; padding: 0 18px;
+  font-family: var(--etikett); font-weight: 700; font-size: 14px;
+  letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none;
+}
+.knapp-neon { background: var(--neon); color: var(--kull); }
+.knapp-neon:hover { background: var(--neon-hover); color: var(--kull); }
+.knapp-sort { background: var(--kull); color: var(--neon); }
+.knapp-sort:hover { background: #000; color: var(--neon); }
+
+/* Linjer */
+.strek-tykk { border-top: 3px solid var(--kull); }
+.strek-tynn { border-bottom: 1px solid var(--linje); }

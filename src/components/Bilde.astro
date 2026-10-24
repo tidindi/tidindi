@@ -1,0 +1,14 @@
+---
+// Bilde i fast format. Uten bilde vises en nøytral flate med teksten «Bilde».
+interface Props {
+  src?: string;
+  alt?: string;
+  format: '16-9' | '16-8' | '3-2';
+  posisjon?: string;
+  laster?: 'eager' | 'lazy';
+}
+const { src, alt = '', format, posisjon = 'center', laster = 'lazy' } = Astro.props;
+---
+{src
+  ? <img class={`bilde r-${format}`} src={src} alt={alt} loading={laster} decoding="async" style={`object-position: ${posisjon}`} />
+  : <div class={`bilde-tom r-${format}`} role="img" aria-label="Bilde kommer">Bilde</div>}
