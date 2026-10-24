@@ -18,6 +18,9 @@ const hovedsak = hent(forside.hovedsak);
 const treSaker = forside.treSaker.map(hent);
 const bildesaker = forside.bildesaker.map(hent);
 const siste = artikler.slice(0, 5); // allerede sortert med nyeste først
+// «Flere saker»: de nyeste sakene som ikke allerede står på forsiden, maks fire rader à tre.
+const paForsiden = new Set([forside.hovedsak, ...forside.treSaker, ...forside.bildesaker]);
+const flere = artikler.filter((a) => !paForsiden.has(a.slug)).slice(0, 12);
 ---
 <Base>
   <Topplinje />
@@ -51,9 +54,10 @@ const siste = artikler.slice(0, 5); // allerede sortert med nyeste først
       </aside>
     </section>
 
-    <section class="rutenett strek-tykk tre" aria-label="Flere saker">
+    <section class="rutenett strek-tykk tre" aria-label="Utvalgte saker">
       {treSaker.map((a) => (
         <article class="k4 kort tre-sak">
+          <a href={artikkelUrl(a)} tabindex="-1" aria-hidden="true" class="bildesak-bilde"><Bilde bilde={a.bilde} alt="" format="3-2" storrelser="(max-width: 900px) 100vw, 380px" /></a>
           <Seksjonsmerke seksjon={a.seksjon} />
           <h2 class="h-stor"><a href={artikkelUrl(a)}>{a.tittel}</a></h2>
           <p class="liten-ingress">{a.ingress}</p>
@@ -72,6 +76,21 @@ const siste = artikler.slice(0, 5); // allerede sortert med nyeste først
         </article>
       ))}
     </section>
+
+    {flere.length > 0 && (
+      <section class="strek-tykk flere" aria-labelledby="flere-tittel">
+        <h2 id="flere-tittel" class="etikett blokk-etikett">Flere saker</h2>
+        <div class="rutenett flere-rutenett">
+          {flere.map((a) => (
+            <article class="k4 kort">
+              <a href={artikkelUrl(a)} tabindex="-1" aria-hidden="true" class="bildesak-bilde"><Bilde bilde={a.bilde} alt="" format="3-2" storrelser="(max-width: 900px) 100vw, 380px" /></a>
+              <Seksjonsmerke seksjon={a.seksjon} />
+              <h3 class="h-mellom"><a href={artikkelUrl(a)}>{a.tittel}</a></h3>
+            </article>
+          ))}
+        </div>
+      </section>
+    )}
   </main>
 
   <Bunn />
@@ -94,6 +113,7 @@ const siste = artikler.slice(0, 5); // allerede sortert med nyeste først
   .liten-ingress { font-size: 17px; line-height: 1.5; color: var(--brodtekst); }
 
   .bildesak-bilde { margin-bottom: var(--s1); }
+  .flere-rutenett { row-gap: var(--blokk); padding-top: var(--s3); }
 
   @media (max-width: 900px) {
     .siste { margin-top: var(--blokk); }

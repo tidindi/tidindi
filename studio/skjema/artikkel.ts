@@ -65,6 +65,7 @@ export const artikkel = defineType({
       description: 'Vises i sort-hvitt på nettstedet. Velg utsnitt og fokuspunkt med blyanten. Bildet beskjæres til 16:9 på forsiden, 16:8 i artikkelen og 3:2 som bildesak.',
       options: { hotspot: true },
       fields: bildefelt,
+      validation: (R) => R.required().error('Saken må ha et hovedbilde – det vises på forsiden.'),
     }),
     defineField({
       name: 'brodtekst',
