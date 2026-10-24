@@ -7,7 +7,7 @@ export default defineConfig({
   integrations: [
     sitemap({
       // Morgenbrief-siden ligger som statisk fil og skal også med
-      customPages: ['https://tidindi.no/morgenbrief/'],
+      customPages: ['https://tidindi.no/morgenbrief/', 'https://tidindi.no/varde/'],
     }),
   ],
   build: { format: 'directory' },
