@@ -49,8 +49,6 @@ export function Forhandsvisning(props: { document: { displayed: any } }) {
 
   const hovedbilde = bildedata(a.hovedbilde);
   const blokker = brodtekst(a.brodtekst);
-  const sisteIndeks = blokker.length - 1;
-  const merkeIAvsnitt = blokker[sisteIndeks]?.type === 'avsnitt';
   const mangler = [
     !a.seksjon && 'seksjon', !a.tittel && 'tittel', !a.slug?.current && 'adresse', !a.ingress && 'ingress',
     hovedbilde && !hovedbilde.alt && 'alternativ tekst til bildet',
@@ -102,9 +100,8 @@ export function Forhandsvisning(props: { document: { displayed: any } }) {
           <div className="tf-tekst">
             {blokker.map((b, i) => {
               if (b.type === 'avsnitt') {
-                const merke = merkeIAvsnitt && i === sisteIndeks ? '&nbsp;' + sluttmerkeHtml : '';
                 const html = b.html ?? (b.tekst ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;');
-                return <p key={i} dangerouslySetInnerHTML={{ __html: html + merke }} />;
+                return <p key={i} dangerouslySetInnerHTML={{ __html: html }} />;
               }
               if (b.type === 'mellomtittel') return <h2 key={i} className="tf-mellomtittel">{b.tekst}</h2>;
               if (b.type === 'liste') return <ul key={i} className="tf-liste">{b.punkter.map((p, j) => <li key={j} dangerouslySetInnerHTML={{ __html: p }} />)}</ul>;
@@ -130,7 +127,7 @@ export function Forhandsvisning(props: { document: { displayed: any } }) {
               );
               return null;
             })}
-            {!merkeIAvsnitt && blokker.length > 0 && <p dangerouslySetInnerHTML={{ __html: sluttmerkeHtml }} />}
+            {blokker.length > 0 && <p className="tf-sluttmerke-alene" dangerouslySetInnerHTML={{ __html: sluttmerkeHtml }} />}
             {(a.kilde || a.pressemelding) && (
               <p className="tf-meta tf-kilde">
                 {a.kilde && <>Kilde: {a.kilde}</>}

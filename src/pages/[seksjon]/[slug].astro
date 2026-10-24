@@ -19,9 +19,7 @@ export async function getStaticPaths() {
 
 const { artikkel: a } = Astro.props as { artikkel: Artikkel };
 const artikler = await hentArtikler();
-// Sluttmerket (den gotiske T-en) settes etter siste avsnitt, eller alene hvis teksten slutter med noe annet.
-const sisteIndeks = a.brodtekst.length - 1;
-const merkeIAvsnitt = a.brodtekst[sisteIndeks]?.type === 'avsnitt';
+// Sluttmerket (den gotiske T-en) står alltid på egen linje under siste avsnitt.
 const merFra = artikler.filter((x) => x.seksjon === a.seksjon && x.slug !== a.slug).slice(0, 4);
 const lesOgsa = artikler.filter((x) => x.slug !== a.slug && x.seksjon !== a.seksjon).slice(0, 3);
 ---
@@ -55,10 +53,7 @@ const lesOgsa = artikler.filter((x) => x.slug !== a.slug && x.seksjon !== a.seks
 
       <div class="k7 art-tekst">
         {a.brodtekst.map((b, i) => {
-          if (b.type === 'avsnitt') {
-            const merke = merkeIAvsnitt && i === sisteIndeks ? '&nbsp;' + sluttmerkeHtml : '';
-            return b.html ? <p set:html={b.html + merke} /> : <p>{b.tekst}<Fragment set:html={merke} /></p>;
-          }
+          if (b.type === 'avsnitt') return b.html ? <p set:html={b.html} /> : <p>{b.tekst}</p>;
           if (b.type === 'liste') return <ul class="art-liste">{b.punkter.map((p) => <li set:html={p} />)}</ul>;
           if (b.type === 'bilde') return (
             <figure class="art-innebilde">
@@ -82,7 +77,7 @@ const lesOgsa = artikler.filter((x) => x.slug !== a.slug && x.seksjon !== a.seks
             </aside>
           );
         })}
-        {!merkeIAvsnitt && a.brodtekst.length > 0 && <p class="sluttmerke-alene" set:html={sluttmerkeHtml} />}
+        {a.brodtekst.length > 0 && <p class="sluttmerke-alene" set:html={sluttmerkeHtml} />}
         {(a.kilde || a.pressemelding) && (
           <p class="meta art-kilde">
             {a.kilde && <>Kilde: {a.kilde}</>}
@@ -161,6 +156,8 @@ const lesOgsa = artikler.filter((x) => x.slug !== a.slug && x.seksjon !== a.seks
     width: 1.15em; height: 1.15em; border-radius: 50%; margin-left: 0.15em; vertical-align: -0.22em;
     background: var(--kull); color: var(--neon);
   }
+  .sluttmerke-alene { line-height: 1; }
+  .sluttmerke-alene :global(.sluttmerke) { margin-left: 0; vertical-align: top; }
   .art-tekst :global(.sluttmerke svg) { display: block; width: 0.66em; height: 0.68em; fill: currentColor; }
   .art-kilde { padding-top: var(--s4); border-top: 1px solid var(--linje); font-size: 14px; letter-spacing: 0.08em; }
 

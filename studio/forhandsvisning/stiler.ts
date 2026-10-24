@@ -60,6 +60,8 @@ export const stiler = `
 .tf-fakta { margin: 8px 0; background: var(--flate); padding: 24px; display: flex; flex-direction: column; gap: 12px; font-size: 17px; line-height: 1.5; }
 .tf-fakta ul { margin: 0; padding-left: 24px; display: flex; flex-direction: column; gap: 8px; }
 .tf .sluttmerke { display: inline-flex; align-items: center; justify-content: center; width: 1.15em; height: 1.15em; border-radius: 50%; margin-left: 0.15em; vertical-align: -0.22em; background: var(--kull); color: var(--neon); }
+.tf .tf-sluttmerke-alene { line-height: 1; }
+.tf .tf-sluttmerke-alene .sluttmerke { margin-left: 0; vertical-align: top; }
 .tf .sluttmerke svg { display: block; width: 0.66em; height: 0.68em; fill: currentColor; }
 .tf-kilde { padding-top: 16px; border-top: 1px solid var(--linje); font-size: 14px; letter-spacing: 0.08em; }
 
