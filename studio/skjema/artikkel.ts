@@ -150,7 +150,7 @@ export const artikkel = defineType({
       title: 'Bygger på pressemelding fra',
       type: 'string',
       group: 'detaljer',
-      description: 'Fyll inn avsender hvis saken bygger på en pressemelding. Vises som «Saken bygger på en pressemelding fra …».',
+      description: 'Valgfritt – fyll inn når det passer å opplyse om det. Vises som «Saken bygger på en pressemelding fra …» nederst i saken.',
     }),
     defineField({
       name: 'emneknagger',
