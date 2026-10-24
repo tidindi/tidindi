@@ -1,8 +1,20 @@
 ---
 import Tekstside from '../layouts/Tekstside.astro';
+import { utgiver } from '../data/utgiver';
 ---
-<Tekstside tittel="Om Tidindi" beskrivelse="Om nettmagasinet Tidindi.">
-  <p>[Tekst om Tidindi kommer: hva magasinet er, hvem som står bak, og hvordan vi jobber.]</p>
+<Tekstside tittel="Om Tidindi" beskrivelse="Tidindi er et uavhengig norsk nettmagasin med nyheter fra samfunnet, pengene, sporten, kulturen og verden.">
+  <p>Tidindi er et uavhengig norsk nettmagasin. Vi publiserer nyhetssaker fra samfunnet, pengene, sporten, kulturen og verden – skrevet på tradisjonelt vis, med kildene oppgitt.</p>
+  <p>Magasinet er en del av Tidindi, som også gir ut nyhetsbrevet <a href="/morgenbrief/">Tidindi Morgenbrief</a> og tjenesten <a href="/varde/">Tidindi Varde</a> for medieovervåkning.</p>
+
+  <h2>Slik jobber vi</h2>
+  <p>Sakene i magasinet er nyhetsjournalistikk. Vi oppgir alltid hvor opplysningene kommer fra, og når en sak bygger på en pressemelding, står det tydelig i saken. Tidindi er politisk nøytralt. Les mer i <a href="/redaksjonelle-prinsipper/">våre redaksjonelle prinsipper</a>.</p>
+
   <h2>Ansvarlig redaktør</h2>
-  <p>[Navn] · [E-post]</p>
+  <p>{utgiver.redaktor}<br><a href={`mailto:${utgiver.epost}`}>{utgiver.epost}</a></p>
+
+  <h2>Utgiver</h2>
+  <p>{utgiver.selskap}<br>Org.nr. {utgiver.orgnr}<br>{utgiver.adresse}</p>
+
+  <h2>Tips og rettelser</h2>
+  <p>Har du et tips, eller har vi gjort en feil? Skriv til <a href={`mailto:${utgiver.epost}`}>{utgiver.epost}</a>.</p>
 </Tekstside>

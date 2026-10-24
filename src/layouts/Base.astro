@@ -52,11 +52,29 @@ const kanonisk = new URL(Astro.url.pathname, Astro.site).toString();
     plausible.init()
   </script>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+  <link rel="preload" href="/fonter/source-serif-4-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonter/playfair-display-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonter/fonter.css">
 </head>
 <body>
   <slot />
+  <script is:inline>
+    // Sidene bygges ferdig på forhånd. Tidspunkt i «Siste» og seksjonslister regnes om i nettleseren,
+    // så «kl. 07.10» bare vises samme dag – ellers datoen («23. okt.»).
+    (function () {
+      try {
+        var tz = 'Europe/Oslo';
+        var dag = function (d) { return new Intl.DateTimeFormat('en-CA', { timeZone: tz }).format(d); };
+        var idag = dag(new Date());
+        document.querySelectorAll('time[data-siste]').forEach(function (el) {
+          var d = new Date(el.getAttribute('datetime'));
+          if (isNaN(d)) return;
+          el.textContent = dag(d) === idag
+            ? 'kl. ' + new Intl.DateTimeFormat('nb-NO', { hour: '2-digit', minute: '2-digit', timeZone: tz }).format(d).replace(':', '.')
+            : new Intl.DateTimeFormat('nb-NO', { day: 'numeric', month: 'short', timeZone: tz }).format(d);
+        });
+      } catch (e) {}
+    })();
+  </script>
 </body>
 </html>

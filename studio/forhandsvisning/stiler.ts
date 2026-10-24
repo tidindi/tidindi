@@ -1,7 +1,7 @@
 // Stilene til forhåndsvisningen. Speiler src/styles/global.css og artikkelmalen.
 // Alt er avgrenset til .tf, så Studio selv ikke påvirkes.
 export const stiler = `
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap');
+@import url('/fonter/fonter.css');
 
 .tf {
   --blyhvit: #F5F4EF; --kull: #1C1E20; --tekst-2: #5C616A; --linje: #D3D5D8; --flate: #E3E4E6; --brodtekst: #2A2A28; --neon: #E6FF2B;

@@ -42,7 +42,7 @@ const siste = artikler.slice(0, 5); // allerede sortert med nyeste først
           {siste.map((a) => (
             <li>
               <a href={artikkelUrl(a)} class="kort siste-sak">
-                <span class="meta"><time datetime={a.publisert}>{sisteTid(a.publisert)}</time> · {seksjonsnavn(a.seksjon)}</span>
+                <span class="meta"><time data-siste datetime={a.publisert}>{sisteTid(a.publisert)}</time> · {seksjonsnavn(a.seksjon)}</span>
                 <span class="h-siste">{a.tittel}</span>
               </a>
             </li>

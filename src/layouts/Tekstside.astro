@@ -23,5 +23,7 @@ const { tittel, beskrivelse } = Astro.props;
   .innhold { display: flex; flex-direction: column; gap: var(--s5); }
   h1 { font-family: var(--overskrift); font-weight: 700; font-size: clamp(2.25rem, 5vw, 3.25rem); line-height: 1.08; letter-spacing: -0.01em; }
   .tekst { display: flex; flex-direction: column; gap: var(--s4); font-size: 1.125rem; line-height: 1.7; color: var(--brodtekst); }
+  .tekst :global(a) { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  .tekst :global(a:hover) { text-decoration-thickness: 2px; }
   .tekst :global(h2) { font-family: var(--overskrift); font-size: 26px; line-height: 1.15; color: var(--kull); margin-top: var(--s3); }
 </style>
