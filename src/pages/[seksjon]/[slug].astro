@@ -7,19 +7,21 @@ import Hovedmeny from '../../components/Hovedmeny.astro';
 import Bunn from '../../components/Bunn.astro';
 import Bilde from '../../components/Bilde.astro';
 import Seksjonsmerke from '../../components/Seksjonsmerke.astro';
-import { artikler, artikkelUrl, type Artikkel } from '../../data/testinnhold';
+import { hentArtikler, artikkelUrl, delingsbilde, type Artikkel } from '../../data/innhold';
 import { seksjonsnavn } from '../../data/seksjoner';
 import { datoOgTid, klokkeslett } from '../../data/format';
 
-export function getStaticPaths() {
+export async function getStaticPaths() {
+  const artikler = await hentArtikler();
   return artikler.map((a) => ({ params: { seksjon: a.seksjon, slug: a.slug }, props: { artikkel: a } }));
 }
 
 const { artikkel: a } = Astro.props as { artikkel: Artikkel };
+const artikler = await hentArtikler();
 const merFra = artikler.filter((x) => x.seksjon === a.seksjon && x.slug !== a.slug).slice(0, 4);
 const lesOgsa = artikler.filter((x) => x.slug !== a.slug && x.seksjon !== a.seksjon).slice(0, 3);
 ---
-<Base tittel={a.tittel} beskrivelse={a.ingress} bilde={a.bilde?.src} type="article">
+<Base tittel={a.tittel} beskrivelse={a.ingress} bilde={delingsbilde(a.bilde)} type="article">
   <Hovedmeny aktiv={a.seksjon} />
 
   <main class="wrap artikkel">
@@ -32,7 +34,7 @@ const lesOgsa = artikler.filter((x) => x.slug !== a.slug && x.seksjon !== a.seks
         <h1 class="art-tittel">{a.tittel}</h1>
         <p class="art-ingress">{a.ingress}</p>
         <div class="art-byline">
-          <span>{a.skribent}</span>
+          {a.skribent ? <span>{a.skribent}</span> : <span>Tidindi</span>}
           <span class="meta">
             Publisert <time datetime={a.publisert}>{datoOgTid(a.publisert)}</time>
             {a.oppdatert && <> · Oppdatert <time datetime={a.oppdatert}>{klokkeslett(a.oppdatert)}</time></>}
@@ -41,7 +43,7 @@ const lesOgsa = artikler.filter((x) => x.slug !== a.slug && x.seksjon !== a.seks
       </header>
 
       <figure class="k12 art-bilde">
-        <Bilde src={a.bilde?.src} alt={a.bilde?.alt} format="16-8" laster="eager" />
+        <Bilde bilde={a.bilde} format="16-8" laster="eager" storrelser="(max-width: 1248px) 100vw, 1200px" />
         {(a.bilde?.tekst || a.bilde?.kreditering) && (
           <figcaption>{a.bilde?.tekst} {a.bilde?.kreditering && <span class="meta">Foto: {a.bilde.kreditering}</span>}</figcaption>
         )}
@@ -49,12 +51,21 @@ const lesOgsa = artikler.filter((x) => x.slug !== a.slug && x.seksjon !== a.seks
 
       <div class="k7 art-tekst">
         {a.brodtekst.map((b) => {
-          if (b.type === 'avsnitt') return <p>{b.tekst}</p>;
+          if (b.type === 'avsnitt') return b.html ? <p set:html={b.html} /> : <p>{b.tekst}</p>;
+          if (b.type === 'liste') return <ul class="art-liste">{b.punkter.map((p) => <li set:html={p} />)}</ul>;
+          if (b.type === 'bilde') return (
+            <figure class="art-innebilde">
+              <Bilde bilde={b.bilde} format="3-2" storrelser="(max-width: 900px) 100vw, 690px" />
+              {(b.bilde.tekst || b.bilde.kreditering) && (
+                <figcaption>{b.bilde.tekst} {b.bilde.kreditering && <span class="meta">Foto: {b.bilde.kreditering}</span>}</figcaption>
+              )}
+            </figure>
+          );
           if (b.type === 'mellomtittel') return <h2 class="h-stor art-mellomtittel">{b.tekst}</h2>;
           if (b.type === 'sitat') return (
             <blockquote class="art-sitat">
               <p>«{b.tekst}»</p>
-              <cite class="etikett">{b.kilde}</cite>
+              {b.kilde && <cite class="etikett">{b.kilde}</cite>}
             </blockquote>
           );
           if (b.type === 'fakta') return (
@@ -64,7 +75,13 @@ const lesOgsa = artikler.filter((x) => x.slug !== a.slug && x.seksjon !== a.seks
             </aside>
           );
         })}
-        {a.kilde && <p class="meta art-kilde">Kilde: {a.kilde}</p>}
+        {(a.kilde || a.pressemelding) && (
+          <p class="meta art-kilde">
+            {a.kilde && <>Kilde: {a.kilde}</>}
+            {a.kilde && a.pressemelding && ' · '}
+            {a.pressemelding && <>Saken bygger på en pressemelding fra {a.pressemelding}</>}
+          </p>
+        )}
       </div>
 
       <aside class="fra9 art-side">
@@ -125,6 +142,11 @@ const lesOgsa = artikler.filter((x) => x.slug !== a.slug && x.seksjon !== a.seks
   .art-sitat cite { font-style: normal; }
   .art-fakta { background: var(--flate); padding: var(--s5); display: flex; flex-direction: column; gap: var(--s3); font-size: 17px; line-height: 1.5; }
   .art-fakta ul { margin: 0; padding-left: var(--s5); display: flex; flex-direction: column; gap: var(--s2); }
+  .art-tekst :global(a) { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  .art-tekst :global(a:hover) { text-decoration-thickness: 2px; }
+  .art-liste { margin: 0; padding-left: var(--s5); display: flex; flex-direction: column; gap: var(--s2); }
+  .art-innebilde { display: flex; flex-direction: column; gap: var(--s2); margin: var(--s2) 0; }
+  .art-innebilde figcaption { font-size: 15px; line-height: 1.45; color: var(--tekst-2); }
   .art-kilde { padding-top: var(--s4); border-top: 1px solid var(--linje); font-size: 14px; letter-spacing: 0.08em; }
 
   .art-side { display: flex; flex-direction: column; gap: var(--s7); }

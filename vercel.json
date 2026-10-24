@@ -1,4 +1,25 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "astro"
+  "framework": "astro",
+  "rewrites": [
+    {
+      "source": "/studio/:sti*",
+      "destination": "/studio/index.html"
+    },
+    {
+      "source": "/static/:fil(favicon.*|apple-touch-icon.png|manifest.webmanifest)",
+      "destination": "/studio/static/:fil"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/studio/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    }
+  ]
 }

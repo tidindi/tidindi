@@ -1,14 +1,24 @@
-// TESTINNHOLD – erstattes av innhold fra Sanity i neste steg.
-// Strukturen speiler innholdsmodellen i claude/arkitektur.md, så sidene
-// kan kobles til Sanity uten at malene endres.
+// TESTINNHOLD – vises bare så lenge det ikke finnes publiserte artikler i Sanity
+// (og ved bygging uten nett, SANITY_OFFLINE=1). Typene her brukes av begge kildene.
 
 import type { SeksjonSlug } from './seksjoner';
 
+// Bilde: enten en ferdig adresse (src) eller et bilde fra Sanity (sanity), som beskjæres per format.
+export interface Bildedata {
+  src?: string;
+  sanity?: unknown;
+  alt: string;
+  tekst?: string;
+  kreditering?: string;
+}
+
 export type Blokk =
-  | { type: 'avsnitt'; tekst: string }
+  | { type: 'avsnitt'; tekst?: string; html?: string }
   | { type: 'mellomtittel'; tekst: string }
-  | { type: 'sitat'; tekst: string; kilde: string }
-  | { type: 'fakta'; tittel?: string; punkter: string[] };
+  | { type: 'liste'; punkter: string[] } // punktene er ferdig HTML
+  | { type: 'sitat'; tekst: string; kilde?: string }
+  | { type: 'fakta'; tittel?: string; punkter: string[] }
+  | { type: 'bilde'; bilde: Bildedata };
 
 export interface Artikkel {
   slug: string;
@@ -16,12 +26,20 @@ export interface Artikkel {
   sted?: string;
   tittel: string;
   ingress: string;
-  skribent: string;
+  skribent?: string;
   publisert: string; // ISO-tid
   oppdatert?: string;
-  bilde?: { src: string; alt: string; tekst?: string; kreditering?: string };
+  bilde?: Bildedata;
   kilde?: string;
+  pressemelding?: string;
   brodtekst: Blokk[];
+}
+
+export interface Forsideoppsett {
+  hovedsak: string;
+  treSaker: string[];
+  bildesaker: string[];
+  morgenbrief: { tittel: string; tekst: string; knapp: string };
 }
 
 const standardTekst: Blokk[] = [
@@ -49,7 +67,8 @@ function sak(
     slug, seksjon, tittel, ingress, publisert,
     sted: '[Sted]',
     skribent: '[Journalist]',
-    kilde: '[Kilde] · [Saken bygger på en pressemelding fra avsender]',
+    kilde: '[Kilde]',
+    pressemelding: '[Avsender]',
     brodtekst: standardTekst,
     ...ekstra,
   };
@@ -101,7 +120,7 @@ export const artikler: Artikkel[] = [
 
 // Forsideoppsettet – i Sanity blir dette ett dokument som redaksjonen styrer.
 // «Siste» står ikke her: den fylles automatisk med de nyeste artiklene.
-export const forside = {
+export const forside: Forsideoppsett = {
   hovedsak: 'testsak-hovedsak',
   treSaker: ['testsak-pengene-1', 'testsak-verden-1', 'testsak-kulturen-1'],
   bildesaker: ['testsak-verden-2', 'testsak-sporten-2', 'testsak-kulturen-2'],

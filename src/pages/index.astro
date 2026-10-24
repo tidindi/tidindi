@@ -8,15 +8,16 @@ import Bunn from '../components/Bunn.astro';
 import Bilde from '../components/Bilde.astro';
 import Seksjonsmerke from '../components/Seksjonsmerke.astro';
 import MorgenbriefRamme from '../components/MorgenbriefRamme.astro';
-import { forside, finnArtikkel, sisteArtikler, artikkelUrl, type Artikkel } from '../data/testinnhold';
+import { hentInnhold, artikkelUrl, type Artikkel } from '../data/innhold';
 import { sisteTid } from '../data/format';
 import { seksjonsnavn } from '../data/seksjoner';
 
-const hent = (slug: string) => finnArtikkel(slug) as Artikkel;
+const { artikler, forside } = await hentInnhold();
+const hent = (slug: string) => artikler.find((a) => a.slug === slug) as Artikkel;
 const hovedsak = hent(forside.hovedsak);
 const treSaker = forside.treSaker.map(hent);
 const bildesaker = forside.bildesaker.map(hent);
-const siste = sisteArtikler(5);
+const siste = artikler.slice(0, 5); // allerede sortert med nyeste først
 ---
 <Base>
   <Topplinje />
@@ -27,7 +28,7 @@ const siste = sisteArtikler(5);
       <article class="k8 kort hovedsak">
         <figure class="hovedsak-figur">
           <a href={artikkelUrl(hovedsak)} tabindex="-1" aria-hidden="true">
-            <Bilde src={hovedsak.bilde?.src} alt="" format="16-9" laster="eager" />
+            <Bilde bilde={hovedsak.bilde} alt="" format="16-9" laster="eager" storrelser="(max-width: 900px) 100vw, 790px" />
           </a>
           {hovedsak.bilde?.kreditering && <figcaption class="meta">Foto: {hovedsak.bilde.kreditering}</figcaption>}
         </figure>
@@ -66,7 +67,7 @@ const siste = sisteArtikler(5);
     <section class="rutenett bildesaker" aria-label="Bildesaker">
       {bildesaker.map((a) => (
         <article class="k4 kort">
-          <a href={artikkelUrl(a)} tabindex="-1" aria-hidden="true" class="bildesak-bilde"><Bilde src={a.bilde?.src} alt="" format="3-2" /></a>
+          <a href={artikkelUrl(a)} tabindex="-1" aria-hidden="true" class="bildesak-bilde"><Bilde bilde={a.bilde} alt="" format="3-2" storrelser="(max-width: 900px) 100vw, 380px" /></a>
           <Seksjonsmerke seksjon={a.seksjon} />
           <h3 class="h-mellom"><a href={artikkelUrl(a)}>{a.tittel}</a></h3>
         </article>

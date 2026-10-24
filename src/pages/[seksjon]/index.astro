@@ -6,7 +6,7 @@ import Hovedmeny from '../../components/Hovedmeny.astro';
 import Bunn from '../../components/Bunn.astro';
 import Bilde from '../../components/Bilde.astro';
 import { seksjoner, seksjonsnavn } from '../../data/seksjoner';
-import { artikler, artikkelUrl } from '../../data/testinnhold';
+import { hentArtikler, artikkelUrl } from '../../data/innhold';
 import { sisteTid } from '../../data/format';
 
 export function getStaticPaths() {
@@ -14,7 +14,7 @@ export function getStaticPaths() {
 }
 
 const { seksjon } = Astro.params as { seksjon: string };
-const saker = artikler.filter((a) => a.seksjon === seksjon).sort((a, b) => b.publisert.localeCompare(a.publisert));
+const saker = (await hentArtikler()).filter((a) => a.seksjon === seksjon); // nyeste først
 const [forste, ...resten] = saker;
 ---
 <Base tittel={seksjonsnavn(seksjon)} beskrivelse={`Nyheter fra ${seksjonsnavn(seksjon).toLowerCase()} i Tidindi.`}>
@@ -25,7 +25,7 @@ const [forste, ...resten] = saker;
     {forste ? (
       <>
         <article class="rutenett strek-tykk forste">
-          <a href={artikkelUrl(forste)} class="k7" tabindex="-1" aria-hidden="true"><Bilde src={forste.bilde?.src} alt="" format="16-9" laster="eager" /></a>
+          <a href={artikkelUrl(forste)} class="k7" tabindex="-1" aria-hidden="true"><Bilde bilde={forste.bilde} alt="" format="16-9" laster="eager" storrelser="(max-width: 900px) 100vw, 690px" /></a>
           <div class="k5 kort forste-tekst">
             <span class="meta"><time datetime={forste.publisert}>{sisteTid(forste.publisert)}</time></span>
             <h2 class="h-hoved"><a href={artikkelUrl(forste)}>{forste.tittel}</a></h2>
