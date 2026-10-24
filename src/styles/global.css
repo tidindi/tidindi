@@ -1,0 +1,156 @@
+/* ──────────────────────────────────────────────────────────────
+   TIDINDI – designtokens og grunnstiler
+   Farger og skrifter endres her, og slår gjennom på alle sider.
+   Fasit: claude/visuell-identitet.md i TIDINDI-prosjektet.
+   ────────────────────────────────────────────────────────────── */
+:root {
+  /* Farger */
+  --blyhvit: #F5F4EF;
+  --kull: #1C1E20;
+  --kull-lys: #828892;
+  --neon: #E6FF2B;
+  --neon-hover: #F0FF6A;
+  --tekst-2: #5C616A;
+  --tekst-mork-flate: #A9ADB3;
+  --linje: #D3D5D8;
+  --flate: #E3E4E6;
+  --brodtekst: #2A2A28;
+
+  /* Skrifter */
+  --overskrift: "Playfair Display", Georgia, serif;
+  --tekst: "Source Serif 4", Georgia, serif;
+  --etikett: "Barlow Condensed", "Arial Narrow", sans-serif;
+
+  /* Avstandsskala (8-punkts system). Bruk bare disse. */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 24px;
+  --s6: 32px;
+  --s7: 48px;
+  --s8: 64px;
+
+  /* Rutenett: 12 kolonner, fast kolonneavstand, felles innholdsbredde */
+  --maks: 1200px;
+  --gutter: 24px;      /* sidemarg */
+  --kol: 32px;         /* avstand mellom kolonner */
+  --blokk: var(--s7);  /* avstand mellom hovedblokker */
+}
+@media (max-width: 600px) {
+  :root { --gutter: 16px; --kol: 24px; --blokk: var(--s6); }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--blyhvit);
+  color: var(--kull);
+  font-family: var(--tekst);
+  font-size: 18px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+main { flex: 1 0 auto; }
+a { color: var(--kull); text-decoration: none; }
+a:hover { color: var(--tekst-2); }
+:focus-visible { outline: 3px solid var(--kull); outline-offset: 3px; }
+img { display: block; max-width: 100%; }
+h1, h2, h3, p, figure, blockquote { margin: 0; }
+
+.wrap { max-width: var(--maks); margin: 0 auto; padding-left: var(--gutter); padding-right: var(--gutter); width: 100%; }
+
+/* 12-kolonners rutenett. Alle blokker plasseres på de samme kolonnene,
+   slik at kanter står på linje fra seksjon til seksjon. Under 900 px: én kolonne. */
+.rutenett { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--kol); }
+.k12 { grid-column: span 12; }
+.k8 { grid-column: span 8; }
+.k7 { grid-column: span 7; }
+.k5 { grid-column: span 5; }
+.k4 { grid-column: span 4; }
+.fra9 { grid-column: 9 / span 4; }
+@media (max-width: 900px) {
+  .rutenett > * { grid-column: 1 / -1; }
+}
+.skjult { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Logo */
+.logo { display: block; height: 1em; width: auto; }
+
+/* Etiketter og markører */
+.etikett {
+  font-family: var(--etikett);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.meta {
+  font-family: var(--etikett);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tekst-2);
+}
+.rombe {
+  display: inline-block;
+  width: 8px; height: 8px;
+  background: currentColor;
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+.seksjon-merke { display: inline-flex; align-items: center; gap: 10px; }
+
+/* Overskrifter */
+.h-hoved, .h-stor, .h-mellom, .h-liten, .h-siste {
+  font-family: var(--overskrift);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+/* Typografisk skala: 60 / 26 / 21 / 19 – mellomtitler i artikler bruker h-stor */
+.h-hoved { font-size: clamp(2.25rem, 4.4vw, 3.75rem); line-height: 1.04; }
+.h-stor { font-size: 26px; line-height: 1.15; }
+.h-mellom { font-size: 21px; line-height: 1.2; }
+.h-siste { font-size: 19px; line-height: 1.25; }
+.ingress { font-size: 1.3125rem; line-height: 1.5; color: var(--brodtekst); }
+
+/* Bilder */
+/* Alle bilder i sort-hvitt. Sanity leverer dem allerede gråtonet; filteret sikrer det samme for andre kilder. */
+.bilde { width: 100%; object-fit: cover; background: var(--flate); filter: grayscale(1); }
+.bilde-tom {
+  width: 100%;
+  background: var(--flate);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--etikett); font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--tekst-2);
+}
+.r-16-9 { aspect-ratio: 16 / 9; }
+.r-16-8 { aspect-ratio: 16 / 8; }
+.r-3-2 { aspect-ratio: 3 / 2; }
+
+/* Knapper */
+.knapp-neon, .knapp-sort {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 48px; padding: 0 var(--s5);
+  font-family: var(--etikett); font-weight: 700; font-size: 14px;
+  letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none;
+}
+.knapp-neon { background: var(--neon); color: var(--kull); }
+.knapp-neon:hover { background: var(--neon-hover); color: var(--kull); }
+.knapp-sort { background: var(--kull); color: var(--neon); }
+.knapp-sort:hover { background: #000; color: var(--neon); }
+
+/* Linjer */
+.strek-tykk { border-top: 3px solid var(--kull); }
+.strek-tynn { border-bottom: 1px solid var(--linje); }
+
+/* Blokkoverskrift: etikett rett under en tykk strek («Siste», «Les også», «Mer fra …») */
+.blokk-etikett { padding-top: var(--s4); padding-bottom: var(--s2); font-size: 15px; letter-spacing: 0.18em; }
+
+/* Kortrytme: etikett → overskrift → ingress */
+.kort { display: flex; flex-direction: column; gap: var(--s3); }

@@ -1,0 +1,43 @@
+---
+// Forsidens masthead: stor logo, slagord og seksjonsmeny.
+import Logo from './Logo.astro';
+import { seksjoner } from '../data/seksjoner';
+interface Props { aktiv?: string }
+const { aktiv } = Astro.props;
+---
+<header class="wrap masthead">
+  <a href="/" class="masthead-logo" aria-label="Tidindi – til forsiden"><Logo /></a>
+  <p class="slagord">Mer om det som skjer</p>
+  <nav aria-label="Seksjoner" class="seksjonsmeny">
+    <ul>
+      {seksjoner.map((s) => (
+        <li><a href={`/${s.slug}/`} aria-current={aktiv === s.slug ? 'page' : undefined}>{s.navn}</a></li>
+      ))}
+    </ul>
+  </nav>
+</header>
+
+<style>
+  .masthead { padding-top: var(--s6); display: flex; flex-direction: column; align-items: center; }
+  .masthead-logo { color: var(--kull); font-size: clamp(3.4rem, 9.5vw, 6.6rem); line-height: 1; }
+  .masthead-logo:hover { color: var(--kull); }
+  .slagord { margin-top: var(--s3); font-family: var(--overskrift); font-style: italic; font-size: 17px; color: var(--tekst-2); }
+  .seksjonsmeny { width: 100%; margin-top: var(--s5); border-top: 3px solid var(--kull); border-bottom: 1px solid var(--kull); }
+  .seksjonsmeny ul {
+    list-style: none; margin: 0; padding: 0;
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 0 var(--s7);
+    font-family: var(--etikett); font-size: 16px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  .seksjonsmeny a { display: inline-flex; align-items: center; min-height: 48px; }
+  .seksjonsmeny a[aria-current='page'] { box-shadow: inset 0 -3px 0 var(--kull); }
+  @media (max-width: 600px) {
+    .seksjonsmeny ul {
+      flex-wrap: nowrap; justify-content: space-between; gap: 0 var(--s4);
+      font-size: 13px; letter-spacing: 0.08em;
+      overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    }
+    .seksjonsmeny ul::-webkit-scrollbar { display: none; }
+    .seksjonsmeny a { min-height: 44px; white-space: nowrap; }
+  }
+</style>

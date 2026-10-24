@@ -1,0 +1,28 @@
+---
+import Tekstside from '../layouts/Tekstside.astro';
+import { utgiver } from '../data/utgiver';
+---
+<Tekstside tittel="Personvern" beskrivelse="Hvilke personopplysninger Tidindi behandler, hvorfor, og hvilke rettigheter du har.">
+  <p>Vi samler inn så lite som mulig om deg. Her står hva vi behandler, hvorfor, og hvilke rettigheter du har.</p>
+
+  <h2>Behandlingsansvarlig</h2>
+  <p>{utgiver.selskap}, org.nr. {utgiver.orgnr}, {utgiver.adresse}. Kontakt: <a href={`mailto:${utgiver.epost}`}>{utgiver.epost}</a>.</p>
+
+  <h2>Ingen informasjonskapsler</h2>
+  <p>Tidindi bruker ikke informasjonskapsler (cookies) og viser ikke annonser. Skriftene på nettstedet lastes fra vår egen server, ikke fra tredjeparter.</p>
+
+  <h2>Besøksstatistikk</h2>
+  <p>Vi bruker Plausible Analytics for å se hvor mange som besøker sidene og hvilke saker som leses. Plausible bruker ikke informasjonskapsler og lagrer ikke IP-adresser. Statistikken viser bare samlede tall, og dataene behandles og lagres i EU. Grunnlaget er vår berettigede interesse i å forstå hvordan nettstedet brukes (personvernforordningen artikkel 6 nr. 1 bokstav f).</p>
+
+  <h2>Påmelding til Tidindi Morgenbrief og Tidindi Varde</h2>
+  <p>Når du melder deg på, lagrer vi e-postadressen din. Vi bruker den bare til å gi deg beskjed om Tidindi Morgenbrief og Tidindi Varde. Grunnlaget er samtykket ditt (artikkel 6 nr. 1 bokstav a). Du kan når som helst melde deg av med lenken i e-postene fra oss, eller ved å skrive til oss.</p>
+  <p>Påmeldingene håndteres av Mailchimp (Intuit Inc., USA). Overføringen til USA skjer under EU–US Data Privacy Framework, som Intuit og Mailchimp er tilsluttet.</p>
+
+  <h2>Drift av nettstedet</h2>
+  <p>Nettstedet driftes av Vercel. Som alle nettjenester registrerer Vercel tekniske opplysninger, som IP-adresse, i serverlogger for å kunne levere sidene og verne mot misbruk. Loggene slettes automatisk etter kort tid.</p>
+
+  <h2>Dine rettigheter</h2>
+  <p>Du har rett til innsyn i opplysningene vi har om deg, og til å få dem rettet eller slettet. Du kan også trekke tilbake et samtykke. Skriv til <a href={`mailto:${utgiver.epost}`}>{utgiver.epost}</a>. Mener du at vi behandler opplysninger i strid med regelverket, kan du klage til <a href="https://www.datatilsynet.no/">Datatilsynet</a>.</p>
+
+  <p class="meta">Sist oppdatert 24. oktober 2026</p>
+</Tekstside>

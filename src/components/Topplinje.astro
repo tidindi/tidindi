@@ -1,0 +1,57 @@
+---
+// Sort stripe øverst på forsiden: dato, teaser for Tidindi Varde og abonnementsknapp for Morgenbrief.
+// Morgenbrief-knappen er den eneste neongule flaten; Varde har neon kontur på sort.
+import { datoLang } from '../data/format';
+const iDag = datoLang(new Date());
+---
+<div class="topplinje">
+  <div class="wrap topplinje-inner">
+    <span class="topplinje-dato" data-dagens-dato>{iDag}</span>
+    <div class="topplinje-knapper">
+      <a class="knapp-kontur" href="/varde/"><span class="lang">Medieovervåkning med&nbsp;</span><span class="merke">Tidindi&nbsp;</span>Varde</a>
+      <a class="knapp-neon" href="/morgenbrief/"><span class="lang">Abonner på&nbsp;</span><span class="merke">Tidindi&nbsp;</span>morgenbrief</a>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  // Siden bygges statisk; datoen oppdateres i nettleseren så den alltid er dagens.
+  (function () {
+    var el = document.querySelector('[data-dagens-dato]');
+    if (!el) return;
+    try {
+      var s = new Intl.DateTimeFormat('nb-NO', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Oslo' }).format(new Date());
+      el.textContent = s.charAt(0).toUpperCase() + s.slice(1);
+    } catch (e) {}
+  })();
+</script>
+
+<style>
+  .topplinje { background: var(--kull); color: var(--tekst-mork-flate); }
+  .topplinje-inner {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+    gap: var(--s2) var(--s5); padding-top: var(--s2); padding-bottom: var(--s2);
+  }
+  .topplinje-dato {
+    font-family: var(--etikett); font-size: 14px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  .topplinje-knapper { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s3); }
+  .topplinje :global(.knapp-neon) { min-height: 44px; }
+  .knapp-kontur {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 44px; padding: 0 var(--s5);
+    font-family: var(--etikett); font-weight: 700; font-size: 14px;
+    letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none;
+    color: var(--neon); box-shadow: inset 0 0 0 1px var(--neon);
+  }
+  .knapp-kontur:hover { color: var(--kull); background: var(--neon); }
+  @media (max-width: 760px) { .lang { display: none; } }
+  @media (max-width: 560px) {
+    .topplinje-inner { justify-content: center; }
+    .topplinje-knapper { justify-content: center; }
+    .merke { display: none; }
+    .knapp-kontur, .topplinje :global(.knapp-neon) { padding: 0 var(--s4); }
+    .topplinje-dato { display: none; }
+  }
+</style>

@@ -1,0 +1,54 @@
+---
+// Kompakt meny for artikkel- og seksjonssider: logo til venstre, seksjoner og abonnement til høyre.
+// På mobil: logo og «Abonner» på første linje, seksjonene på en egen linje under.
+import Logo from './Logo.astro';
+import { seksjoner } from '../data/seksjoner';
+interface Props { aktiv?: string }
+const { aktiv } = Astro.props;
+---
+<nav aria-label="Hovedmeny" class="hovedmeny">
+  <div class="wrap hovedmeny-inner">
+    <a href="/" class="hovedmeny-logo" aria-label="Tidindi – til forsiden"><Logo /></a>
+    <ul>
+      {seksjoner.map((s) => (
+        <li><a href={`/${s.slug}/`} aria-current={aktiv === s.slug ? 'page' : undefined}>{s.navn}</a></li>
+      ))}
+    </ul>
+    <a class="knapp-sort abonner" href="/morgenbrief/">Abonner</a>
+  </div>
+</nav>
+
+<style>
+  .hovedmeny { border-bottom: 3px solid var(--kull); }
+  .hovedmeny-inner {
+    display: flex; align-items: center;
+    gap: var(--s3) var(--s5); padding-top: var(--s3); padding-bottom: var(--s3);
+  }
+  .hovedmeny-logo { color: var(--kull); font-size: 42px; line-height: 1; }
+  .hovedmeny-logo:hover { color: var(--kull); }
+  ul {
+    list-style: none; margin: 0 0 0 auto; padding: 0;
+    display: flex; align-items: center; gap: 0 var(--s5);
+    font-family: var(--etikett); font-size: 15px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  ul a { display: inline-flex; align-items: center; min-height: 48px; white-space: nowrap; }
+  ul a[aria-current='page'] { box-shadow: inset 0 -3px 0 var(--kull); }
+  .abonner { margin-left: var(--s2); }
+  @media (max-width: 900px) {
+    .hovedmeny-inner { flex-wrap: wrap; padding-bottom: 0; }
+    .abonner { margin-left: auto; min-height: 44px; }
+    ul {
+      order: 3; width: 100%; margin: 0;
+      justify-content: space-between; gap: 0 var(--s4);
+      border-top: 1px solid var(--linje);
+      overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    }
+    ul::-webkit-scrollbar { display: none; }
+    ul a { min-height: 44px; }
+  }
+  @media (max-width: 600px) {
+    .hovedmeny-logo { font-size: 34px; }
+    ul { font-size: 13px; letter-spacing: 0.08em; }
+  }
+</style>

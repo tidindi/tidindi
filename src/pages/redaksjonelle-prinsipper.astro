@@ -1,0 +1,28 @@
+---
+import Tekstside from '../layouts/Tekstside.astro';
+import { utgiver } from '../data/utgiver';
+---
+<Tekstside tittel="Redaksjonelle prinsipper" beskrivelse="Slik arbeider Tidindi: uavhengighet, kildebruk, pressemeldinger, bilder, retting av feil, bruk av KI og presseetikk.">
+  <p>Tidindi skal være et medium leserne kan stole på. Disse prinsippene gjelder for alt vi publiserer.</p>
+
+  <h2>Uavhengighet</h2>
+  <p>Tidindi er redaksjonelt uavhengig og politisk nøytralt. Ansvarlig redaktør bestemmer hva som publiseres. Ingen annonsører, eiere eller samarbeidspartnere har innflytelse over det redaksjonelle innholdet.</p>
+
+  <h2>Nyheter, ikke meninger</h2>
+  <p>Magasinet publiserer nyhetssaker. Vi skriver ikke kommentarer eller vurderinger i nyhetssakene. Kuratering og vurdering av mediebildet hører hjemme i nyhetsbrevet Tidindi Morgenbrief.</p>
+
+  <h2>Kilder og pressemeldinger</h2>
+  <p>Vi oppgir alltid hvor opplysningene i en sak kommer fra. Når en sak bygger på en pressemelding, står det tydelig nederst i saken hvem som har sendt den.</p>
+
+  <h2>Bilder</h2>
+  <p>Alle bilder i Tidindi vises i sort-hvitt. Utover gråtoner og beskjæring endrer vi ikke bildene. Fotograf eller kilde oppgis i artikkelen.</p>
+
+  <h2>Kunstig intelligens</h2>
+  <p>Tidindi er et menneskestyrt medium. Vi kan bruke KI som verktøy i research og tekstarbeid, men KI skriver aldri saker på egen hånd og publiserer aldri innhold. Alt som publiseres, er skrevet eller gjennomgått og godkjent av et menneske i redaksjonen.</p>
+
+  <h2>Feil og rettelser</h2>
+  <p>Vi retter feil så raskt som mulig, og åpent. Når en publisert sak endres vesentlig, vises tidspunktet for oppdateringen i saken. Si fra om feil til <a href={`mailto:${utgiver.epost}`}>{utgiver.epost}</a>.</p>
+
+  <h2>Presseetikk</h2>
+  <p>Tidindi følger prinsippene i <a href="https://snl.no/V%C3%A6r_varsom-plakaten">Vær Varsom-plakaten</a> og <a href="https://snl.no/Redakt%C3%B8rplakaten">Redaktørplakaten</a>.</p>
+</Tekstside>

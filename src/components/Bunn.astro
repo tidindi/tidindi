@@ -1,0 +1,46 @@
+---
+import Logo from './Logo.astro';
+import { utgiver } from '../data/utgiver';
+---
+<footer class="bunn">
+  <div class="wrap bunn-inner">
+    <a href="/" class="bunn-logo" aria-label="Tidindi – til forsiden"><Logo /></a>
+    <ul>
+      <li><a href="/om/">Om Tidindi</a></li>
+      <li><a href="/redaksjonelle-prinsipper/">Redaksjonelle prinsipper</a></li>
+      <li><a href="/morgenbrief/">Tidindi Morgenbrief</a></li>
+      <li><a href="/varde/">Tidindi Varde</a></li>
+      <li><a href="/personvern/">Personvern</a></li>
+    </ul>
+    <p class="bunn-redaktor">Ansvarlig redaktør: {utgiver.redaktor}</p>
+  </div>
+</footer>
+
+<style>
+  .bunn { background: var(--kull); color: var(--blyhvit); margin-top: auto; }
+  .bunn-inner {
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+    gap: var(--s4) var(--s6); padding-top: var(--s6); padding-bottom: var(--s6);
+  }
+  .bunn-logo { color: var(--blyhvit); font-size: 40px; line-height: 1; }
+  .bunn-logo:hover { color: var(--blyhvit); }
+  ul {
+    list-style: none; margin: 0; padding: 0;
+    display: flex; flex-wrap: wrap; gap: 0 var(--s5);
+    font-family: var(--etikett); font-size: 14px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  ul a { display: inline-flex; align-items: center; min-height: 44px; color: var(--tekst-mork-flate); }
+  ul a:hover { color: var(--neon); }
+  .bunn-redaktor {
+    width: 100%; padding-top: var(--s4); border-top: 1px solid #3A3D40;
+    font-family: var(--etikett); font-size: 13px; font-weight: 600; letter-spacing: 0.08em; color: var(--tekst-mork-flate);
+  }
+  .bunn-redaktor a { color: var(--tekst-mork-flate); text-decoration: underline; text-underline-offset: 3px; }
+  .bunn-redaktor a:hover { color: var(--neon); }
+  @media (max-width: 600px) {
+    .bunn-inner { flex-direction: column; align-items: flex-start; gap: var(--s4); }
+    ul { flex-direction: column; gap: 0; }
+    ul a { min-height: 40px; }
+  }
+</style>

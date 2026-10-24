@@ -1,0 +1,80 @@
+---
+// Grunnmalen for alle sider i magasinet: metadata, skrifter, Plausible.
+import '../styles/global.css';
+
+interface Props {
+  tittel?: string;
+  beskrivelse?: string;
+  bilde?: string;
+  type?: 'website' | 'article';
+}
+
+const {
+  tittel,
+  beskrivelse = 'Tidindi – mer om det som skjer. Nyheter fra samfunnet, pengene, sporten, kulturen og verden.',
+  bilde,
+  type = 'website',
+} = Astro.props;
+
+const sidetittel = tittel ? `${tittel} – Tidindi` : 'Tidindi – Mer om det som skjer';
+const kanonisk = new URL(Astro.url.pathname, Astro.site).toString();
+---
+<!doctype html>
+<html lang="nb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{sidetittel}</title>
+  <meta name="description" content={beskrivelse}>
+  <link rel="canonical" href={kanonisk}>
+  <meta name="theme-color" content="#1C1E20">
+  <meta name="color-scheme" content="light">
+
+  <meta property="og:type" content={type}>
+  <meta property="og:locale" content="nb_NO">
+  <meta property="og:site_name" content="Tidindi">
+  <meta property="og:title" content={tittel ?? 'Tidindi'}>
+  <meta property="og:description" content={beskrivelse}>
+  <meta property="og:url" content={kanonisk}>
+  {bilde && <meta property="og:image" content={bilde}>}
+  <meta name="twitter:card" content={bilde ? 'summary_large_image' : 'summary'}>
+
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="sitemap" href="/sitemap-index.xml">
+
+  <!-- Privacy-friendly analytics by Plausible -->
+  <script is:inline async src="https://plausible.io/js/pa-uQ1S11ihAWoN0xINBg3aX.js"></script>
+  <script is:inline>
+    window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+    plausible.init()
+  </script>
+
+  <link rel="preload" href="/fonter/source-serif-4-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonter/playfair-display-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonter/fonter.css">
+</head>
+<body>
+  <slot />
+  <script is:inline>
+    // Sidene bygges ferdig på forhånd. Tidspunkt i «Siste» og seksjonslister regnes om i nettleseren,
+    // så «kl. 07.10» bare vises samme dag – ellers datoen («23. okt.»).
+    (function () {
+      try {
+        var tz = 'Europe/Oslo';
+        var dag = function (d) { return new Intl.DateTimeFormat('en-CA', { timeZone: tz }).format(d); };
+        var idag = dag(new Date());
+        document.querySelectorAll('time[data-siste]').forEach(function (el) {
+          var d = new Date(el.getAttribute('datetime'));
+          if (isNaN(d)) return;
+          el.textContent = dag(d) === idag
+            ? 'kl. ' + new Intl.DateTimeFormat('nb-NO', { hour: '2-digit', minute: '2-digit', timeZone: tz }).format(d).replace(':', '.')
+            : new Intl.DateTimeFormat('nb-NO', { day: 'numeric', month: 'short', timeZone: tz }).format(d);
+        });
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "astro",
+  "rewrites": [
+    {
+      "source": "/studio/:sti*",
+      "destination": "/studio/index.html"
+    },
+    {
+      "source": "/static/favicon.ico",
+      "destination": "/favicon.ico"
+    },
+    {
+      "source": "/static/favicon.svg",
+      "destination": "/favicon.svg"
+    },
+    {
+      "source": "/static/apple-touch-icon.png",
+      "destination": "/apple-touch-icon.png"
+    },
+    {
+      "source": "/static/manifest.webmanifest",
+      "destination": "/studio/static/manifest.webmanifest"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/studio/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    }
+  ]
+}

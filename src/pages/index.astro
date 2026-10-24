@@ -1,0 +1,102 @@
+---
+// FORSIDEN – plasseringene styres redaksjonelt (forsideoppsettet), «Siste» fylles automatisk.
+// Alt står på det felles 12-kolonners rutenettet: hovedsak 8 + Siste 4, deretter 4 + 4 + 4.
+import Base from '../layouts/Base.astro';
+import Topplinje from '../components/Topplinje.astro';
+import Masthead from '../components/Masthead.astro';
+import Bunn from '../components/Bunn.astro';
+import Bilde from '../components/Bilde.astro';
+import Seksjonsmerke from '../components/Seksjonsmerke.astro';
+import MorgenbriefRamme from '../components/MorgenbriefRamme.astro';
+import { hentInnhold, artikkelUrl, type Artikkel } from '../data/innhold';
+import { sisteTid } from '../data/format';
+import { seksjonsnavn } from '../data/seksjoner';
+
+const { artikler, forside } = await hentInnhold();
+const hent = (slug: string) => artikler.find((a) => a.slug === slug) as Artikkel;
+const hovedsak = hent(forside.hovedsak);
+const treSaker = forside.treSaker.map(hent);
+const bildesaker = forside.bildesaker.map(hent);
+const siste = artikler.slice(0, 5); // allerede sortert med nyeste først
+---
+<Base>
+  <Topplinje />
+  <Masthead />
+
+  <main class="wrap forside">
+    <section class="rutenett">
+      <article class="k8 kort hovedsak">
+        <figure class="hovedsak-figur">
+          <a href={artikkelUrl(hovedsak)} tabindex="-1" aria-hidden="true">
+            <Bilde bilde={hovedsak.bilde} alt="" format="16-9" laster="eager" storrelser="(max-width: 900px) 100vw, 790px" />
+          </a>
+        </figure>
+        <Seksjonsmerke seksjon={hovedsak.seksjon} storrelse="stor" />
+        <h1 class="h-hoved"><a href={artikkelUrl(hovedsak)}>{hovedsak.tittel}</a></h1>
+        <p class="ingress">{hovedsak.ingress}</p>
+      </article>
+
+      <aside class="fra9 siste strek-tykk" aria-labelledby="siste-tittel">
+        <h2 id="siste-tittel" class="etikett blokk-etikett">Siste</h2>
+        <ul>
+          {siste.map((a) => (
+            <li>
+              <a href={artikkelUrl(a)} class="kort siste-sak">
+                <span class="meta"><time data-siste datetime={a.publisert}>{sisteTid(a.publisert)}</time> · {seksjonsnavn(a.seksjon)}</span>
+                <span class="h-siste">{a.tittel}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </aside>
+    </section>
+
+    <section class="rutenett strek-tykk tre" aria-label="Flere saker">
+      {treSaker.map((a) => (
+        <article class="k4 kort tre-sak">
+          <Seksjonsmerke seksjon={a.seksjon} />
+          <h2 class="h-stor"><a href={artikkelUrl(a)}>{a.tittel}</a></h2>
+          <p class="liten-ingress">{a.ingress}</p>
+        </article>
+      ))}
+    </section>
+
+    <MorgenbriefRamme {...forside.morgenbrief} />
+
+    <section class="rutenett bildesaker" aria-label="Bildesaker">
+      {bildesaker.map((a) => (
+        <article class="k4 kort">
+          <a href={artikkelUrl(a)} tabindex="-1" aria-hidden="true" class="bildesak-bilde"><Bilde bilde={a.bilde} alt="" format="3-2" storrelser="(max-width: 900px) 100vw, 380px" /></a>
+          <Seksjonsmerke seksjon={a.seksjon} />
+          <h3 class="h-mellom"><a href={artikkelUrl(a)}>{a.tittel}</a></h3>
+        </article>
+      ))}
+    </section>
+  </main>
+
+  <Bunn />
+</Base>
+
+<style>
+  .forside { padding-top: var(--blokk); padding-bottom: var(--s8); display: flex; flex-direction: column; gap: var(--blokk); }
+
+  /* Hovedsak: bilde → etikett → tittel → ingress, med jevn rytme */
+  .hovedsak { gap: var(--s4); }
+  .hovedsak-figur { display: flex; flex-direction: column; gap: var(--s2); margin-bottom: var(--s1); }
+  .hovedsak .ingress { max-width: 40em; }
+
+  /* Siste: starter på samme høyde som bildet, kolonnen står over tredje kolonne under */
+  .siste ul { list-style: none; margin: 0; padding: 0; }
+  .siste-sak { gap: var(--s2); padding: var(--s4) 0; border-bottom: 1px solid var(--linje); }
+
+  /* Tre saker: lik vertikal innramming som Siste-listen, men større luft */
+  .tre-sak { padding: var(--s5) 0; border-bottom: 1px solid var(--linje); }
+  .liten-ingress { font-size: 17px; line-height: 1.5; color: var(--brodtekst); }
+
+  .bildesak-bilde { margin-bottom: var(--s1); }
+
+  @media (max-width: 900px) {
+    .siste { margin-top: var(--blokk); }
+    .bildesaker { row-gap: var(--blokk); }
+  }
+</style>

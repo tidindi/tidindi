@@ -1,0 +1,32 @@
+---
+// Bilde i fast format. Bilder fra Sanity beskjæres til formatet rundt fokuspunktet som er satt i Studio,
+// og leveres i flere størrelser (srcset) og moderne filformat.
+// Uten bilde vises en nøytral flate med teksten «Bilde».
+import { bildeUrl, type Bildedata } from '../data/innhold';
+
+interface Props {
+  bilde?: Bildedata;
+  src?: string;
+  alt?: string;
+  format: '16-9' | '16-8' | '3-2';
+  posisjon?: string;
+  laster?: 'eager' | 'lazy';
+  storrelser?: string;
+}
+const { bilde, format, posisjon = 'center', laster = 'lazy', storrelser = '(max-width: 900px) 100vw, 800px' } = Astro.props;
+const alt = Astro.props.alt ?? bilde?.alt ?? '';
+
+const forhold = { '16-9': 9 / 16, '16-8': 8 / 16, '3-2': 2 / 3 }[format];
+const bredder = [480, 800, 1200, 1600, 2000];
+
+let src = Astro.props.src ?? bilde?.src;
+let srcset: string | undefined;
+if (bilde?.sanity) {
+  const url = (b: number) => bildeUrl(bilde, b, forhold);
+  src = url(1200);
+  srcset = bredder.map((b) => `${url(b)} ${b}w`).join(', ');
+}
+---
+{src
+  ? <img class={`bilde r-${format}`} src={src} srcset={srcset} sizes={srcset ? storrelser : undefined} alt={alt} loading={laster} decoding="async" style={`object-position: ${posisjon}`} />
+  : <div class={`bilde-tom r-${format}`} role="img" aria-label="Bilde kommer">Bilde</div>}
