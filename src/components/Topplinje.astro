@@ -1,12 +1,12 @@
 ---
-// Sort stripe øverst på forsiden: dato, teaser for Tidindi Varde og abonnementsknapp for Morgenbrief.
+// Sort stripe øverst på forsiden: dato og klokkeslett, teaser for Tidindi Varde og abonnementsknapp for Morgenbrief.
 // Morgenbrief-knappen er den eneste neongule flaten; Varde har neon kontur på sort.
 import { datoLang } from '../data/format';
 const iDag = datoLang(new Date());
 ---
 <div class="topplinje">
   <div class="wrap topplinje-inner">
-    <span class="topplinje-dato" data-dagens-dato>{iDag}</span>
+    <span class="topplinje-dato"><span data-dagens-dato>{iDag}</span><span class="topplinje-klokke" data-klokke></span></span>
     <div class="topplinje-knapper">
       <a class="knapp-kontur" href="/varde/"><span class="lang">Medieovervåkning med&nbsp;</span><span class="merke">Tidindi&nbsp;</span>Varde</a>
       <a class="knapp-neon" href="/morgenbrief/"><span class="lang">Abonner på&nbsp;</span><span class="merke">Tidindi&nbsp;</span>morgenbrief</a>
@@ -15,14 +15,24 @@ const iDag = datoLang(new Date());
 </div>
 
 <script is:inline>
-  // Siden bygges statisk; datoen oppdateres i nettleseren så den alltid er dagens.
+  // Siden bygges statisk; dato og klokkeslett settes i nettleseren (norsk tid) og oppdateres hvert halve minutt.
   (function () {
-    var el = document.querySelector('[data-dagens-dato]');
-    if (!el) return;
-    try {
-      var s = new Intl.DateTimeFormat('nb-NO', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Oslo' }).format(new Date());
-      el.textContent = s.charAt(0).toUpperCase() + s.slice(1);
-    } catch (e) {}
+    var dato = document.querySelector('[data-dagens-dato]');
+    var klokke = document.querySelector('[data-klokke]');
+    if (!dato) return;
+    function oppdater() {
+      try {
+        var naa = new Date();
+        var s = new Intl.DateTimeFormat('nb-NO', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Oslo' }).format(naa);
+        dato.textContent = s.charAt(0).toUpperCase() + s.slice(1);
+        if (klokke) {
+          var t = new Intl.DateTimeFormat('nb-NO', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Oslo' }).format(naa);
+          klokke.textContent = ' · kl. ' + t.replace(':', '.');
+        }
+      } catch (e) {}
+    }
+    oppdater();
+    setInterval(oppdater, 30000);
   })();
 </script>
 

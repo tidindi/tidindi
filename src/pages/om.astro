@@ -2,12 +2,19 @@
 import Tekstside from '../layouts/Tekstside.astro';
 import { utgiver } from '../data/utgiver';
 ---
-<Tekstside tittel="Om Tidindi" beskrivelse="Tidindi er et uavhengig norsk nettmagasin med nyheter fra samfunnet, pengene, sporten, kulturen og verden.">
-  <p>Tidindi er et uavhengig norsk nettmagasin. Vi publiserer nyhetssaker fra samfunnet, pengene, sporten, kulturen og verden – skrevet på tradisjonelt vis, med kildene oppgitt.</p>
-  <p>Magasinet er en del av Tidindi, som også gir ut nyhetsbrevet <a href="/morgenbrief/">Tidindi Morgenbrief</a> og tjenesten <a href="/varde/">Tidindi Varde</a> for medieovervåkning.</p>
+<Tekstside tittel="Om Tidindi" beskrivelse="Tidindi er et lite, redaksjonelt nyhetsmagasin med et stort interessefelt. Navnet kommer fra det norrøne tíðindi – hendelser, nyheter og etterretninger.">
+  <p>Mennesker har alltid hatt behov for å vite hva som skjer rundt dem. Lenge før aviser, radio og internett ble nyheter og fortellinger brakt videre fra menneske til menneske.</p>
+  <p>På norrønt brukte man ordet <em>tíðindi</em> om hendelser, nyheter og etterretninger. Det er opphavet til det norske «tidende», et ord som har fulgt avisene gjennom generasjoner. Og det er her vi har hentet navnet vårt.</p>
+  <p>I dag er ikke utfordringen mangel på nyheter. Tvert imot. Informasjonen kommer fra alle kanter, hele tiden. Det er blitt vanskeligere å skille det vesentlige fra det mindre viktige, se sammenhengene og forstå hva utviklingen betyr.</p>
+  <p>Tidindi er et lite, redaksjonelt nyhetsmagasin med et stort interessefelt. Vi forsøker ikke å dekke alt. Vi velger ut saker og utviklingstrekk vi mener fortjener oppmerksomhet, på tvers av samfunn, politikk, økonomi, kultur og andre deler av nyhetsbildet.</p>
+  <p>Ambisjonen er å gi leserne mer enn kjennskap til hva som har skjedd. Vi vil bidra med innsikt, perspektiver og en bedre forståelse av verden vi lever i. Innholdet velges, skrives og redigeres av mennesker.</p>
 
-  <h2>Slik jobber vi</h2>
-  <p>Sakene i magasinet er nyhetsjournalistikk. Vi oppgir alltid hvor opplysningene kommer fra, og når en sak bygger på en pressemelding, står det tydelig i saken. Tidindi er politisk nøytralt. Les mer i <a href="/redaksjonelle-prinsipper/">våre redaksjonelle prinsipper</a>.</p>
+  <h2>Mer enn et nettmagasin</h2>
+  <p>Tidindi utvikles også som et lite mediehus med tjenester for både privatpersoner og virksomheter.</p>
+  <p><a href="/morgenbrief/">Tidindi Morgenbrief</a> skal gi deg en bedre start på dagen, med en redaksjonelt sammenstilt oversikt over de viktigste nyhetene fra norske og internasjonale medier, og hva du bør følge med på videre.</p>
+  <p><a href="/varde/">Tidindi Varde</a> er vår tjeneste for medieovervåkning. Den skal gi virksomheter løpende varsler og oversikt over hva som skrives om dem, andre relevante aktører og temaene som betyr noe for virksomheten.</p>
+  <p>Mye har forandret seg siden menneskene snakket om <em>tíðindi</em> i norrøn tid. Men behovet for å vite hva som skjer, og forstå betydningen av det, er like aktuelt.</p>
+  <p>Det er dette Tidindi bygger på.</p>
 
   <h2>Ansvarlig redaktør</h2>
   <p>{utgiver.redaktor}<br><a href={`mailto:${utgiver.epost}`}>{utgiver.epost}</a></p>
@@ -16,5 +23,5 @@ import { utgiver } from '../data/utgiver';
   <p>{utgiver.selskap}<br>Org.nr. {utgiver.orgnr}<br>{utgiver.adresse}</p>
 
   <h2>Tips og rettelser</h2>
-  <p>Har du et tips, eller har vi gjort en feil? Skriv til <a href={`mailto:${utgiver.epost}`}>{utgiver.epost}</a>.</p>
+  <p>Har du et tips, eller har vi gjort en feil? Skriv til <a href={`mailto:${utgiver.epost}`}>{utgiver.epost}</a>. Les også <a href="/redaksjonelle-prinsipper/">våre redaksjonelle prinsipper</a>.</p>
 </Tekstside>

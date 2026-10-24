@@ -1,6 +1,5 @@
 ---
 import Logo from './Logo.astro';
-import { utgiver } from '../data/utgiver';
 ---
 <footer class="bunn">
   <div class="wrap bunn-inner">
@@ -12,7 +11,6 @@ import { utgiver } from '../data/utgiver';
       <li><a href="/varde/">Tidindi Varde</a></li>
       <li><a href="/personvern/">Personvern</a></li>
     </ul>
-    <p class="bunn-redaktor">Ansvarlig redaktør: {utgiver.redaktor}</p>
   </div>
 </footer>
 
@@ -32,12 +30,6 @@ import { utgiver } from '../data/utgiver';
   }
   ul a { display: inline-flex; align-items: center; min-height: 44px; color: var(--tekst-mork-flate); }
   ul a:hover { color: var(--neon); }
-  .bunn-redaktor {
-    width: 100%; padding-top: var(--s4); border-top: 1px solid #3A3D40;
-    font-family: var(--etikett); font-size: 13px; font-weight: 600; letter-spacing: 0.08em; color: var(--tekst-mork-flate);
-  }
-  .bunn-redaktor a { color: var(--tekst-mork-flate); text-decoration: underline; text-underline-offset: 3px; }
-  .bunn-redaktor a:hover { color: var(--neon); }
   @media (max-width: 600px) {
     .bunn-inner { flex-direction: column; align-items: flex-start; gap: var(--s4); }
     ul { flex-direction: column; gap: 0; }
