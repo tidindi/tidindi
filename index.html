@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tidindi Morgenbrief og Varde – Få oversikten. Bruk tiden på noe annet.</title>
-<meta name="description" content="Tidindi Morgenbrief gir deg det viktigste fra norske og internasjonale medier hver morgen. Tidindi Varde varsler deg når virksomheten din blir omtalt.">
+<title>Tidindi Morgenbrief – Få oversikten. Bruk tiden på noe annet.</title>
+<meta name="description" content="Tidindi Morgenbrief: hver morgen en e-post med det viktigste fra norske og internasjonale medier.">
 <meta name="theme-color" content="#1C1E20">
 <meta name="color-scheme" content="light">
 <link rel="canonical" href="https://tidindi.no/morgenbrief/">
@@ -12,7 +12,7 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="nb_NO">
 <meta property="og:site_name" content="Tidindi">
-<meta property="og:title" content="Tidindi Morgenbrief og Varde">
+<meta property="og:title" content="Tidindi Morgenbrief">
 <meta property="og:description" content="Få oversikten. Bruk tiden på noe annet.">
 <meta property="og:url" content="https://tidindi.no/morgenbrief/">
 <meta name="twitter:card" content="summary">
@@ -207,6 +207,45 @@ p { margin: 0; }
   .liste li { grid-template-columns: minmax(0, 1fr); row-gap: 4px; }
   .topp .knapp-neon { padding: 0 14px; }
 }
+
+/* Krysslenke mellom produktene */
+.kryss { position: relative; padding-top: clamp(40px, 6vw, 64px); padding-bottom: clamp(48px, 7vw, 80px); }
+.kryss::before { content: ""; position: absolute; top: 0; left: var(--gutter); right: var(--gutter); border-top: 3px solid var(--kull); }
+.kryss-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 24px clamp(32px, 5vw, 72px); align-items: end; }
+.kryss .lockup { font-size: clamp(2.25rem, 4vw, 3.25rem); white-space: nowrap; margin: 0; }
+.kryss p { font-family: var(--overskrift); font-weight: 700; font-size: clamp(1.5rem, 2.6vw, 2rem); line-height: 1.15; letter-spacing: -0.01em; margin-bottom: 20px; }
+.kryss .etikett { display: inline-flex; gap: 10px; align-items: center; margin-bottom: 16px; }
+.knapp-lenke {
+  display: inline-flex; align-items: center; min-height: 48px; padding: 0 24px; text-decoration: none;
+  font-family: var(--etikett); font-size: 16px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+  background: var(--kull); color: var(--neon);
+}
+.knapp-lenke:hover { background: #000; color: var(--neon); }
+.hero .lockup { font-size: clamp(2.5rem, 4.6vw, 3.5rem); white-space: nowrap; margin: 0 0 24px; }
+
+/* Mørk side (Varde) */
+body.mork { background: var(--kull); color: var(--blyhvit); }
+body.mork a { color: var(--blyhvit); }
+body.mork .topp { border-bottom: 1px solid var(--linje-mork); }
+body.mork .hero h1 { color: var(--blyhvit); }
+body.mork .hero h1 em { color: var(--neon); }
+body.mork .hero .intro p { color: #D9DBDE; }
+body.mork .produkt::before, body.mork .kryss::before { border-top-color: var(--blyhvit); }
+body.mork .undertittel { color: var(--blyhvit); }
+body.mork .brod { color: #D9DBDE; }
+body.mork .brod .lead { color: var(--blyhvit); }
+body.mork .liste { border-top-color: var(--linje-mork); }
+body.mork .liste li { border-bottom-color: var(--linje-mork); }
+body.mork .liste .etikett { color: var(--blyhvit); }
+body.mork .liste .etikett .rombe { color: var(--neon); }
+body.mork .avslutt { margin-top: 8px; padding-top: 20px; border-top: 1px solid var(--linje-mork); font-family: var(--overskrift); font-style: italic; font-size: clamp(1.25rem, 2vw, 1.5rem); line-height: 1.4; color: var(--blyhvit); }
+body.mork .knapp-lenke { background: var(--neon); color: var(--kull); }
+body.mork .knapp-lenke:hover { background: #F0FF6A; color: var(--kull); }
+body.mork .kryss .etikett { color: var(--tekst-mork-flate); }
+body.mork .paamelding a { color: var(--kull); }
+body.mork .knapp-neon, body.mork .knapp-neon:hover { color: var(--kull); }
+body.mork .bunn nav a { color: var(--tekst-mork-flate); }
+body.mork .bunn nav a:hover { color: var(--neon); }
 </style>
 </head>
 <body>
@@ -222,16 +261,16 @@ p { margin: 0; }
 
   <section class="wrap hero" aria-labelledby="hero-tittel">
     <div>
+      <p class="lockup"><span class="l-logo">Tidindi</span><span class="l-navn">Morgenbrief</span></p>
       <h1 id="hero-tittel"><span>Få oversikten.</span><span><em>Bruk tiden på noe annet.</em></span></h1>
       <div class="intro">
         <p>Det skjer mye. Hele tiden. Å holde seg oppdatert krever både tid og oppmerksomhet.</p>
-        <p>Tidindi utvikler to nye tjenester som gjør det enklere å få med seg det vesentlige – enten du vil forstå mer av nyhetsbildet eller følge med på hva som blir sagt om virksomheten din.</p>
+        <p>Tidindi Morgenbrief gjør det enklere å få med seg det vesentlige. Hver morgen får du en e-post med det viktigste fra norske og internasjonale medier.</p>
       </div>
     </div>
-
     <form class="paamelding" id="paamelding" novalidate>
       <h2>Bli blant de første</h2>
-      <p>Meld deg på, så får du beskjed når Tidindi Morgenbrief og Tidindi Varde åpner.</p>
+      <p>Meld deg på, så får du beskjed når Tidindi Morgenbrief åpner.</p>
       <div class="felt">
         <label for="epost">E-post</label>
         <input id="epost" name="EMAIL" type="email" autocomplete="email" inputmode="email" required placeholder="navn@eksempel.no">
@@ -246,14 +285,13 @@ p { margin: 0; }
     </form>
   </section>
 
-  <section class="wrap produkt" aria-labelledby="morgenbrief-tittel">
+  <section class="wrap produkt" aria-labelledby="innhold-tittel">
     <div class="produkt-grid">
       <div>
-        <h2 class="lockup" id="morgenbrief-tittel"><span class="l-logo">Tidindi</span><span class="l-navn">Morgenbrief</span></h2>
-        <p class="undertittel">Start dagen litt klokere.</p>
+        <h2 class="undertittel" id="innhold-tittel" style="margin-top:0">Start dagen litt klokere.</h2>
       </div>
       <div class="brod">
-        <p class="lead">Hver morgen får du en e-post med det viktigste fra norske og internasjonale medier.</p>
+        <p class="lead">Dette får du hver morgen:</p>
         <ul class="liste">
           <li><span class="etikett"><span class="rombe" aria-hidden="true"></span>Dagens ord</span><span>Ett ord som fanger det som preger nyhetsbildet.</span></li>
           <li><span class="etikett"><span class="rombe" aria-hidden="true"></span>Dagens overblikk</span><span>En kort redaksjonell analyse som trekker linjene mellom hendelsene og forklarer hvorfor de er viktige.</span></li>
@@ -266,21 +304,15 @@ p { margin: 0; }
     </div>
   </section>
 
-  <section class="varde" aria-labelledby="varde-tittel">
-    <div class="wrap produkt">
-      <div class="produkt-grid">
-        <div>
-          <h2 class="lockup" id="varde-tittel"><span class="l-logo">Tidindi</span><span class="l-navn">Varde</span></h2>
-          <p class="undertittel">Få vite det når virksomheten din blir omtalt.</p>
-        </div>
-        <div class="brod">
-          <p class="lead">Medieovervåkning trenger ikke være dyrt og komplisert.</p>
-          <p>Med Varde får du løpende varsler når virksomheten eller merkevaren din omtales i digitale redaksjonelle medier.</p>
-          <p>Hver morgen får du også en rapport som oppsummerer omtalen av virksomheten din, utviklingen innenfor et tema du velger, og hva mediene skriver om inntil to andre aktører – for eksempel konkurrentene dine.</p>
-          <p>Alt rett i innboksen. Uten omfattende systemer, unødvendige funksjoner eller tidkrevende gjennomgang av mediene.</p>
-          <p class="avslutt">Så kan du bruke tiden på det som faktisk trenger din oppmerksomhet.</p>
-          <a class="lenke-neon" href="#paamelding">Meld interesse</a>
-        </div>
+  <section class="wrap kryss" aria-labelledby="kryss-tittel">
+    <div class="kryss-grid">
+      <div>
+        <span class="etikett"><span class="rombe" aria-hidden="true"></span>For virksomheter</span>
+        <h2 class="lockup" id="kryss-tittel"><span class="l-logo">Tidindi</span><span class="l-navn">Varde</span></h2>
+      </div>
+      <div>
+        <p>Få vite det når virksomheten din blir omtalt.</p>
+        <a class="knapp-lenke" href="/varde/">Les om Tidindi Varde</a>
       </div>
     </div>
   </section>
@@ -291,6 +323,8 @@ p { margin: 0; }
   <div class="wrap">
     <span class="logo-liten" aria-label="Tidindi">Tidindi</span>
     <nav aria-label="Bunnmeny">
+      <a href="/morgenbrief/">Tidindi Morgenbrief</a>
+      <a href="/varde/">Tidindi Varde</a>
       <a href="https://www.instagram.com/tidindinyheter/" rel="noopener">Instagram</a>
       <span>© 2026 Tidindi</span>
     </nav>
@@ -323,8 +357,8 @@ var MC_FID = "00a52de3f0";
     ferdig();
     if (data && data.result === "success") {
       skjema.reset();
-      vis("Takk! Du står på listen. Vi gir beskjed når tjenestene åpner.");
-      try { window.plausible && window.plausible("Påmelding"); } catch (e) {}
+      vis("Takk! Du står på listen. Vi gir beskjed når Tidindi Morgenbrief åpner.");
+      try { window.plausible && window.plausible("Påmelding", { props: { produkt: "Morgenbrief" } }); } catch (e) {}
       return;
     }
     var melding = (data && data.msg) ? String(data.msg) : "";
