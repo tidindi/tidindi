@@ -2,12 +2,11 @@
 import Tekstside from '../layouts/Tekstside.astro';
 import { utgiver } from '../data/utgiver';
 ---
-<Tekstside tittel="Redaksjonelle prinsipper" beskrivelse="Slik arbeider Tidindi: uavhengighet, kildebruk, pressemeldinger, bilder, retting av feil og bruk av KI.">
+<Tekstside tittel="Redaksjonelle prinsipper" beskrivelse="Slik arbeider Tidindi: uavhengighet, kildebruk, pressemeldinger, bilder, retting av feil, bruk av KI og presseetikk.">
   <p>Tidindi skal være et medium leserne kan stole på. Disse prinsippene gjelder for alt vi publiserer.</p>
 
   <h2>Uavhengighet</h2>
   <p>Tidindi er redaksjonelt uavhengig og politisk nøytralt. Ansvarlig redaktør bestemmer hva som publiseres. Ingen annonsører, eiere eller samarbeidspartnere har innflytelse over det redaksjonelle innholdet.</p>
-  [VALGFRITT: <p>Ansvarlig redaktør driver også kommunikasjonsbyrået SALO Kommunikasjon AS. For å unngå interessekonflikter omtaler Tidindi ikke byråets kunder.</p>]
 
   <h2>Nyheter, ikke meninger</h2>
   <p>Magasinet publiserer nyhetssaker. Vi skriver ikke kommentarer eller vurderinger i nyhetssakene. Kuratering og vurdering av mediebildet hører hjemme i nyhetsbrevet Tidindi Morgenbrief.</p>
@@ -24,6 +23,6 @@ import { utgiver } from '../data/utgiver';
   <h2>Feil og rettelser</h2>
   <p>Vi retter feil så raskt som mulig, og åpent. Når en publisert sak endres vesentlig, vises tidspunktet for oppdateringen i saken. Si fra om feil til <a href={`mailto:${utgiver.epost}`}>{utgiver.epost}</a>.</p>
 
-  [VALGFRITT: <h2>Presseetikk</h2>
-  <p>Tidindi arbeider etter Vær Varsom-plakaten og Redaktørplakaten.</p>]
+  <h2>Presseetikk</h2>
+  <p>Tidindi følger prinsippene i <a href="https://snl.no/V%C3%A6r_varsom-plakaten">Vær Varsom-plakaten</a> og <a href="https://snl.no/Redakt%C3%B8rplakaten">Redaktørplakaten</a>.</p>
 </Tekstside>
