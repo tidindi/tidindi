@@ -18,20 +18,20 @@ const { aktiv } = Astro.props;
 </header>
 
 <style>
-  .masthead { padding-top: 36px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .masthead { padding-top: var(--s6); display: flex; flex-direction: column; align-items: center; }
   .masthead-logo { color: var(--kull); font-size: clamp(3.4rem, 9.5vw, 6.6rem); line-height: 1; }
   .masthead-logo:hover { color: var(--kull); }
-  .slagord { font-family: var(--overskrift); font-style: italic; font-size: 17px; color: var(--tekst-2); }
-  .seksjonsmeny { width: 100%; margin-top: 22px; border-top: 3px solid var(--kull); border-bottom: 1px solid var(--kull); }
+  .slagord { margin-top: var(--s3); font-family: var(--overskrift); font-style: italic; font-size: 17px; color: var(--tekst-2); }
+  .seksjonsmeny { width: 100%; margin-top: var(--s5); border-top: 3px solid var(--kull); border-bottom: 1px solid var(--kull); }
   .seksjonsmeny ul {
     list-style: none; margin: 0; padding: 0;
-    display: flex; flex-wrap: wrap; justify-content: center; gap: 0 44px;
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 0 var(--s7);
     font-family: var(--etikett); font-size: 16px; font-weight: 600;
     letter-spacing: 0.12em; text-transform: uppercase;
   }
-  .seksjonsmeny a { display: inline-block; padding: 13px 0; }
+  .seksjonsmeny a { display: inline-flex; align-items: center; min-height: 48px; }
   .seksjonsmeny a[aria-current='page'] { box-shadow: inset 0 -3px 0 var(--kull); }
-  @media (max-width: 560px) {
-    .seksjonsmeny ul { gap: 0 20px; font-size: 14px; }
+  @media (max-width: 600px) {
+    .seksjonsmeny ul { gap: 0 var(--s5); font-size: 14px; }
   }
 </style>

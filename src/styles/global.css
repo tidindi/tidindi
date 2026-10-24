@@ -21,9 +21,24 @@
   --tekst: "Source Serif 4", Georgia, serif;
   --etikett: "Barlow Condensed", "Arial Narrow", sans-serif;
 
-  /* Mål */
+  /* Avstandsskala (8-punkts system). Bruk bare disse. */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 24px;
+  --s6: 32px;
+  --s7: 48px;
+  --s8: 64px;
+
+  /* Rutenett: 12 kolonner, fast kolonneavstand, felles innholdsbredde */
   --maks: 1200px;
-  --gutter: clamp(16px, 4vw, 24px);
+  --gutter: 24px;      /* sidemarg */
+  --kol: 32px;         /* avstand mellom kolonner */
+  --blokk: var(--s7);  /* avstand mellom hovedblokker */
+}
+@media (max-width: 600px) {
+  :root { --gutter: 16px; --kol: 24px; --blokk: var(--s6); }
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -48,6 +63,19 @@ img { display: block; max-width: 100%; }
 h1, h2, h3, p, figure, blockquote { margin: 0; }
 
 .wrap { max-width: var(--maks); margin: 0 auto; padding-left: var(--gutter); padding-right: var(--gutter); width: 100%; }
+
+/* 12-kolonners rutenett. Alle blokker plasseres på de samme kolonnene,
+   slik at kanter står på linje fra seksjon til seksjon. Under 900 px: én kolonne. */
+.rutenett { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--kol); }
+.k12 { grid-column: span 12; }
+.k8 { grid-column: span 8; }
+.k7 { grid-column: span 7; }
+.k5 { grid-column: span 5; }
+.k4 { grid-column: span 4; }
+.fra9 { grid-column: 9 / span 4; }
+@media (max-width: 900px) {
+  .rutenett > * { grid-column: 1 / -1; }
+}
 .skjult { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* Logo */
@@ -84,9 +112,10 @@ h1, h2, h3, p, figure, blockquote { margin: 0; }
   font-weight: 700;
   letter-spacing: -0.01em;
 }
+/* Typografisk skala: 60 / 26 / 21 / 19 – mellomtitler i artikler bruker h-stor */
 .h-hoved { font-size: clamp(2.25rem, 4.4vw, 3.75rem); line-height: 1.04; }
-.h-stor { font-size: 26px; line-height: 1.14; }
-.h-mellom { font-size: 21px; line-height: 1.18; }
+.h-stor { font-size: 26px; line-height: 1.15; }
+.h-mellom { font-size: 21px; line-height: 1.2; }
 .h-siste { font-size: 19px; line-height: 1.25; }
 .ingress { font-size: 1.3125rem; line-height: 1.5; color: var(--brodtekst); }
 
@@ -106,7 +135,7 @@ h1, h2, h3, p, figure, blockquote { margin: 0; }
 /* Knapper */
 .knapp-neon, .knapp-sort {
   display: inline-flex; align-items: center; justify-content: center;
-  min-height: 44px; padding: 0 18px;
+  min-height: 48px; padding: 0 var(--s5);
   font-family: var(--etikett); font-weight: 700; font-size: 14px;
   letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none;
 }
@@ -118,3 +147,9 @@ h1, h2, h3, p, figure, blockquote { margin: 0; }
 /* Linjer */
 .strek-tykk { border-top: 3px solid var(--kull); }
 .strek-tynn { border-bottom: 1px solid var(--linje); }
+
+/* Blokkoverskrift: etikett rett under en tykk strek («Siste», «Les også», «Mer fra …») */
+.blokk-etikett { padding-top: var(--s4); padding-bottom: var(--s2); font-size: 15px; letter-spacing: 0.18em; }
+
+/* Kortrytme: etikett → overskrift → ingress */
+.kort { display: flex; flex-direction: column; gap: var(--s3); }

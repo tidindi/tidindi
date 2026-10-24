@@ -1,5 +1,6 @@
 ---
 // SEKSJONSSIDE – forslag (ikke tegnet i designet ennå): nyeste saker i seksjonen.
+// Rutenett: første sak bilde 7 + tekst 5; listen 8 kolonner (samme bredde som artikkelhodet).
 import Base from '../../layouts/Base.astro';
 import Hovedmeny from '../../components/Hovedmeny.astro';
 import Bunn from '../../components/Bunn.astro';
@@ -23,25 +24,27 @@ const [forste, ...resten] = saker;
 
     {forste ? (
       <>
-        <article class="forste strek-tykk">
-          <a href={artikkelUrl(forste)}><Bilde src={forste.bilde?.src} alt={forste.bilde?.alt} format="16-9" laster="eager" /></a>
-          <div class="forste-tekst">
+        <article class="rutenett strek-tykk forste">
+          <a href={artikkelUrl(forste)} class="k7" tabindex="-1" aria-hidden="true"><Bilde src={forste.bilde?.src} alt="" format="16-9" laster="eager" /></a>
+          <div class="k5 kort forste-tekst">
             <span class="meta"><time datetime={forste.publisert}>{sisteTid(forste.publisert)}</time></span>
             <h2 class="h-hoved"><a href={artikkelUrl(forste)}>{forste.tittel}</a></h2>
             <p class="ingress">{forste.ingress}</p>
           </div>
         </article>
-        <ul class="liste">
-          {resten.map((a) => (
-            <li>
-              <a href={artikkelUrl(a)}>
-                <span class="meta"><time datetime={a.publisert}>{sisteTid(a.publisert)}</time></span>
-                <span class="h-stor">{a.tittel}</span>
-                <span class="liste-ingress">{a.ingress}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
+        <div class="rutenett">
+          <ul class="k8 liste">
+            {resten.map((a) => (
+              <li>
+                <a href={artikkelUrl(a)} class="kort">
+                  <span class="meta"><time datetime={a.publisert}>{sisteTid(a.publisert)}</time></span>
+                  <span class="h-stor">{a.tittel}</span>
+                  <span class="liste-ingress">{a.ingress}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
       </>
     ) : (
       <p class="tom">Det er ingen saker i denne seksjonen ennå.</p>
@@ -51,13 +54,13 @@ const [forste, ...resten] = saker;
 </Base>
 
 <style>
-  .seksjonsside { padding-top: 40px; padding-bottom: 64px; display: flex; flex-direction: column; gap: 28px; }
+  .seksjonsside { padding-top: var(--blokk); padding-bottom: var(--s8); display: flex; flex-direction: column; gap: var(--s6); }
   .seksjon-tittel { font-family: var(--etikett); font-weight: 700; font-size: clamp(2.5rem, 6vw, 4rem); letter-spacing: 0.06em; text-transform: uppercase; line-height: 1; }
-  .forste { padding-top: 28px; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 32px; align-items: start; }
-  .forste-tekst { display: flex; flex-direction: column; gap: 14px; }
+  .forste { padding-top: var(--s5); row-gap: var(--s5); align-items: start; }
+  .forste-tekst { gap: var(--s4); }
+  .forste-tekst .h-hoved { font-size: clamp(2rem, 3.4vw, 2.875rem); }
   .liste { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--kull); }
-  .liste li a { display: flex; flex-direction: column; gap: 8px; padding: 22px 0; border-bottom: 1px solid var(--linje); }
+  .liste li a { padding: var(--s5) 0; border-bottom: 1px solid var(--linje); }
   .liste-ingress { font-size: 17px; color: var(--brodtekst); }
   .tom { color: var(--tekst-2); }
-  @media (max-width: 800px) { .forste { grid-template-columns: minmax(0, 1fr); } }
 </style>

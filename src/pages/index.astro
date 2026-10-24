@@ -1,5 +1,6 @@
 ---
 // FORSIDEN – plasseringene styres redaksjonelt (forsideoppsettet), «Siste» fylles automatisk.
+// Alt står på det felles 12-kolonners rutenettet: hovedsak 8 + Siste 4, deretter 4 + 4 + 4.
 import Base from '../layouts/Base.astro';
 import Topplinje from '../components/Topplinje.astro';
 import Masthead from '../components/Masthead.astro';
@@ -22,23 +23,25 @@ const siste = sisteArtikler(5);
   <Masthead />
 
   <main class="wrap forside">
-    <section class="topp">
-      <article class="hovedsak">
-        <a href={artikkelUrl(hovedsak)} class="hovedsak-bilde">
-          <Bilde src={hovedsak.bilde?.src} alt={hovedsak.bilde?.alt} format="16-9" laster="eager" />
-        </a>
-        {hovedsak.bilde?.kreditering && <p class="meta kreditering">Foto: {hovedsak.bilde.kreditering}</p>}
+    <section class="rutenett">
+      <article class="k8 kort hovedsak">
+        <figure class="hovedsak-figur">
+          <a href={artikkelUrl(hovedsak)} tabindex="-1" aria-hidden="true">
+            <Bilde src={hovedsak.bilde?.src} alt="" format="16-9" laster="eager" />
+          </a>
+          {hovedsak.bilde?.kreditering && <figcaption class="meta">Foto: {hovedsak.bilde.kreditering}</figcaption>}
+        </figure>
         <Seksjonsmerke seksjon={hovedsak.seksjon} storrelse="stor" />
         <h1 class="h-hoved"><a href={artikkelUrl(hovedsak)}>{hovedsak.tittel}</a></h1>
         <p class="ingress">{hovedsak.ingress}</p>
       </article>
 
-      <aside class="siste strek-tykk" aria-labelledby="siste-tittel">
-        <h2 id="siste-tittel" class="etikett siste-tittel">Siste</h2>
+      <aside class="fra9 siste strek-tykk" aria-labelledby="siste-tittel">
+        <h2 id="siste-tittel" class="etikett blokk-etikett">Siste</h2>
         <ul>
           {siste.map((a) => (
             <li>
-              <a href={artikkelUrl(a)}>
+              <a href={artikkelUrl(a)} class="kort siste-sak">
                 <span class="meta"><time datetime={a.publisert}>{sisteTid(a.publisert)}</time> · {seksjonsnavn(a.seksjon)}</span>
                 <span class="h-siste">{a.tittel}</span>
               </a>
@@ -48,22 +51,22 @@ const siste = sisteArtikler(5);
       </aside>
     </section>
 
-    <section class="tre strek-tykk" aria-label="Flere saker">
+    <section class="rutenett strek-tykk tre" aria-label="Flere saker">
       {treSaker.map((a) => (
-        <article class="tre-sak">
+        <article class="k4 kort tre-sak">
           <Seksjonsmerke seksjon={a.seksjon} />
           <h2 class="h-stor"><a href={artikkelUrl(a)}>{a.tittel}</a></h2>
-          <p class="tre-ingress">{a.ingress}</p>
+          <p class="liten-ingress">{a.ingress}</p>
         </article>
       ))}
     </section>
 
     <MorgenbriefRamme {...forside.morgenbrief} />
 
-    <section class="bildesaker" aria-label="Bildesaker">
+    <section class="rutenett bildesaker" aria-label="Bildesaker">
       {bildesaker.map((a) => (
-        <article class="bildesak">
-          <a href={artikkelUrl(a)} tabindex="-1" aria-hidden="true"><Bilde src={a.bilde?.src} alt="" format="3-2" /></a>
+        <article class="k4 kort">
+          <a href={artikkelUrl(a)} tabindex="-1" aria-hidden="true" class="bildesak-bilde"><Bilde src={a.bilde?.src} alt="" format="3-2" /></a>
           <Seksjonsmerke seksjon={a.seksjon} />
           <h3 class="h-mellom"><a href={artikkelUrl(a)}>{a.tittel}</a></h3>
         </article>
@@ -75,22 +78,25 @@ const siste = sisteArtikler(5);
 </Base>
 
 <style>
-  .forside { padding-top: 40px; padding-bottom: 48px; display: flex; flex-direction: column; gap: 48px; }
+  .forside { padding-top: var(--blokk); padding-bottom: var(--s8); display: flex; flex-direction: column; gap: var(--blokk); }
 
-  .topp { display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-start; }
-  .hovedsak { flex: 999 1 600px; min-width: 0; display: flex; flex-direction: column; gap: 18px; }
-  .hovedsak .ingress { max-width: 720px; }
-  .kreditering { font-size: 12px; margin-top: -10px; }
+  /* Hovedsak: bilde → etikett → tittel → ingress, med jevn rytme */
+  .hovedsak { gap: var(--s4); }
+  .hovedsak-figur { display: flex; flex-direction: column; gap: var(--s2); margin-bottom: var(--s1); }
+  .hovedsak-figur figcaption { font-size: 12px; }
+  .hovedsak .ingress { max-width: 40em; }
 
-  .siste { flex: 1 1 300px; min-width: 0; }
-  .siste-tittel { padding: 14px 0 6px; font-size: 16px; letter-spacing: 0.18em; }
+  /* Siste: starter på samme høyde som bildet, kolonnen står over tredje kolonne under */
   .siste ul { list-style: none; margin: 0; padding: 0; }
-  .siste li a { display: flex; flex-direction: column; gap: 6px; padding: 16px 0; border-bottom: 1px solid var(--linje); }
+  .siste-sak { gap: var(--s2); padding: var(--s4) 0; border-bottom: 1px solid var(--linje); }
 
-  .tre { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); column-gap: 40px; padding-top: 6px; }
-  .tre-sak { display: flex; flex-direction: column; gap: 12px; padding: 22px 0 28px; border-bottom: 1px solid var(--linje); }
-  .tre-ingress { font-size: 17px; line-height: 1.5; color: var(--brodtekst); }
+  /* Tre saker: lik vertikal innramming som Siste-listen, men større luft */
+  .tre-sak { padding: var(--s5) 0; border-bottom: 1px solid var(--linje); }
+  .liten-ingress { font-size: 17px; line-height: 1.5; color: var(--brodtekst); }
 
-  .bildesaker { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0 32px; }
-  .bildesak { display: flex; flex-direction: column; gap: 12px; padding-bottom: 28px; }
+  .bildesak-bilde { margin-bottom: var(--s1); }
+
+  @media (max-width: 900px) {
+    .siste { margin-top: var(--blokk); }
+  }
 </style>

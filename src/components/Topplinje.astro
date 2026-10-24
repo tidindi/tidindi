@@ -26,12 +26,13 @@ const iDag = datoLang(new Date());
   .topplinje { background: var(--kull); color: var(--tekst-mork-flate); }
   .topplinje-inner {
     display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
-    gap: 8px 24px; padding-top: 8px; padding-bottom: 8px;
+    gap: var(--s2) var(--s5); padding-top: var(--s2); padding-bottom: var(--s2);
   }
   .topplinje-dato {
     font-family: var(--etikett); font-size: 14px; font-weight: 600;
     letter-spacing: 0.12em; text-transform: uppercase;
   }
+  .topplinje :global(.knapp-neon) { min-height: 44px; }
   @media (max-width: 560px) {
     .topplinje-inner { justify-content: center; }
     .topplinje-dato { display: none; }

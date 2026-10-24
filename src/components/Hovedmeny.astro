@@ -12,7 +12,7 @@ const { aktiv } = Astro.props;
       {seksjoner.map((s) => (
         <li><a href={`/${s.slug}/`} aria-current={aktiv === s.slug ? 'page' : undefined}>{s.navn}</a></li>
       ))}
-      <li><a class="knapp-sort" href="/morgenbrief/">Abonner</a></li>
+      <li class="abonner"><a class="knapp-sort" href="/morgenbrief/">Abonner</a></li>
     </ul>
   </div>
 </nav>
@@ -21,20 +21,22 @@ const { aktiv } = Astro.props;
   .hovedmeny { border-bottom: 3px solid var(--kull); }
   .hovedmeny-inner {
     display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
-    gap: 10px 28px; padding-top: 12px; padding-bottom: 12px;
+    gap: var(--s3) var(--s6); padding-top: var(--s3); padding-bottom: var(--s3);
   }
   .hovedmeny-logo { color: var(--kull); font-size: 42px; line-height: 1; }
   .hovedmeny-logo:hover { color: var(--kull); }
   ul {
     list-style: none; margin: 0; padding: 0;
-    display: flex; flex-wrap: wrap; align-items: center; gap: 0 22px;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--s5);
     font-family: var(--etikett); font-size: 15px; font-weight: 600;
     letter-spacing: 0.12em; text-transform: uppercase;
   }
-  ul a:not(.knapp-sort) { display: inline-block; padding: 12px 0; }
+  ul a:not(.knapp-sort) { display: inline-flex; align-items: center; min-height: 48px; }
   ul a[aria-current='page'] { box-shadow: inset 0 -3px 0 var(--kull); }
+  .abonner { margin-left: var(--s2); }
   @media (max-width: 640px) {
     .hovedmeny-inner { flex-direction: column; align-items: flex-start; }
-    ul { gap: 0 16px; font-size: 14px; }
+    ul { gap: 0 var(--s4); font-size: 14px; }
+    .abonner { margin-left: 0; }
   }
 </style>
