@@ -2,27 +2,29 @@
 import Tekstside from '../layouts/Tekstside.astro';
 import { utgiver } from '../data/utgiver';
 ---
-<Tekstside tittel="Redaksjonelle prinsipper" beskrivelse="Slik arbeider Tidindi: uavhengighet, kildebruk, pressemeldinger, bilder, retting av feil, bruk av KI og presseetikk.">
-  <p>Tidindi skal være et medium leserne kan stole på. Disse prinsippene gjelder for alt vi publiserer.</p>
+<Tekstside tittel="Redaksjonelle prinsipper" beskrivelse="Tidindi skal være et nyhetsmagasin leserne kan stole på. Prinsippene for uavhengighet, journalistikk, kilder, bilder, kunstig intelligens, rettelser og presseetikk.">
+  <p>Tidindi skal være et nyhetsmagasin leserne kan stole på. Vi legger vekt på uavhengighet, etterprøvbarhet og saklig journalistikk. Disse prinsippene ligger til grunn for alt vi publiserer.</p>
 
   <h2>Uavhengighet</h2>
-  <p>Tidindi er redaksjonelt uavhengig og politisk og religiøst nøytralt. Ansvarlig redaktør bestemmer hva som publiseres. Ingen annonsører, eiere eller samarbeidspartnere har innflytelse over det redaksjonelle innholdet.</p>
+  <p>Tidindi er redaksjonelt uavhengig og politisk og religiøst nøytralt. Vi har ingen partipolitisk eller religiøs agenda. Ansvarlig redaktør avgjør hva som publiseres, og redaksjonelle vurderinger skal ikke styres av kommersielle eller andre særinteresser. Eventuelle bindinger av betydning for omtalen skal opplyses.</p>
 
-  <h2>Nyheter, ikke meninger</h2>
-  <p>Magasinet publiserer nyhetssaker. Vi skriver ikke kommentarer eller vurderinger i nyhetssakene. Kuratering og vurdering av mediebildet hører hjemme i nyhetsbrevet Tidindi Morgenbrief.</p>
+  <h2>Journalistikk og redaksjonelle prioriteringer</h2>
+  <p>Tidindi publiserer nyhetsjournalistikk, med vekt på hendelser, bakgrunn og sammenhenger. Vi velger saker ut fra nyhetsverdi og betydning, og søker å gi leserne innsikt i både hva som skjer og hvorfor det er viktig. Vi skiller mellom dokumenterte fakta, påstander og vurderinger, og lar ikke egne politiske eller religiøse standpunkter prege nyhetsformidlingen.</p>
 
-  <h2>Kilder og pressemeldinger</h2>
-  <p>Vi oppgir alltid hvor opplysningene i en sak kommer fra. Når en sak bygger på en pressemelding, står det tydelig nederst i saken hvem som har sendt den.</p>
+  <h2>Kilder og etterprøvbarhet</h2>
+  <p>Vi arbeider kildekritisk og legger vekt på å kontrollere opplysninger før publisering. Vi oppgir relevante kilder og viser til andre medier når vi bygger på deres journalistikk. Omstridte opplysninger skal behandles med nødvendig forbehold, og berørte parter skal få anledning til å imøtegå alvorlige beskyldninger.</p>
 
   <h2>Bilder</h2>
-  <p>Alle bilder i Tidindi vises i sort-hvitt. Utover gråtoner og beskjæring endrer vi ikke bildene. Fotograf eller kilde oppgis i artikkelen.</p>
+  <p>Tidindi presenterer fotografier i sort-hvitt som del av magasinets visuelle identitet. Beskjæring og justering av gråtoner skal ikke endre bildenes meningsinnhold. Fotograf eller bildekilde krediteres.</p>
 
   <h2>Kunstig intelligens</h2>
-  <p>Tidindi er et menneskestyrt medium. Vi kan bruke KI som verktøy i research og tekstarbeid, men KI skriver aldri saker på egen hånd og publiserer aldri innhold. Alt som publiseres, er skrevet eller gjennomgått og godkjent av et menneske i redaksjonen.</p>
+  <p>Tidindi er et menneskestyrt redaksjonelt medium. Kunstig intelligens kan brukes som støtte i research, informasjonsinnhenting og tekstarbeid, men ingen saker produseres eller publiseres automatisk av KI. Redaksjonen står for de journalistiske vurderingene og har ansvaret for alt innhold som publiseres.</p>
 
   <h2>Feil og rettelser</h2>
-  <p>Vi retter feil så raskt som mulig, og åpent. Når en publisert sak endres vesentlig, vises tidspunktet for oppdateringen i saken. Si fra om feil til <a href={`mailto:${utgiver.epost}`}>{utgiver.epost}</a>.</p>
+  <p>Vi retter feil så raskt som mulig og gjør vesentlige rettelser synlige for leserne. Når en publisert sak oppdateres vesentlig, oppgis tidspunktet for oppdateringen. Feil kan meldes til <a href={`mailto:${utgiver.epost}`}>{utgiver.epost}</a>.</p>
 
   <h2>Presseetikk</h2>
-  <p>Tidindi følger prinsippene i <a href="https://snl.no/V%C3%A6r_varsom-plakaten">Vær Varsom-plakaten</a> og <a href="https://snl.no/Redakt%C3%B8rplakaten">Redaktørplakaten</a>.</p>
+  <p>Tidindi legger prinsippene i <a href="https://www.presse.no/vaer-varsom-plakaten">Vær Varsom-plakaten</a> og <a href="https://www.redaktor.no/ressurser/etiske-og-juridiske-rammeverk/redaktorplakaten">Redaktørplakaten</a> til grunn for det redaksjonelle arbeidet.</p>
+
+  <p>Ansvarlig redaktør: {utgiver.redaktor}</p>
 </Tekstside>
