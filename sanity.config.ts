@@ -7,6 +7,7 @@ import { forside } from './studio/skjema/forside';
 import { struktur, standardvisning } from './studio/struktur';
 import { medPubliseringstid } from './studio/handlinger';
 import { seksjoner } from './src/data/seksjoner';
+import { Monogram } from './studio/Monogram';
 
 // Redigeringsverktøyet for Nettmagasinet Tidindi.
 // Ligger på /studio på nettstedet. Ingen nøkler her – innlogging skjer med Sanity-kontoen.
@@ -16,6 +17,7 @@ export default defineConfig({
   projectId: '1ld4ddgo',
   dataset: 'production',
   basePath: '/studio',
+  icon: Monogram,
 
   plugins: [structureTool({ structure: struktur, defaultDocumentNode: standardvisning, title: 'Innhold' }), nbNOLocale()],
 

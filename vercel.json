@@ -7,8 +7,20 @@
       "destination": "/studio/index.html"
     },
     {
-      "source": "/static/:fil(favicon.*|apple-touch-icon.png|manifest.webmanifest)",
-      "destination": "/studio/static/:fil"
+      "source": "/static/favicon.ico",
+      "destination": "/favicon.ico"
+    },
+    {
+      "source": "/static/favicon.svg",
+      "destination": "/favicon.svg"
+    },
+    {
+      "source": "/static/apple-touch-icon.png",
+      "destination": "/apple-touch-icon.png"
+    },
+    {
+      "source": "/static/manifest.webmanifest",
+      "destination": "/studio/static/manifest.webmanifest"
     }
   ],
   "headers": [

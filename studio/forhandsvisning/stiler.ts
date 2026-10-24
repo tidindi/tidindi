@@ -59,6 +59,8 @@ export const stiler = `
 .tf-sitat cite { font-style: normal; }
 .tf-fakta { margin: 8px 0; background: var(--flate); padding: 24px; display: flex; flex-direction: column; gap: 12px; font-size: 17px; line-height: 1.5; }
 .tf-fakta ul { margin: 0; padding-left: 24px; display: flex; flex-direction: column; gap: 8px; }
+.tf .sluttmerke { display: inline-block; height: 0.78em; width: 0.76em; margin-left: 0.12em; vertical-align: -0.06em; }
+.tf .sluttmerke svg { display: block; width: 100%; height: 100%; fill: currentColor; }
 .tf-kilde { padding-top: 16px; border-top: 1px solid var(--linje); font-size: 14px; letter-spacing: 0.08em; }
 
 .tf-forside { border-top: 3px solid var(--kull); }

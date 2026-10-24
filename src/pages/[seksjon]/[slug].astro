@@ -10,6 +10,7 @@ import Seksjonsmerke from '../../components/Seksjonsmerke.astro';
 import { hentArtikler, artikkelUrl, delingsbilde, type Artikkel } from '../../data/innhold';
 import { seksjonsnavn } from '../../data/seksjoner';
 import { datoOgTid, klokkeslett } from '../../data/format';
+import { sluttmerkeHtml } from '../../data/monogram';
 
 export async function getStaticPaths() {
   const artikler = await hentArtikler();
@@ -18,6 +19,9 @@ export async function getStaticPaths() {
 
 const { artikkel: a } = Astro.props as { artikkel: Artikkel };
 const artikler = await hentArtikler();
+// Sluttmerket (den gotiske T-en) settes etter siste avsnitt, eller alene hvis teksten slutter med noe annet.
+const sisteIndeks = a.brodtekst.length - 1;
+const merkeIAvsnitt = a.brodtekst[sisteIndeks]?.type === 'avsnitt';
 const merFra = artikler.filter((x) => x.seksjon === a.seksjon && x.slug !== a.slug).slice(0, 4);
 const lesOgsa = artikler.filter((x) => x.slug !== a.slug && x.seksjon !== a.seksjon).slice(0, 3);
 ---
@@ -50,8 +54,11 @@ const lesOgsa = artikler.filter((x) => x.slug !== a.slug && x.seksjon !== a.seks
       </figure>
 
       <div class="k7 art-tekst">
-        {a.brodtekst.map((b) => {
-          if (b.type === 'avsnitt') return b.html ? <p set:html={b.html} /> : <p>{b.tekst}</p>;
+        {a.brodtekst.map((b, i) => {
+          if (b.type === 'avsnitt') {
+            const merke = merkeIAvsnitt && i === sisteIndeks ? '&nbsp;' + sluttmerkeHtml : '';
+            return b.html ? <p set:html={b.html + merke} /> : <p>{b.tekst}<Fragment set:html={merke} /></p>;
+          }
           if (b.type === 'liste') return <ul class="art-liste">{b.punkter.map((p) => <li set:html={p} />)}</ul>;
           if (b.type === 'bilde') return (
             <figure class="art-innebilde">
@@ -75,6 +82,7 @@ const lesOgsa = artikler.filter((x) => x.slug !== a.slug && x.seksjon !== a.seks
             </aside>
           );
         })}
+        {!merkeIAvsnitt && a.brodtekst.length > 0 && <p class="sluttmerke-alene" set:html={sluttmerkeHtml} />}
         {(a.kilde || a.pressemelding) && (
           <p class="meta art-kilde">
             {a.kilde && <>Kilde: {a.kilde}</>}
@@ -147,6 +155,8 @@ const lesOgsa = artikler.filter((x) => x.slug !== a.slug && x.seksjon !== a.seks
   .art-liste { margin: 0; padding-left: var(--s5); display: flex; flex-direction: column; gap: var(--s2); }
   .art-innebilde { display: flex; flex-direction: column; gap: var(--s2); margin: var(--s2) 0; }
   .art-innebilde figcaption { font-size: 15px; line-height: 1.45; color: var(--tekst-2); }
+  .art-tekst :global(.sluttmerke) { display: inline-block; height: 0.78em; width: 0.76em; margin-left: 0.12em; vertical-align: -0.06em; color: var(--kull); }
+  .art-tekst :global(.sluttmerke svg) { display: block; width: 100%; height: 100%; fill: currentColor; }
   .art-kilde { padding-top: var(--s4); border-top: 1px solid var(--linje); font-size: 14px; letter-spacing: 0.08em; }
 
   .art-side { display: flex; flex-direction: column; gap: var(--s7); }
