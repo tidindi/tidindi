@@ -3,7 +3,7 @@
 export const utgiver = {
   redaktor: 'Ole Asbjørn Winther',
   epost: 'kontakt@tidindi.no',
-  selskap: 'SALO Kommunikasjon AS',
+  selskap: 'SALO Kommunikasjon',
   orgnr: '989 924 885',
   adresse: 'Brodtkorbs vei 6, 7017 Trondheim',
 };
