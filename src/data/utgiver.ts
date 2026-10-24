@@ -5,5 +5,5 @@ export const utgiver = {
   epost: 'kontakt@tidindi.no',
   selskap: 'SALO Kommunikasjon AS',
   orgnr: '989 924 885',
-  adresse: '[Adresse]',
+  adresse: 'Brodtkorbs vei 6, 7017 Trondheim',
 };
