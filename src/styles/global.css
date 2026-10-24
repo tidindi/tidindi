@@ -120,7 +120,8 @@ h1, h2, h3, p, figure, blockquote { margin: 0; }
 .ingress { font-size: 1.3125rem; line-height: 1.5; color: var(--brodtekst); }
 
 /* Bilder */
-.bilde { width: 100%; object-fit: cover; background: var(--flate); }
+/* Alle bilder i sort-hvitt. Sanity leverer dem allerede gråtonet; filteret sikrer det samme for andre kilder. */
+.bilde { width: 100%; object-fit: cover; background: var(--flate); filter: grayscale(1); }
 .bilde-tom {
   width: 100%;
   background: var(--flate);

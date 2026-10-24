@@ -17,11 +17,12 @@ export const sanityProsjekt = { projectId: '1ld4ddgo', dataset: 'production' };
 
 const bildebygger = createImageUrlBuilder(sanityProsjekt);
 
-/** Adresse til et Sanity-bilde beskåret til gitt bredde og forhold (høyde/bredde) rundt fokuspunktet. */
+/** Adresse til et Sanity-bilde beskåret til gitt bredde og forhold (høyde/bredde) rundt fokuspunktet.
+ *  Alle bilder vises i sort-hvitt (Tidindis bildeprofil). Originalen i Sanity beholdes i farger. */
 export function bildeUrl(bilde: Bildedata | undefined, bredde: number, forhold: number): string | undefined {
   if (!bilde) return undefined;
   if (!bilde.sanity) return bilde.src;
-  return bildebygger.image(bilde.sanity as any).width(bredde).height(Math.round(bredde * forhold)).fit('crop').auto('format').quality(80).url();
+  return bildebygger.image(bilde.sanity as any).width(bredde).height(Math.round(bredde * forhold)).fit('crop').saturation(-100).auto('format').quality(80).url();
 }
 
 /** Bilde til deling i sosiale medier (1200 × 630). */

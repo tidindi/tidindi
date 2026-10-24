@@ -62,7 +62,7 @@ export const artikkel = defineType({
       title: 'Hovedbilde',
       type: 'image',
       group: 'sak',
-      description: 'Velg utsnitt og fokuspunkt med blyanten. Bildet beskjæres til 16:9 på forsiden, 16:8 i artikkelen og 3:2 som bildesak.',
+      description: 'Vises i sort-hvitt på nettstedet. Velg utsnitt og fokuspunkt med blyanten. Bildet beskjæres til 16:9 på forsiden, 16:8 i artikkelen og 3:2 som bildesak.',
       options: { hotspot: true },
       fields: bildefelt,
     }),
