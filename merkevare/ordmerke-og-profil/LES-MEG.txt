@@ -1,0 +1,20 @@
+Tidindi – logofiler (arbeidsversjon, oktober 2026)
+
+PROFILBILDER (kvadratiske, 1080 x 1080 px, god luft for rund beskjæring)
+- tidindi-profil-sort-paa-neon      Hovedvariant. Sort på neongul.
+- tidindi-profil-neon-paa-sort      Neongul på sort.
+- tidindi-profil-sort-paa-blyhvit   Sort på blyhvit. Rolig, redaksjonell.
+- tidindi-profil-blyhvit-paa-sort   Blyhvit på sort.
+Bruk .png til LinkedIn og Instagram. .svg er vektor og kan skaleres fritt.
+
+ORDMERKE (uten bakgrunn, transparent)
+- tidindi-ordmerke-sort             Til lyse flater.
+- tidindi-ordmerke-blyhvit          Til mørke flater.
+
+FARGER
+Neongul #E6FF2B · Trekullsort #1C1E20 · Blyhvit #F5F4EF
+Regel: neongul står aldri direkte på blyhvit.
+
+Bokstavene er konvertert til vektorkonturer fra skriften UnifrakturMaguntia
+(SIL Open Font License 1.1, se FONT-LISENS-OFL.txt). Filene krever ikke at
+skriften er installert. Ordmerket bør på sikt tegnes ut som et eget, unikt merke.

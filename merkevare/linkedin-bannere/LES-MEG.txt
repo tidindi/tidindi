@@ -1,0 +1,17 @@
+Tidindi – LinkedIn-bannere (oktober 2026)
+
+PERSONLIG PROFIL: 1584 x 396 px (bakgrunnsbilde)
+BEDRIFTSSIDE:     1512 x 256 px (forsidebilde, LinkedIns nye minstestørrelse)
+
+Varianter:
+- ...-neon        Sort tekst på neongul
+- ...-sort        Blyhvit logo og neongul overskrift på sort
+- ...-ren-neon    Ren neongul flate
+- ...-ren-sort    Ren sort flate
+
+PNG-filene er eksportert i dobbel oppløsning for skarp visning. Last opp PNG.
+Teksten er plassert utenfor området der profilbildet / bedriftslogoen dekker
+banneret (nede til venstre). Sjekk også visningen på mobil etter opplasting.
+
+Skrifter (konvertert til konturer, SIL Open Font License 1.1):
+UnifrakturMaguntia (logo), Playfair Display (overskrift), Barlow Condensed (tidindi.no).
