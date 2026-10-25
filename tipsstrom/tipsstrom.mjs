@@ -178,6 +178,13 @@ for (const r of resultater) {
   else console.log(`✓ ${r.navn} – ${r.saker.length} i strømmen (${r.url})`);
 }
 
+// Kort statusrapport som GitHub-merknad (leses i Actions-oversikten).
+if (env.GITHUB_ACTIONS) {
+  const linjer = resultater.map((r) => (r.feil ? `✗ ${r.navn}: ${r.feil.map((f) => f.split(' → ')[1]).join(' / ')}` : `✓ ${r.navn}: ${r.saker.length}`));
+  const tekstRapport = [`${antall} meldinger i e-posten (vindu ${vinduTimer} t, ${utelatt} utelatt)`, ...linjer].join('%0A');
+  console.log(`::notice title=Tipsstrøm::${tekstRapport}`);
+}
+
 if (env.TEST === '1' || !env.RESEND_API_KEY) {
   writeFileSync('tipsstrom.html', html);
   console.log(env.TEST === '1' ? 'Testkjøring – ingenting sendt. Se tipsstrom.html.' : 'RESEND_API_KEY mangler – ingenting sendt.');
