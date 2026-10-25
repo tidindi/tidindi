@@ -11,6 +11,7 @@ import { hentArtikler, artikkelUrl, delingsbilde, type Artikkel } from '../../da
 import { seksjonsnavn } from '../../data/seksjoner';
 import { datoOgTid, klokkeslett } from '../../data/format';
 import { sluttmerkeHtml } from '../../data/monogram';
+import { artikkelData } from '../../data/strukturert';
 
 export async function getStaticPaths() {
   const artikler = await hentArtikler();
@@ -23,7 +24,7 @@ const artikler = await hentArtikler();
 const merFra = artikler.filter((x) => x.seksjon === a.seksjon && x.slug !== a.slug).slice(0, 4);
 const lesOgsa = artikler.filter((x) => x.slug !== a.slug && x.seksjon !== a.seksjon).slice(0, 3);
 ---
-<Base tittel={a.tittel} beskrivelse={a.ingress} bilde={delingsbilde(a.bilde)} type="article">
+<Base tittel={a.tittel} beskrivelse={a.ingress} bilde={delingsbilde(a.bilde)} type="article" publisert={a.publisert} oppdatert={a.oppdatert} strukturert={artikkelData(a)}>
   <Hovedmeny aktiv={a.seksjon} />
 
   <main class="wrap artikkel">

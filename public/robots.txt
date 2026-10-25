@@ -1,0 +1,6 @@
+# Tidindi – søkemotorer er velkomne. Redigeringsverktøyet holdes utenfor.
+User-agent: *
+Allow: /
+Disallow: /studio/
+
+Sitemap: https://tidindi.no/sitemap-index.xml

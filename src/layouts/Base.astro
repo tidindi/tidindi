@@ -7,6 +7,9 @@ interface Props {
   beskrivelse?: string;
   bilde?: string;
   type?: 'website' | 'article';
+  publisert?: string;
+  oppdatert?: string;
+  strukturert?: object[]; // schema.org-objekter (JSON-LD) for søkemotorer
 }
 
 const {
@@ -14,7 +17,14 @@ const {
   beskrivelse = 'Tidindi – mer om det som skjer. Nyheter fra samfunnet, pengene, sporten, kulturen og verden.',
   bilde,
   type = 'website',
+  publisert,
+  oppdatert,
+  strukturert,
 } = Astro.props;
+// JSON-LD samlet i én graf. «<» escapes så teksten aldri kan bryte ut av script-taggen.
+const jsonLd = strukturert?.length
+  ? JSON.stringify({ '@context': 'https://schema.org', '@graph': strukturert }).replace(/</g, '\\u003c')
+  : undefined;
 
 const sidetittel = tittel ? `${tittel} – Tidindi` : 'Tidindi – Mer om det som skjer';
 const kanonisk = new URL(Astro.url.pathname, Astro.site).toString();
@@ -38,6 +48,9 @@ const kanonisk = new URL(Astro.url.pathname, Astro.site).toString();
   <meta property="og:url" content={kanonisk}>
   {bilde && <meta property="og:image" content={bilde}>}
   <meta name="twitter:card" content={bilde ? 'summary_large_image' : 'summary'}>
+  {publisert && <meta property="article:published_time" content={publisert}>}
+  {(oppdatert ?? publisert) && type === 'article' && <meta property="article:modified_time" content={oppdatert ?? publisert}>}
+  {jsonLd && <script type="application/ld+json" set:html={jsonLd} />}
 
   <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
