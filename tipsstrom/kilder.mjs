@@ -14,15 +14,12 @@ export const grupper = [
 export const kilder = [
   // 1 – Norge, myndigheter og statistikk
   { navn: 'Regjeringen', gruppe: 1, urls: ['https://www.regjeringen.no/no/aktuelt/rss/id2581966/', 'https://www.regjeringen.no/no/rss/Rss/2581966/'] },
-  { navn: 'SSB', gruppe: 1, urls: ['https://www.ssb.no/rss/statistikk', 'https://www.ssb.no/rss', 'https://www.ssb.no/rss/nyheter'] },
-  { navn: 'DSB', gruppe: 1, urls: ['https://www.dsb.no/rss/', 'https://www.dsb.no/rss/nyheter/', 'https://www.dsb.no/nyheter/rss/'] },
+  { navn: 'SSB', gruppe: 1, urls: ['https://www.ssb.no/rss/', 'https://www.ssb.no/rss'] },
   { navn: 'Folkehelseinstituttet', gruppe: 1, urls: ['https://www.fhi.no/rss/nyheter/', 'https://www.fhi.no/rss/', 'https://www.fhi.no/nyheter/rss/'] },
-  { navn: 'Mattilsynet', gruppe: 1, urls: ['https://www.mattilsynet.no/rss/nyheter', 'https://www.mattilsynet.no/rss'] },
-  { navn: 'Norges Bank', gruppe: 1, urls: ['https://www.norges-bank.no/rss/nyheter-og-hendelser/', 'https://www.norges-bank.no/rss/'] },
+  { navn: 'Norges Bank', gruppe: 1, urls: ['https://www.norges-bank.no/en/rss-feeds/Press-releases---Norges-Bank/'] },
 
   // 2 – Norge, næring m.m.
   { navn: 'NTB Kommunikasjon', gruppe: 2, maks: 25, urls: ['https://kommunikasjon.ntb.no/rss/releases/latest?lang=no', 'https://kommunikasjon.ntb.no/rss/releases/latest'] },
-  { navn: 'Mynewsdesk Norge', gruppe: 2, urls: ['https://www.mynewsdesk.com/no/rss/latest', 'https://www.mynewsdesk.com/no/rss/current_news'] },
   { navn: 'Cision Norge', gruppe: 2, urls: ['https://news.cision.com/no/ListItems?format=rss', 'https://news.cision.com/ListItems?format=rss&culture=nb-NO'] },
 
   // 3 – Norden
@@ -32,11 +29,10 @@ export const kilder = [
 
   // 4 – Europa
   { navn: 'EU-kommisjonen', gruppe: 4, urls: ['https://ec.europa.eu/commission/presscorner/api/rss?language=en', 'https://ec.europa.eu/commission/presscorner/home/en/rss'] },
-  { navn: 'Eurostat', gruppe: 4, urls: ['https://ec.europa.eu/eurostat/en/web/rss/news', 'https://ec.europa.eu/eurostat/web/main/news/rss'] },
 
   // 5 – Forskning
-  { navn: 'EurekAlert!', gruppe: 5, maks: 15, urls: ['https://www.eurekalert.org/rss.xml', 'https://www.eurekalert.org/rss/all.xml', 'https://www.eurekalert.org/rss/'] },
-  { navn: 'AlphaGalileo', gruppe: 5, urls: ['https://www.alphagalileo.org/en-gb/RSS', 'https://www.alphagalileo.org/rss'] },
+  { navn: 'forskning.no', gruppe: 5, urls: ['https://www.forskning.no/rss', 'https://forskning.no/rss'] },
+  { navn: 'ScienceDaily (forskningsnyheter fra universiteter)', gruppe: 5, maks: 15, urls: ['https://www.sciencedaily.com/rss/all.xml', 'https://www.sciencedaily.com/rss/top/science.xml'] },
 
   // 6 – Internasjonalt
   { navn: 'WHO', gruppe: 6, urls: ['https://www.who.int/rss-feeds/news-english.xml'] },
