@@ -1,0 +1,29 @@
+# Prøvesending av e-postmalene for Morgenbrief og Varde med fiktivt innhold.
+# Kjøres bare manuelt: Actions → E-postprøve → Run workflow.
+name: E-postprøve
+
+on:
+  workflow_dispatch:
+    inputs:
+      send:
+        description: 'Send prøvene til kontakt@tidindi.no'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Lag og send prøvene
+        run: node epost/prove.mjs
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          SEND: ${{ inputs.send && '1' || '0' }}
