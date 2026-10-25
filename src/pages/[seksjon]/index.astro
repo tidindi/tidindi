@@ -5,7 +5,7 @@ import Base from '../../layouts/Base.astro';
 import Hovedmeny from '../../components/Hovedmeny.astro';
 import Bunn from '../../components/Bunn.astro';
 import Bilde from '../../components/Bilde.astro';
-import { seksjoner, seksjonsnavn } from '../../data/seksjoner';
+import { seksjoner, seksjonsnavn, seksjonsbeskrivelse } from '../../data/seksjoner';
 import { hentArtikler, artikkelUrl } from '../../data/innhold';
 import { sisteTid } from '../../data/format';
 
@@ -17,7 +17,7 @@ const { seksjon } = Astro.params as { seksjon: string };
 const saker = (await hentArtikler()).filter((a) => a.seksjon === seksjon); // nyeste først
 const [forste, ...resten] = saker;
 ---
-<Base tittel={seksjonsnavn(seksjon)} beskrivelse={`Nyheter fra ${seksjonsnavn(seksjon).toLowerCase()} i Tidindi.`}>
+<Base tittel={seksjonsnavn(seksjon)} beskrivelse={seksjonsbeskrivelse(seksjon) ?? `Nyheter fra ${seksjonsnavn(seksjon).toLowerCase()} i Tidindi.`}>
   <Hovedmeny aktiv={seksjon} />
   <main class="wrap seksjonsside">
     <h1 class="seksjon-tittel">{seksjonsnavn(seksjon)}</h1>
