@@ -28,8 +28,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
       - name: Hent og send
@@ -42,7 +42,7 @@ jobs:
           VINDU_TIMER: ${{ inputs.vindu }}
       - name: Lagre e-posten som vedlegg (testkjøring)
         if: always() && hashFiles('tipsstrom.html') != ''
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: tipsstrom
           path: tipsstrom.html
