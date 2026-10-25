@@ -119,6 +119,7 @@ export const artikkel = defineType({
           fields: [
             defineField({ name: 'tittel', title: 'Tittel', type: 'string', initialValue: 'Fakta' }),
             defineField({ name: 'punkter', title: 'Punkter', type: 'array', of: [{ type: 'text', rows: 2 }], validation: (R) => R.min(1) }),
+            defineField({ name: 'merknad', title: 'Tekst under punktene', type: 'text', rows: 2, description: 'Valgfritt. For eksempel kilder eller en kort merknad. Vises i mindre tekst nederst i faktaboksen.' }),
           ],
           preview: { select: { title: 'tittel', punkter: 'punkter' }, prepare: ({ title, punkter }) => ({ title: title || 'Fakta', subtitle: `Faktaboks · ${punkter?.length ?? 0} punkter` }) },
         }),

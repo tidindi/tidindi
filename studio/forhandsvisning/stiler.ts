@@ -58,6 +58,7 @@ export const stiler = `
 .tf-sitat p { font-family: var(--overskrift); font-style: italic; font-size: 1.75rem; line-height: 1.3; }
 .tf-sitat cite { font-style: normal; }
 .tf-fakta { margin: 8px 0; background: var(--flate); padding: 24px; display: flex; flex-direction: column; gap: 12px; font-size: 17px; line-height: 1.5; }
+.tf-fakta-merknad { margin: 0; padding-top: 8px; border-top: 1px solid var(--linje); font-size: 15px; line-height: 1.45; color: var(--tekst-2); white-space: pre-line; }
 .tf-fakta ul { margin: 0; padding-left: 24px; display: flex; flex-direction: column; gap: 8px; }
 .tf .sluttmerke { display: inline-flex; align-items: center; justify-content: center; width: 1.15em; height: 1.15em; border-radius: 50%; margin-left: 0.15em; vertical-align: -0.22em; background: var(--kull); color: var(--neon); }
 .tf .tf-sluttmerke-alene { line-height: 1; }

@@ -17,7 +17,7 @@ export type Blokk =
   | { type: 'mellomtittel'; tekst: string }
   | { type: 'liste'; punkter: string[] } // punktene er ferdig HTML
   | { type: 'sitat'; tekst: string; kilde?: string }
-  | { type: 'fakta'; tittel?: string; punkter: string[] }
+  | { type: 'fakta'; tittel?: string; punkter: string[]; merknad?: string }
   | { type: 'bilde'; bilde: Bildedata };
 
 export interface Artikkel {

@@ -64,7 +64,7 @@ export function brodtekst(innhold: any[] | null | undefined): Blokk[] {
     } else if (b._type === 'sitat' && b.tekst) {
       ut.push({ type: 'sitat', tekst: b.tekst, kilde: b.kilde });
     } else if (b._type === 'faktaboks') {
-      ut.push({ type: 'fakta', tittel: b.tittel, punkter: (b.punkter ?? []).filter(Boolean) });
+      ut.push({ type: 'fakta', tittel: b.tittel, punkter: (b.punkter ?? []).filter(Boolean), merknad: b.merknad?.trim() || undefined });
     } else if (b._type === 'bilde') {
       const bilde = bildedata(b);
       if (bilde) ut.push({ type: 'bilde', bilde });
