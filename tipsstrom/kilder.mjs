@@ -31,7 +31,6 @@ export const kilder = [
   { navn: 'EU-kommisjonen', gruppe: 4, urls: ['https://ec.europa.eu/commission/presscorner/api/rss?language=en', 'https://ec.europa.eu/commission/presscorner/home/en/rss'] },
 
   // 5 – Forskning
-  { navn: 'forskning.no', gruppe: 5, urls: ['https://www.forskning.no/rss', 'https://forskning.no/rss'] },
   { navn: 'ScienceDaily (forskningsnyheter fra universiteter)', gruppe: 5, maks: 15, urls: ['https://www.sciencedaily.com/rss/all.xml', 'https://www.sciencedaily.com/rss/top/science.xml'] },
 
   // 6 – Internasjonalt

@@ -3,8 +3,6 @@
 name: Tipsstrøm
 
 on:
-  push:
-    branches: [tipsstrom]   # midlertidig: testkjøring mens strømmen settes opp
   schedule:
     - cron: '0 4,5,10,11 * * *'
   workflow_dispatch:
@@ -40,8 +38,8 @@ jobs:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           SALO_KUNDER: ${{ secrets.SALO_KUNDER }}
           TIDSSJEKK: ${{ github.event_name == 'schedule' && '1' || '0' }}
-          TEST: ${{ (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.test)) && '1' || '0' }}
-          VINDU_TIMER: ${{ github.event_name == 'push' && '24' || inputs.vindu }}
+          TEST: ${{ github.event_name == 'workflow_dispatch' && inputs.test && '1' || '0' }}
+          VINDU_TIMER: ${{ inputs.vindu }}
       - name: Lagre e-posten som vedlegg (testkjøring)
         if: always() && hashFiles('tipsstrom.html') != ''
         uses: actions/upload-artifact@v4
