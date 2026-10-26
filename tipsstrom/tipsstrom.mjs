@@ -6,7 +6,8 @@
 //   SALO_KUNDER     – kommaseparert liste med navn som skal holdes utenfor (GitHub-hemmelighet, ikke i koden).
 //   TIPS_TIL        – mottaker (standard kontakt@tidindi.no)
 //   TIPS_FRA        – avsender (standard «Tidindi tipsstrøm <tips@tidindi.no>», krever at tidindi.no er bekreftet i Resend)
-//   TIDSSJEKK=1     – kjør bare hvis klokken i Oslo er 06 eller 12 (planlagte kjøringer, håndterer sommertid)
+//   TIDSSJEKK=1     – kjør bare innenfor utgavevinduene i Oslo: morgen 06.00–09.59, middag 12.00–14.59
+//                     (planlagte kjøringer; GitHub forsinker planlagte jobber, så vinduet er romslig)
 //   TEST=1          – sjekk kildene og lag e-posten, men ikke send. Skriver tipsstrom.html.
 //   VINDU_TIMER     – overstyrer hvor mange timer bakover meldinger hentes
 
@@ -16,15 +17,21 @@ import { kilder, grupper } from './kilder.mjs';
 const TZ = 'Europe/Oslo';
 const env = process.env;
 const naa = new Date();
-const osloTime = Number(new Intl.DateTimeFormat('en-GB', { hour: '2-digit', hourCycle: 'h23', timeZone: TZ }).format(naa));
+const [osloTime, osloMin] = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZone: TZ })
+  .format(naa).split(':').map(Number);
+const iMorgenvindu = osloTime >= 6 && osloTime < 10;
+const iMiddagsvindu = osloTime >= 12 && osloTime < 15;
 
-if (env.TIDSSJEKK === '1' && osloTime !== 6 && osloTime !== 12) {
-  console.log(`Klokken er ${osloTime} i Oslo – ikke tidspunkt for tipsstrøm. Avslutter.`);
+if (env.TIDSSJEKK === '1' && !iMorgenvindu && !iMiddagsvindu) {
+  console.log(`Klokken er ${osloTime} i Oslo – utenfor utgavevinduene. Avslutter.`);
   process.exit(0);
 }
 
-// Morgenutgaven dekker tiden siden forrige middag (18 t), middagsutgaven siden morgenen (6 t).
-const vinduTimer = Number(env.VINDU_TIMER) || (osloTime < 9 ? 18 : 6);
+// Morgenutgaven dekker tiden siden kl. 12 i går, middagsutgaven tiden siden kl. 06 i dag.
+// Regnes fra faktisk klokkeslett, så en forsinket kjøring ikke mister meldinger.
+const morgenutgave = osloTime < 11;
+const timerSiden = osloTime + osloMin / 60 + (morgenutgave ? 12 : -6);
+const vinduTimer = Number(env.VINDU_TIMER) || Math.max(1, Math.ceil(timerSiden * 10) / 10);
 const fra = new Date(naa.getTime() - vinduTimer * 3600 * 1000);
 
 // ---------- Henting og tolking av RSS/Atom ----------
@@ -126,7 +133,7 @@ const antall = [...perGruppe.values()].flat().reduce((n, k) => n + k.saker.lengt
 const esc = (s = '') => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const kl = (d) => (d && !isNaN(d) ? new Intl.DateTimeFormat('nb-NO', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: TZ }).format(d) : '');
 const datoTekst = new Intl.DateTimeFormat('nb-NO', { weekday: 'long', day: 'numeric', month: 'long', timeZone: TZ }).format(naa);
-const utgave = osloTime < 9 ? 'morgen' : 'middag';
+const utgave = morgenutgave ? 'morgen' : 'middag';
 const emne = `Tidindi tipsstrøm – ${datoTekst}, ${utgave} (${antall} meldinger)`;
 
 const ETIKETT = "font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;text-transform:uppercase;letter-spacing:.12em;";

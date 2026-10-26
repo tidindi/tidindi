@@ -1,10 +1,17 @@
-# Tipsstrøm til redaksjonen: nye meldinger fra åpne kilder, sendt på e-post kl. 06 og 12 norsk tid.
-# GitHub kjører etter UTC. Vi starter både på vinter- og sommertid, og skriptet slipper bare gjennom kl. 06 og 12 i Oslo.
+# Tipsstrøm til redaksjonen: nye meldinger fra åpne kilder, sendt på e-post morgen og middag.
+#
+# GitHub forsinker eller dropper planlagte jobber, særlig på hele klokkeslett. Derfor:
+#   – jobben startes hvert 20. minutt i to tidsrom (minutt 7, 27 og 47, ikke på hel time),
+#   – skriptet sender bare innenfor utgavevinduene i Oslo (morgen 06.00–09.59, middag 12.00–14.59),
+#   – en merkelapp i Actions-cachen sørger for at hver utgave bare sendes én gang per dag.
+# Mislykkes en sending, settes ingen merkelapp, og neste kjøring prøver igjen.
+# Tidsrommene dekker både vinter- og sommertid (GitHub kjører etter UTC).
 name: Tipsstrøm
 
 on:
   schedule:
-    - cron: '0 4,5,10,11 * * *'
+    - cron: '7,27,47 4-7 * * *'
+    - cron: '7,27,47 10-13 * * *'
   workflow_dispatch:
     inputs:
       test:
@@ -28,11 +35,46 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+      - name: Finn utgave
+        id: utgave
+        run: |
+          H=$(TZ=Europe/Oslo date +%-H)
+          D=$(TZ=Europe/Oslo date +%F)
+          if [ "$H" -ge 6 ] && [ "$H" -lt 10 ]; then U=morgen
+          elif [ "$H" -ge 12 ] && [ "$H" -lt 15 ]; then U=middag
+          else U=; fi
+          echo "utgave=$U" >> "$GITHUB_OUTPUT"
+          echo "nokkel=tipsstrom-sendt-$D-$U" >> "$GITHUB_OUTPUT"
+          echo "Oslo kl. $H, dato $D, utgave: ${U:-ingen}"
+
+      - name: Sjekk om utgaven alt er sendt
+        id: sendt
+        if: steps.utgave.outputs.utgave != ''
+        uses: actions/cache/restore@v6
+        with:
+          path: .tipsstrom-sendt
+          key: ${{ steps.utgave.outputs.nokkel }}
+          lookup-only: true
+
+      # Planlagte kjøringer sender bare i et utgavevindu, og bare hvis utgaven ikke er sendt.
+      # Manuelle kjøringer sender alltid.
+      - name: Avgjør om det skal sendes
+        id: skal
+        run: |
+          if [ "${{ github.event_name }}" != "schedule" ]; then echo "kjor=ja" >> "$GITHUB_OUTPUT"
+          elif [ -z "${{ steps.utgave.outputs.utgave }}" ]; then echo "kjor=nei" >> "$GITHUB_OUTPUT"; echo "Utenfor utgavevinduene."
+          elif [ "${{ steps.sendt.outputs.cache-hit }}" = "true" ]; then echo "kjor=nei" >> "$GITHUB_OUTPUT"; echo "Utgaven er alt sendt i dag."
+          else echo "kjor=ja" >> "$GITHUB_OUTPUT"; fi
+
       - uses: actions/checkout@v7
+        if: steps.skal.outputs.kjor == 'ja'
       - uses: actions/setup-node@v7
+        if: steps.skal.outputs.kjor == 'ja'
         with:
           node-version: 22
+
       - name: Hent og send
+        if: steps.skal.outputs.kjor == 'ja'
         run: node tipsstrom/tipsstrom.mjs
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
@@ -40,6 +82,21 @@ jobs:
           TIDSSJEKK: ${{ github.event_name == 'schedule' && '1' || '0' }}
           TEST: ${{ github.event_name == 'workflow_dispatch' && inputs.test && '1' || '0' }}
           VINDU_TIMER: ${{ inputs.vindu }}
+
+      # Ekte sending innenfor et utgavevindu (planlagt eller manuell): merk utgaven som sendt.
+      - name: Merk utgaven som sendt
+        id: merk
+        if: >-
+          success() && steps.skal.outputs.kjor == 'ja' && steps.utgave.outputs.utgave != ''
+          && steps.sendt.outputs.cache-hit != 'true' && hashFiles('tipsstrom.html') == ''
+        run: mkdir -p .tipsstrom-sendt && date -u > .tipsstrom-sendt/sendt
+      - name: Lagre merkelappen
+        if: steps.merk.outcome == 'success'
+        uses: actions/cache/save@v6
+        with:
+          path: .tipsstrom-sendt
+          key: ${{ steps.utgave.outputs.nokkel }}
+
       - name: Lagre e-posten som vedlegg (testkjøring)
         if: always() && hashFiles('tipsstrom.html') != ''
         uses: actions/upload-artifact@v7
