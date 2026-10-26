@@ -11,7 +11,7 @@ html,body{margin:0;width:${w}px;height:${h}px;background:#1C1E20;overflow:hidden
 #felt{width:${fb}px;box-sizing:border-box;padding:${luft}px;background:#E6FF2B;display:flex;align-items:center;justify-content:center}
 #ord{font-family:U;line-height:1;white-space:nowrap;color:#1C1E20}
 #T,#rest{display:inline-block}
-#merke{border-radius:50%;background:#1C1E20;color:#E6FF2B;display:flex;align-items:center;justify-content:center;font-family:U;line-height:1}</style>
+#merke{border-radius:50%;background:#E6FF2B;color:#1C1E20;display:flex;align-items:center;justify-content:center;font-family:U;line-height:1}</style>
 <div id=scene><div id=felt><div id=ord><span id=T>T</span><span id=rest>idindi</span></div></div></div>`;
 fs.writeFileSync(UT + '/scene.html', html);
 const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: w, height: h } });
@@ -23,7 +23,8 @@ await p.evaluate(([fb, luft, modus]) => {
   ord.style.fontSize = fs + 'px';
   const felt = document.getElementById('felt'); felt.style.height = felt.getBoundingClientRect().height + 'px';
   if (modus === 'ut') {
-    const d = Math.round(fs * 0.62);
+    const d = Math.round(fs * 0.8);
+    felt.style.background = 'transparent';
     felt.innerHTML = `<div id=merke style="width:${d}px;height:${d}px;font-size:${Math.round(d * 0.74)}px"><span style="transform:translateY(${Math.round(d * 0.03)}px)">T</span></div>`;
   }
 }, [fb, luft, modus]);
