@@ -2,7 +2,10 @@
 // Brukes både når nettstedet bygges og i forhåndsvisningen i Studio, så de alltid viser det samme.
 // Ingen avhengigheter til Node eller nettleser.
 
-import type { Blokk, Bildedata } from './testinnhold';
+import type { Blokk, Bildedata, Videodata } from './testinnhold';
+
+// Sanity-prosjektet videofilene ligger i (offentlig CDN-adresse).
+const FILER = 'https://cdn.sanity.io/files/1ld4ddgo/production/';
 
 const esc = (t: string) =>
   t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -52,6 +55,28 @@ export function bildedata(bilde: any): Bildedata | undefined {
   return { sanity: bilde, alt: bilde.alt ?? '', tekst: bilde.bildetekst, kreditering: bilde.kreditering || kildekreditering(bilde.kildeKreditering) };
 }
 
+// Videofil fra Sanity: referansen «file-<id>-<filtype>» blir til adressen på Sanitys CDN.
+// Bygges fra referansen, så forhåndsvisningen i Studio virker også før saken er publisert.
+export function filUrl(fil: any): string | undefined {
+  const ref: unknown = fil?.asset?._ref;
+  if (typeof ref !== 'string') return undefined;
+  const m = ref.match(/^file-([a-f0-9]+)-([a-z0-9]+)$/i);
+  return m ? `${FILER}${m[1]}.${m[2]}` : undefined;
+}
+
+export function videodata(v: any): Videodata | undefined {
+  const url = filUrl(v?.fil);
+  if (!url) return undefined;
+  return {
+    url,
+    plakat: bildedata(v.plakat),
+    tekst: v.tekst || undefined,
+    kreditering: v.kreditering || undefined,
+    staende: !!v.staende,
+    vignett: v.vignett !== false,
+  };
+}
+
 export function brodtekst(innhold: any[] | null | undefined): Blokk[] {
   const ut: Blokk[] = [];
   for (const b of innhold ?? []) {
@@ -75,6 +100,9 @@ export function brodtekst(innhold: any[] | null | undefined): Blokk[] {
     } else if (b._type === 'bilde') {
       const bilde = bildedata(b);
       if (bilde) ut.push({ type: 'bilde', bilde });
+    } else if (b._type === 'video') {
+      const video = videodata(b);
+      if (video) ut.push({ type: 'video', video });
     }
   }
   return ut;

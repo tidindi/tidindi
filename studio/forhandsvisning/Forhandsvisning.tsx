@@ -5,10 +5,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useClient } from 'sanity';
 import { createImageUrlBuilder } from '@sanity/image-url';
-import { brodtekst, bildedata } from '../../src/data/portabletekst';
+import { brodtekst, bildedata, videodata } from '../../src/data/portabletekst';
 import { seksjonsnavn } from '../../src/data/seksjoner';
 import { datoOgTid, klokkeslett } from '../../src/data/format';
-import type { Bildedata } from '../../src/data/testinnhold';
+import type { Bildedata, Videodata } from '../../src/data/testinnhold';
 import { stiler } from './stiler';
 import { sluttmerkeHtml } from '../../src/data/monogram';
 
@@ -18,6 +18,19 @@ function Bilde({ bilde, forhold, bygger }: { bilde?: Bildedata; forhold: number;
   if (!bilde?.sanity) return <div className="tf-bilde-tom" style={{ aspectRatio: `${1 / forhold}` }}>Bilde</div>;
   const src = bygger.image(bilde.sanity as any).width(1400).height(Math.round(1400 * forhold)).fit('crop').saturation(-100).auto('format').url();
   return <img className="tf-bilde" src={src} alt={bilde.alt} style={{ aspectRatio: `${1 / forhold}` }} />;
+}
+
+function Video({ video }: { video: Videodata }) {
+  return (
+    <figure className="tf-innebilde">
+      <div className="tf-video" data-staende={video.staende ? '1' : undefined}>
+        <video src={video.url} controls playsInline preload="metadata" />
+      </div>
+      <figcaption>
+        {video.vignett ? 'Med Tidindi-vignett. ' : ''}{video.tekst} {video.kreditering && <span className="tf-meta">Video: {video.kreditering}</span>}
+      </figcaption>
+    </figure>
+  );
 }
 
 function Merke({ seksjon }: { seksjon?: string }) {
@@ -48,6 +61,7 @@ export function Forhandsvisning(props: { document: { displayed: any } }) {
   }, [klient, skribentRef]);
 
   const hovedbilde = bildedata(a.hovedbilde);
+  const hovedvideo = videodata(a.hovedvideo);
   const blokker = brodtekst(a.brodtekst);
   const mangler = [
     !a.seksjon && 'seksjon', !a.tittel && 'tittel', !a.slug?.current && 'adresse', !a.ingress && 'ingress',
@@ -88,14 +102,15 @@ export function Forhandsvisning(props: { document: { displayed: any } }) {
             </div>
           </header>
 
-          <figure className="tf-hovedbilde">
+          {hovedvideo && <Video video={hovedvideo} />}
+          {!hovedvideo && <figure className="tf-hovedbilde">
             <Bilde bilde={hovedbilde} forhold={8 / 16} bygger={bygger} />
             {(hovedbilde?.tekst || hovedbilde?.kreditering) && (
               <figcaption>
                 {hovedbilde?.tekst} {hovedbilde?.kreditering && <span className="tf-meta">Foto: {hovedbilde.kreditering}</span>}
               </figcaption>
             )}
-          </figure>
+          </figure>}
 
           <div className="tf-tekst">
             {blokker.map((b, i) => {
@@ -126,11 +141,12 @@ export function Forhandsvisning(props: { document: { displayed: any } }) {
                   )}
                 </figure>
               );
+              if (b.type === 'video') return <Video key={i} video={b.video} />;
               return null;
             })}
             {blokker.length > 0 && <p className="tf-sluttmerke-alene" dangerouslySetInnerHTML={{ __html: sluttmerkeHtml }} />}
             {(a.kilde || a.pressemelding) && (
-              <p className="tf-meta tf-kilde">
+              <p className="tf-meta tf-kilde" key="kilde">
                 {a.kilde && <>Kilde: {a.kilde}</>}
                 {a.kilde && a.pressemelding && ' · '}
                 {a.pressemelding && <>Saken bygger på en pressemelding fra {a.pressemelding}</>}

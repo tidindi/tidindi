@@ -12,13 +12,24 @@ export interface Bildedata {
   kreditering?: string;
 }
 
+// Video: lastes opp i Sanity og spilles av med Tidindi-vignetten først (hvis valgt).
+export interface Videodata {
+  url: string;
+  plakat?: Bildedata;
+  tekst?: string;
+  kreditering?: string;
+  staende?: boolean;
+  vignett: boolean;
+}
+
 export type Blokk =
   | { type: 'avsnitt'; tekst?: string; html?: string }
   | { type: 'mellomtittel'; tekst: string }
   | { type: 'liste'; punkter: string[] } // punktene er ferdig HTML
   | { type: 'sitat'; tekst: string; kilde?: string }
   | { type: 'fakta'; tittel?: string; punkter: string[]; merknad?: string }
-  | { type: 'bilde'; bilde: Bildedata };
+  | { type: 'bilde'; bilde: Bildedata }
+  | { type: 'video'; video: Videodata };
 
 export interface Artikkel {
   slug: string;
@@ -30,6 +41,7 @@ export interface Artikkel {
   publisert: string; // ISO-tid
   oppdatert?: string;
   bilde?: Bildedata;
+  video?: Videodata;
   kilde?: string;
   pressemelding?: string;
   brodtekst: Blokk[];

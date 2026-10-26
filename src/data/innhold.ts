@@ -10,7 +10,7 @@ import { createImageUrlBuilder } from '@sanity/image-url';
 import { seksjoner, type SeksjonSlug } from './seksjoner';
 import * as test from './testinnhold';
 import type { Artikkel, Bildedata, Forsideoppsett } from './testinnhold';
-import { bildedata, brodtekst } from './portabletekst';
+import { bildedata, brodtekst, videodata } from './portabletekst';
 
 export type { Artikkel, Blokk, Bildedata, Forsideoppsett } from './testinnhold';
 
@@ -38,6 +38,7 @@ const SPORRING = `{
       "publisert": coalesce(publisert, _createdAt), oppdatert,
       "skribent": skribent->navn,
       "hovedbilde": hovedbilde{..., "kildeKreditering": asset->creditLine},
+      hovedvideo,
       "brodtekst": brodtekst[]{..., _type == "bilde" => {"kildeKreditering": asset->creditLine}}
     },
   "forside": *[_id == "forside"][0] {
@@ -82,6 +83,7 @@ async function hent(): Promise<Innhold> {
       publisert: a.publisert,
       oppdatert: a.oppdatert ?? undefined,
       bilde: bildedata(a.hovedbilde),
+      video: videodata(a.hovedvideo),
       kilde: a.kilde ?? undefined,
       pressemelding: a.pressemelding ?? undefined,
       brodtekst: brodtekst(a.brodtekst),

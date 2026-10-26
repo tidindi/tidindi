@@ -47,6 +47,9 @@ export const stiler = `
 
 .tf-bilde { width: 100%; object-fit: cover; background: var(--flate); filter: grayscale(1); }
 .tf-bilde-tom { width: 100%; background: var(--flate); display: flex; align-items: center; justify-content: center; font-family: var(--etikett); font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--tekst-2); }
+.tf-video { background: var(--kull); aspect-ratio: 16 / 9; }
+.tf-video[data-staende] { aspect-ratio: 9 / 16; width: min(100%, 360px); }
+.tf-video video { display: block; width: 100%; height: 100%; object-fit: contain; filter: grayscale(1); }
 .tf-hovedbilde, .tf-innebilde { display: flex; flex-direction: column; gap: 8px; }
 .tf-hovedbilde { margin-top: -12px; }
 .tf-hovedbilde figcaption, .tf-innebilde figcaption { font-size: 15px; line-height: 1.45; color: var(--tekst-2); }

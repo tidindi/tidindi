@@ -1,0 +1,73 @@
+---
+// Video i artikkelen. Spilles av med Tidindi-vignetten (1,5 sekunder) først når det er valgt i Studio.
+// Selve videoen vises i sort-hvitt, som bildene. Vignetten beholder neongult.
+// Ingen eksterne spillere eller sporing: vanlig <video> med filen fra Sanity.
+import { bildeUrl } from '../data/innhold';
+import type { Bildedata, Videodata } from '../data/testinnhold';
+
+interface Props {
+  video: Videodata;
+  reserveplakat?: Bildedata; // hovedbildet brukes som stillbilde når videoen ikke har eget
+  plassering: 'topp' | 'tekst';
+}
+const { video, reserveplakat, plassering } = Astro.props;
+const forhold = video.staende ? 16 / 9 : 9 / 16;
+const plakatbilde = video.plakat ?? reserveplakat;
+const plakat = plakatbilde ? bildeUrl(plakatbilde, video.staende ? 720 : 1600, forhold) : undefined;
+const vignett = video.vignett ? (video.staende ? '/video/tidindi-vignett-staende.mp4' : '/video/tidindi-vignett.mp4') : '';
+---
+<figure class:list={['video-blokk', `video-${plassering}`]}>
+  <div class:list={['video-ramme', { staende: video.staende }]}>
+    <video
+      class:list={['tidindi-video', 'gra']}
+      src={video.url}
+      poster={plakat}
+      data-hoved={video.url}
+      data-vignett={vignett}
+      controls
+      playsinline
+      preload="metadata"
+    >
+      <a href={video.url}>Last ned videoen</a>
+    </video>
+  </div>
+  {(video.tekst || video.kreditering) && (
+    <figcaption>{video.tekst} {video.kreditering && <span class="meta">Video: {video.kreditering}</span>}</figcaption>
+  )}
+</figure>
+
+<script is:inline>
+  // Første gang en video startes: spill vignetten, så selve videoen fra start.
+  (function () {
+    if (window.__tidindiVideo) return;
+    window.__tidindiVideo = true;
+    var start = function () { document.querySelectorAll('video.tidindi-video').forEach(function (v) {
+      var vignett = v.dataset.vignett, hoved = v.dataset.hoved, vist = !vignett;
+      v.addEventListener('play', function () {
+        if (vist) return;
+        vist = true;
+        v.classList.remove('gra');
+        v.src = vignett;
+        v.play().catch(function () {});
+        v.addEventListener('ended', function tilHoved() {
+          v.removeEventListener('ended', tilHoved);
+          v.src = hoved;
+          v.classList.add('gra');
+          v.play().catch(function () {});
+        });
+      });
+    }); };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+  })();
+</script>
+
+<style>
+  .video-blokk { display: flex; flex-direction: column; gap: var(--s2); }
+  .video-tekst { margin: var(--s2) 0; }
+  .video-ramme { background: var(--kull); aspect-ratio: 16 / 9; width: 100%; }
+  .video-ramme.staende { aspect-ratio: 9 / 16; width: min(100%, 420px); }
+  .video-tekst .video-ramme.staende { width: min(100%, 360px); }
+  .tidindi-video { display: block; width: 100%; height: 100%; object-fit: contain; background: var(--kull); }
+  .tidindi-video.gra { filter: grayscale(1); }
+  figcaption { font-size: 15px; line-height: 1.45; color: var(--tekst-2); }
+</style>

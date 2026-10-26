@@ -8,3 +8,5 @@ Fasit for bruk: dokumentet «visuell-identitet.md» i TIDINDI-prosjektet.
 - `linkedin-bannere/` – personlig profil 1584 × 396 og bedriftsside 1512 × 256 (neon, sort, ren neon, ren sort).
 
 Farger: blyhvit #F5F4EF, trekullsort #1C1E20, neongul #E6FF2B. Skrift i ordmerket: UnifrakturMaguntia (konvertert til konturer).
+
+- `video/` – Tidindi-vignetten (1,5 s), liggende 1920 × 1080 og stående 1080 × 1920, MP4 uten lyd. Brukes automatisk foran videoer på nettstedet; kan også legges foran egne klipp til sosiale medier.

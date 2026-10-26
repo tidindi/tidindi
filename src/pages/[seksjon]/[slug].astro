@@ -7,6 +7,7 @@ import Hovedmeny from '../../components/Hovedmeny.astro';
 import Bunn from '../../components/Bunn.astro';
 import Bilde from '../../components/Bilde.astro';
 import Seksjonsmerke from '../../components/Seksjonsmerke.astro';
+import Video from '../../components/Video.astro';
 import Deling from '../../components/Deling.astro';
 import { hentArtikler, artikkelUrl, delingsbilde, type Artikkel } from '../../data/innhold';
 import { seksjonsnavn } from '../../data/seksjoner';
@@ -47,12 +48,18 @@ const lesOgsa = artikler.filter((x) => x.slug !== a.slug && x.seksjon !== a.seks
         </div>
       </header>
 
-      <figure class="k12 art-bilde">
-        <Bilde bilde={a.bilde} format="16-8" laster="eager" storrelser="(max-width: 1248px) 100vw, 1200px" />
-        {(a.bilde?.tekst || a.bilde?.kreditering) && (
-          <figcaption>{a.bilde?.tekst} {a.bilde?.kreditering && <span class="meta">Foto: {a.bilde.kreditering}</span>}</figcaption>
-        )}
-      </figure>
+      {a.video ? (
+        <div class="k12 art-bilde">
+          <Video video={a.video} reserveplakat={a.bilde} plassering="topp" />
+        </div>
+      ) : (
+        <figure class="k12 art-bilde">
+          <Bilde bilde={a.bilde} format="16-8" laster="eager" storrelser="(max-width: 1248px) 100vw, 1200px" />
+          {(a.bilde?.tekst || a.bilde?.kreditering) && (
+            <figcaption>{a.bilde?.tekst} {a.bilde?.kreditering && <span class="meta">Foto: {a.bilde.kreditering}</span>}</figcaption>
+          )}
+        </figure>
+      )}
 
       <div class="k7 art-tekst">
         {a.brodtekst.map((b, i) => {
@@ -66,6 +73,7 @@ const lesOgsa = artikler.filter((x) => x.slug !== a.slug && x.seksjon !== a.seks
               )}
             </figure>
           );
+          if (b.type === 'video') return <Video video={b.video} plassering="tekst" />;
           if (b.type === 'mellomtittel') return <h2 class="h-stor art-mellomtittel">{b.tekst}</h2>;
           if (b.type === 'sitat') return (
             <blockquote class="art-sitat">
