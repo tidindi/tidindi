@@ -31,6 +31,13 @@ export const bildefelt = [
     rows: 2,
   },
   {
+    name: 'farger',
+    title: 'Vis i farger',
+    type: 'boolean',
+    initialValue: false,
+    description: 'Tidindi viser bilder i sort-hvitt. Kryss av for å beholde fargene på dette bildet.',
+  },
+  {
     name: 'kreditering',
     title: 'Foto',
     type: 'string',

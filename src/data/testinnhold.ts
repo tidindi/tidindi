@@ -10,6 +10,7 @@ export interface Bildedata {
   alt: string;
   tekst?: string;
   kreditering?: string;
+  farger?: boolean;      // true: vises i farger (unntak fra sort-hvitt)
 }
 
 // Video: lastes opp i Sanity og spilles av med Tidindi-vignetten først (hvis valgt).
@@ -19,6 +20,7 @@ export interface Videodata {
   tekst?: string;
   kreditering?: string;
   staende?: boolean;
+  farger?: boolean;
   vignett: boolean;
   tittel?: string;        // vises nede i bildet de første sekundene
   byline?: string;

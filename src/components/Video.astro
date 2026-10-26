@@ -4,7 +4,7 @@
 //     i stående format) der T-en kommer først og så resten av ordmerket i sort. Flaten tones så ut.
 //   – Tittel og byline nede i bildet i fem sekunder etter vignetten.
 //   – Sluttmerket de to siste sekundene: neongul sirkel med sort T, midt i bildet.
-// Alt styres av videoens egen tid, så det følger med ved pause og spoling. Videoen vises i sort-hvitt;
+// Alt styres av videoens egen tid, så det følger med ved pause og spoling. Videoen vises i sort-hvitt (med mindre «Vis i farger» er valgt);
 // lagene oppå beholder neongult. Ingen eksterne spillere eller sporing.
 import { bildeUrl } from '../data/innhold';
 import type { Bildedata, Videodata } from '../data/testinnhold';
@@ -24,7 +24,7 @@ const harTittel = !!(video.tittel || video.byline);
 ---
 <figure class:list={['video-blokk', `video-${plassering}`]}>
   <div class:list={['video-ramme', { staende: video.staende }]} data-merkevare={video.vignett ? '1' : undefined}>
-    <video class="tidindi-video" src={plakat ? video.url : `${video.url}#t=0.1`} poster={plakat} controls playsinline preload="metadata">
+    <video class:list={['tidindi-video', { farge: video.farger }]} src={plakat ? video.url : `${video.url}#t=0.1`} poster={plakat} controls playsinline preload="metadata">
       {teksting && <track kind="subtitles" srclang="nb" label="Norsk" src={teksting} default />}
       <a href={video.url}>Last ned videoen</a>
     </video>
@@ -104,6 +104,7 @@ const harTittel = !!(video.tittel || video.byline);
   .video-ramme.staende { aspect-ratio: 9 / 16; width: min(100%, 420px); }
   .video-tekst .video-ramme.staende { width: min(100%, 360px); }
   .tidindi-video { display: block; width: 100%; height: 100%; object-fit: contain; background: var(--kull); filter: grayscale(1); }
+  .tidindi-video.farge { filter: none; }
   .tidindi-video::cue { font-family: 'Source Serif 4', Georgia, serif; color: #F5F4EF; background: rgba(28, 30, 32, 0.86); }
 
   /* Lagene oppå videoen. Mål i forhold til spillerens bredde (cqw), så de skalerer med spilleren.

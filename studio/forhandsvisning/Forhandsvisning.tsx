@@ -15,17 +15,18 @@ import { sluttmerkeHtml } from '../../src/data/monogram';
 type Visning = 'pc' | 'mobil';
 
 function Bilde({ bilde, forhold, bygger, video }: { bilde?: Bildedata; forhold: number; bygger: ReturnType<typeof createImageUrlBuilder>; video?: Videodata }) {
-  if (!bilde?.sanity && video) return <video className="tf-bilde" src={`${video.url}#t=0.5`} muted playsInline preload="metadata" style={{ aspectRatio: `${1 / forhold}`, objectFit: 'cover', filter: 'grayscale(1)', width: '100%' }} />;
+  if (!bilde?.sanity && video) return <video className="tf-bilde" src={`${video.url}#t=0.5`} muted playsInline preload="metadata" style={{ aspectRatio: `${1 / forhold}`, objectFit: 'cover', filter: video.farger ? 'none' : 'grayscale(1)', width: '100%' }} />;
   if (!bilde?.sanity) return <div className="tf-bilde-tom" style={{ aspectRatio: `${1 / forhold}` }}>Bilde</div>;
-  const src = bygger.image(bilde.sanity as any).width(1400).height(Math.round(1400 * forhold)).fit('crop').saturation(-100).auto('format').url();
-  return <img className="tf-bilde" src={src} alt={bilde.alt} style={{ aspectRatio: `${1 / forhold}` }} />;
+  const b = bygger.image(bilde.sanity as any).width(1400).height(Math.round(1400 * forhold)).fit('crop');
+  const src = (bilde.farger ? b : b.saturation(-100)).auto('format').url();
+  return <img className={bilde.farger ? 'tf-bilde tf-farge' : 'tf-bilde'} src={src} alt={bilde.alt} style={{ aspectRatio: `${1 / forhold}` }} />;
 }
 
 function Video({ video }: { video: Videodata }) {
   return (
     <figure className="tf-innebilde">
       <div className="tf-video" data-staende={video.staende ? '1' : undefined}>
-        <video src={video.url} controls playsInline preload="metadata" />
+        <video src={video.url} controls playsInline preload="metadata" className={video.farger ? 'tf-farge' : undefined} />
       </div>
       <figcaption>
         {video.vignett ? 'Med vignett og sluttmerke. ' : ''}{video.tittel ? `Tittel i videoen: «${video.tittel}». ` : ''}{video.byline ? `Byline: ${video.byline}. ` : ''}{video.tekstingUrl ? 'Med teksting. ' : ''}{video.tekst} {video.kreditering && <span className="tf-meta">Video: {video.kreditering}</span>}

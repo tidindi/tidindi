@@ -30,7 +30,7 @@ if (bilde?.sanity) {
 }
 ---
 {src
-  ? <img class={`bilde r-${format}`} src={src} srcset={srcset} sizes={srcset ? storrelser : undefined} alt={alt} loading={laster} decoding="async" style={`object-position: ${posisjon}`} />
+  ? <img class={`bilde r-${format}${bilde?.farger ? ' farge' : ''}`} src={src} srcset={srcset} sizes={srcset ? storrelser : undefined} alt={alt} loading={laster} decoding="async" style={`object-position: ${posisjon}`} />
   : video
-    ? <video class={`bilde r-${format}`} src={`${video.url}#t=0.5`} muted playsinline preload="metadata" aria-hidden="true" tabindex="-1"></video>
+    ? <video class={`bilde r-${format}${video.farger ? ' farge' : ''}`} src={`${video.url}#t=0.5`} muted playsinline preload="metadata" aria-hidden="true" tabindex="-1"></video>
     : <div class={`bilde-tom r-${format}`} role="img" aria-label="Bilde kommer">Bilde</div>}
