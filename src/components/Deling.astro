@@ -1,0 +1,71 @@
+---
+// Deleknapper under artikkelen. Vanlige delingslenker – ingen skript fra Facebook, LinkedIn eller X,
+// og ingen informasjonskapsler. På mobil vises i tillegg «Del», som åpner telefonens egen delingsmeny
+// (Instagram, Messenger, SMS og andre apper).
+interface Props {
+  url: string;
+  tittel: string;
+}
+const { url, tittel } = Astro.props;
+const u = encodeURIComponent(url);
+const t = encodeURIComponent(tittel);
+const lenker = [
+  { navn: 'LinkedIn', href: `https://www.linkedin.com/sharing/share-offsite/?url=${u}` },
+  { navn: 'Facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${u}` },
+  { navn: 'X', href: `https://x.com/intent/post?url=${u}&text=${t}` },
+  { navn: 'E-post', href: `mailto:?subject=${t}&body=${encodeURIComponent(`${tittel}\n\n${url}`)}` },
+];
+---
+<div class="deling" data-url={url} data-tittel={tittel}>
+  <p class="etikett deling-etikett">Del saken</p>
+  <div class="deling-knapper">
+    <button type="button" class="del-knapp del-mobil" data-kanal="Mobil" hidden>Del</button>
+    {lenker.map((l) => (
+      <a class="del-knapp" href={l.href} data-kanal={l.navn} target={l.navn === 'E-post' ? undefined : '_blank'} rel="noopener">{l.navn}</a>
+    ))}
+    <button type="button" class="del-knapp" data-kanal="Kopier" data-kopier>Kopier lenke</button>
+  </div>
+  <p class="meta deling-status" aria-live="polite"></p>
+</div>
+
+<script is:inline>
+  (function () {
+    document.querySelectorAll('.deling').forEach(function (boks) {
+      var url = boks.dataset.url, tittel = boks.dataset.tittel, status = boks.querySelector('.deling-status');
+      var spor = function (kanal) { try { window.plausible && window.plausible('Deling', { props: { kanal: kanal } }); } catch (e) {} };
+      var mobil = boks.querySelector('.del-mobil');
+      if (navigator.share) {
+        mobil.hidden = false;
+        mobil.addEventListener('click', function () {
+          navigator.share({ title: tittel, url: url }).then(function () { spor('Mobil'); }).catch(function () {});
+        });
+      }
+      boks.querySelectorAll('a.del-knapp').forEach(function (a) {
+        a.addEventListener('click', function () { spor(a.dataset.kanal); });
+      });
+      var kopier = boks.querySelector('[data-kopier]');
+      kopier.addEventListener('click', function () {
+        var ferdig = function () { status.textContent = 'Lenken er kopiert.'; spor('Kopier'); setTimeout(function () { status.textContent = ''; }, 3000); };
+        if (navigator.clipboard) navigator.clipboard.writeText(url).then(ferdig).catch(function () { status.textContent = url; });
+        else status.textContent = url;
+      });
+    });
+  })();
+</script>
+
+<style>
+  .deling { display: flex; flex-direction: column; gap: var(--s3); padding-top: var(--s4); border-top: 3px solid var(--kull); }
+  .deling-etikett { margin: 0; }
+  .deling-knapper { display: flex; flex-wrap: wrap; gap: var(--s2); }
+  .del-knapp {
+    display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--s4);
+    border: 1px solid var(--kull); background: transparent; color: var(--kull); cursor: pointer;
+    font-family: var(--etikett); font-weight: 600; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase;
+    text-decoration: none !important;
+  }
+  .del-knapp:hover, .del-knapp:focus-visible { background: var(--kull); color: var(--blyhvit); }
+  .del-mobil { background: var(--kull); color: var(--neon); }
+  .del-mobil:hover { color: var(--neon); }
+  .del-mobil[hidden] { display: none; }
+  .deling-status { margin: 0; min-height: 1.2em; font-size: 13px; }
+</style>

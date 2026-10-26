@@ -7,6 +7,7 @@ import Hovedmeny from '../../components/Hovedmeny.astro';
 import Bunn from '../../components/Bunn.astro';
 import Bilde from '../../components/Bilde.astro';
 import Seksjonsmerke from '../../components/Seksjonsmerke.astro';
+import Deling from '../../components/Deling.astro';
 import { hentArtikler, artikkelUrl, delingsbilde, type Artikkel } from '../../data/innhold';
 import { seksjonsnavn } from '../../data/seksjoner';
 import { datoOgTid, klokkeslett } from '../../data/format';
@@ -22,6 +23,7 @@ const { artikkel: a } = Astro.props as { artikkel: Artikkel };
 const artikler = await hentArtikler();
 // Sluttmerket (den gotiske T-en) står alltid på egen linje under siste avsnitt.
 const merFra = artikler.filter((x) => x.seksjon === a.seksjon && x.slug !== a.slug).slice(0, 4);
+const kanonisk = new URL(artikkelUrl(a), Astro.site ?? 'https://tidindi.no').href;
 const lesOgsa = artikler.filter((x) => x.slug !== a.slug && x.seksjon !== a.seksjon).slice(0, 3);
 ---
 <Base tittel={a.tittel} beskrivelse={a.ingress} bilde={delingsbilde(a.bilde)} type="article" publisert={a.publisert} oppdatert={a.oppdatert} strukturert={artikkelData(a)}>
@@ -87,6 +89,7 @@ const lesOgsa = artikler.filter((x) => x.slug !== a.slug && x.seksjon !== a.seks
             {a.pressemelding && <>Saken bygger på en pressemelding fra {a.pressemelding}</>}
           </p>
         )}
+        <Deling url={kanonisk} tittel={a.tittel} />
       </div>
 
       <aside class="fra9 art-side">
