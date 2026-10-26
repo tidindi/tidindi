@@ -27,7 +27,7 @@ function Video({ video }: { video: Videodata }) {
         <video src={video.url} controls playsInline preload="metadata" />
       </div>
       <figcaption>
-        {video.vignett ? 'Med Tidindi-vignett. ' : ''}{video.tekst} {video.kreditering && <span className="tf-meta">Video: {video.kreditering}</span>}
+        {video.vignett ? 'Med vignett og sluttmerke. ' : ''}{video.tittel ? `Tittel i videoen: «${video.tittel}». ` : ''}{video.byline ? `Byline: ${video.byline}. ` : ''}{video.tekstingUrl ? 'Med teksting. ' : ''}{video.tekst} {video.kreditering && <span className="tf-meta">Video: {video.kreditering}</span>}
       </figcaption>
     </figure>
   );

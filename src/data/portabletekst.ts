@@ -60,7 +60,7 @@ export function bildedata(bilde: any): Bildedata | undefined {
 export function filUrl(fil: any): string | undefined {
   const ref: unknown = fil?.asset?._ref;
   if (typeof ref !== 'string') return undefined;
-  const m = ref.match(/^file-([a-f0-9]+)-([a-z0-9]+)$/i);
+  const m = ref.match(/^file-([a-z0-9]+)-([a-z0-9]+)$/i);
   return m ? `${FILER}${m[1]}.${m[2]}` : undefined;
 }
 
@@ -74,6 +74,9 @@ export function videodata(v: any): Videodata | undefined {
     kreditering: v.kreditering || undefined,
     staende: !!v.staende,
     vignett: v.vignett !== false,
+    tittel: v.tittel || undefined,
+    byline: v.byline || undefined,
+    tekstingUrl: filUrl(v.teksting),
   };
 }
 

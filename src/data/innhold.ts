@@ -89,6 +89,20 @@ async function hent(): Promise<Innhold> {
       brodtekst: brodtekst(a.brodtekst),
     }));
 
+  // Teksting til videoer: .vtt-filene hentes når nettstedet bygges og legges inn i siden.
+  const videoer = artikler.flatMap((a) => [a.video, ...a.brodtekst.map((b) => (b.type === 'video' ? b.video : undefined))])
+    .filter((v): v is NonNullable<typeof v> => !!v?.tekstingUrl);
+  await Promise.all(videoer.map(async (v) => {
+    try {
+      const r = await fetch(v.tekstingUrl!);
+      const tekst = r.ok ? await r.text() : '';
+      if (tekst.trim().startsWith('WEBVTT')) v.teksting = tekst;
+      else console.warn(`[innhold] Tekstingen ${v.tekstingUrl} er ikke en gyldig .vtt-fil – hoppes over.`);
+    } catch (e) {
+      console.warn(`[innhold] Fikk ikke hentet tekstingen ${v.tekstingUrl} – videoen vises uten.`);
+    }
+  }));
+
   if (artikler.length === 0) {
     console.log('[innhold] Ingen publiserte artikler i Sanity ennå – bruker testinnhold.');
     return testsett;

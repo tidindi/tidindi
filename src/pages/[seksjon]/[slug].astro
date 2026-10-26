@@ -50,7 +50,7 @@ const lesOgsa = artikler.filter((x) => x.slug !== a.slug && x.seksjon !== a.seks
 
       {a.video ? (
         <div class="k12 art-bilde">
-          <Video video={a.video} reserveplakat={a.bilde} plassering="topp" />
+          <Video video={a.video} reserveplakat={a.bilde} plassering="topp" seksjon={a.seksjon} />
         </div>
       ) : (
         <figure class="k12 art-bilde">
@@ -73,7 +73,7 @@ const lesOgsa = artikler.filter((x) => x.slug !== a.slug && x.seksjon !== a.seks
               )}
             </figure>
           );
-          if (b.type === 'video') return <Video video={b.video} plassering="tekst" />;
+          if (b.type === 'video') return <Video video={b.video} plassering="tekst" seksjon={a.seksjon} />;
           if (b.type === 'mellomtittel') return <h2 class="h-stor art-mellomtittel">{b.tekst}</h2>;
           if (b.type === 'sitat') return (
             <blockquote class="art-sitat">

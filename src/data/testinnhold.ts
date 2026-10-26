@@ -20,6 +20,10 @@ export interface Videodata {
   kreditering?: string;
   staende?: boolean;
   vignett: boolean;
+  tittel?: string;        // vises nede i bildet de første sekundene
+  byline?: string;
+  tekstingUrl?: string;   // .vtt-fil i Sanity
+  teksting?: string;      // innholdet i .vtt-filen, hentet når nettstedet bygges
 }
 
 export type Blokk =

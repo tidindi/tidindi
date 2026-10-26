@@ -9,4 +9,4 @@ Fasit for bruk: dokumentet «visuell-identitet.md» i TIDINDI-prosjektet.
 
 Farger: blyhvit #F5F4EF, trekullsort #1C1E20, neongul #E6FF2B. Skrift i ordmerket: UnifrakturMaguntia (konvertert til konturer).
 
-- `video/` – Tidindi-vignetten (1,5 s), liggende 1920 × 1080 og stående 1080 × 1920, MP4 uten lyd. Brukes automatisk foran videoer på nettstedet; kan også legges foran egne klipp til sosiale medier.
+- `video/` – vignett (1,3 s: T-en, så ordmerket, sort på neongul) og sluttmerke (2 s: sort sirkel med neongul T på neongul flate), liggende 1920 × 1080 og stående 1080 × 1920, MP4 uten lyd. Brukes automatisk før og etter videoer på nettstedet; kan også legges på egne klipp til sosiale medier.
