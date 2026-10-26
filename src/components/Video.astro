@@ -1,9 +1,11 @@
 ---
-// Video i artikkelen. Rekkefølge ved avspilling (når «Vis Tidindi-vignett og sluttmerke» er på):
-//   1. Vignett (1,3 s): neongul flate (4 av 12 kolonner, som på nettstedet) på trekullsort; T-en, så ordmerket i sort.
-//   2. Selve videoen i sort-hvitt, med tittel og byline nede i bildet de første sekundene, og teksting.
-//   3. Sluttmerket (2 s): neongul sirkel med sort T på trekullsort.
-// Ingen eksterne spillere eller sporing: vanlig <video> med filen fra Sanity.
+// Video i artikkelen. Når «Vis Tidindi-vignett og sluttmerke» er på, legges merkevaren som et lag oppå selve videoen:
+//   – Vignett de første ca. 1,6 sekundene: neongul flate (4 av 12 kolonner, som på nettstedet; full kolonne
+//     i stående format) der T-en kommer først og så resten av ordmerket i sort. Flaten tones så ut.
+//   – Tittel og byline nede i bildet i fem sekunder etter vignetten.
+//   – Sluttmerket de to siste sekundene: neongul sirkel med sort T, midt i bildet.
+// Alt styres av videoens egen tid, så det følger med ved pause og spoling. Videoen vises i sort-hvitt;
+// lagene oppå beholder neongult. Ingen eksterne spillere eller sporing.
 import { bildeUrl } from '../data/innhold';
 import { seksjonsnavn } from '../data/seksjoner';
 import type { Bildedata, Videodata } from '../data/testinnhold';
@@ -18,28 +20,23 @@ const { video, reserveplakat, plassering, seksjon } = Astro.props;
 const forhold = video.staende ? 16 / 9 : 9 / 16;
 const plakatbilde = video.plakat ?? reserveplakat;
 const plakat = plakatbilde ? bildeUrl(plakatbilde, video.staende ? 720 : 1600, forhold) : undefined;
-const s = video.staende ? '-staende' : '';
-const vignett = video.vignett ? `/video/tidindi-vignett${s}.mp4` : '';
-const sluttmerke = video.vignett ? `/video/tidindi-sluttmerke${s}.mp4` : '';
 const teksting = video.teksting ? `data:text/vtt;charset=utf-8,${encodeURIComponent(video.teksting)}` : undefined;
 const harTittel = !!(video.tittel || video.byline);
 ---
 <figure class:list={['video-blokk', `video-${plassering}`]}>
-  <div class:list={['video-ramme', { staende: video.staende }]}>
-    <video
-      class:list={['tidindi-video', 'gra']}
-      src={video.url}
-      poster={plakat}
-      data-hoved={video.url}
-      data-vignett={vignett}
-      data-sluttmerke={sluttmerke}
-      controls
-      playsinline
-      preload="metadata"
-    >
+  <div class:list={['video-ramme', { staende: video.staende }]} data-merkevare={video.vignett ? '1' : undefined}>
+    <video class="tidindi-video" src={video.url} poster={plakat} controls playsinline preload="metadata">
       {teksting && <track kind="subtitles" srclang="nb" label="Norsk" src={teksting} default />}
       <a href={video.url}>Last ned videoen</a>
     </video>
+    {video.vignett && (
+      <>
+        <div class="lag lag-vignett" aria-hidden="true">
+          <div class="vignett-felt"><span class="vignett-ord"><span class="vignett-t">T</span><span class="vignett-rest">idindi</span></span></div>
+        </div>
+        <div class="lag lag-slutt" aria-hidden="true"><span class="slutt-merke"><span>T</span></span></div>
+      </>
+    )}
     {harTittel && (
       <div class="video-tittel" aria-hidden="true">
         {seksjon && <p class="vt-merke"><span class="vt-rombe"></span>{seksjonsnavn(seksjon)}</p>}
@@ -57,30 +54,45 @@ const harTittel = !!(video.tittel || video.byline);
   (function () {
     if (window.__tidindiVideo) return;
     window.__tidindiVideo = true;
+    var ease = function (x) { x = Math.min(1, Math.max(0, x)); return 1 - Math.pow(1 - x, 3); };
     var start = function () {
-      document.querySelectorAll('video.tidindi-video').forEach(function (v) {
-        var d = v.dataset, ramme = v.parentNode, fase = 'klar', tittelTimer;
-        var spor = function (vis) { for (var i = 0; i < v.textTracks.length; i++) v.textTracks[i].mode = vis ? 'showing' : 'hidden'; };
-        var bytt = function (src, gra) { v.src = src; v.classList.toggle('gra', gra); v.play().catch(function () {}); };
-        var hoved = function () {
-          fase = 'hoved'; spor(true);
-          if (v.currentSrc.indexOf(d.hoved) === -1) bytt(d.hoved, true);
-          ramme.classList.add('vis-tittel');
-          clearTimeout(tittelTimer);
-          tittelTimer = setTimeout(function () { ramme.classList.remove('vis-tittel'); }, 5000);
-        };
-        v.addEventListener('play', function () {
-          if (fase !== 'klar') return;
-          if (d.vignett) { fase = 'inn'; spor(false); bytt(d.vignett, false); } else hoved();
-        });
-        v.addEventListener('ended', function () {
-          if (fase === 'inn') hoved();
-          else if (fase === 'hoved' && d.sluttmerke) { fase = 'ut'; spor(false); ramme.classList.remove('vis-tittel'); bytt(d.sluttmerke, false); }
-          else if (fase === 'ut' || fase === 'hoved') {
-            // Ferdig: tilbake til stillbildet, klar til å spilles på nytt.
-            fase = 'klar'; v.src = d.hoved; v.classList.add('gra'); spor(true);
+      document.querySelectorAll('.video-ramme').forEach(function (ramme) {
+        var v = ramme.querySelector('video'), merkevare = ramme.dataset.merkevare === '1';
+        var vig = ramme.querySelector('.lag-vignett'), felt = ramme.querySelector('.vignett-felt');
+        var T = ramme.querySelector('.vignett-t'), rest = ramme.querySelector('.vignett-rest');
+        var slutt = ramme.querySelector('.lag-slutt'), merke = ramme.querySelector('.slutt-merke');
+        var tittel = ramme.querySelector('.video-tittel');
+        var startet = false, rammeId;
+        var tittelFra = merkevare ? 1.6 : 0.2;
+
+        var tegn = function () {
+          var t = v.currentTime, d = v.duration || 0;
+          if (merkevare && startet) {
+            // Vignett: flate inn (0–0,22 s), T (0,14–0,46), resten av ordmerket (0,47–0,87), flate ut (1,25–1,6).
+            var inn = ease(t / 0.22), ut = ease((t - 1.25) / 0.35);
+            var a = ease((t - 0.14) / 0.32), s = ease((t - 0.47) / 0.4);
+            vig.style.opacity = t < 1.6 ? inn * (1 - ut) : 0;
+            felt.style.transform = 'scale(' + (0.96 + 0.04 * inn) + ')';
+            // T-en starter midt i flaten: halve forskjellen mellom ordbredden (2,98 em) og T-en (0,75 em).
+            var forskyv = (1 - s) * 1.1155;
+            T.style.opacity = a;
+            T.style.transform = rest.style.transform = 'translateX(' + forskyv + 'em)';
+            rest.style.clipPath = 'inset(0 ' + (100 * (1 - s)) + '% 0 0)';
+            // Sluttmerket de to siste sekundene.
+            var igjen = d ? d - t : 99, m = ease((2 - igjen) / 0.26);
+            slutt.style.opacity = igjen <= 2 ? m : 0;
+            merke.style.transform = 'scale(' + (0.6 + 0.4 * m) + ')';
           }
-        });
+          if (tittel) {
+            var vis = startet && t >= tittelFra && t < tittelFra + 5 && (!d || d - t > 2.2);
+            ramme.classList.toggle('vis-tittel', vis);
+          }
+        };
+        var loop = function () { tegn(); if (!v.paused && !v.ended) rammeId = requestAnimationFrame(loop); };
+        v.addEventListener('play', function () { startet = true; cancelAnimationFrame(rammeId); loop(); });
+        v.addEventListener('seeked', tegn);
+        v.addEventListener('pause', tegn);
+        v.addEventListener('ended', function () { tegn(); });
       });
     };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
@@ -90,14 +102,25 @@ const harTittel = !!(video.tittel || video.byline);
 <style>
   .video-blokk { display: flex; flex-direction: column; gap: var(--s2); }
   .video-tekst { margin: var(--s2) 0; }
-  .video-ramme { position: relative; background: var(--kull); aspect-ratio: 16 / 9; width: 100%; }
+  .video-ramme { position: relative; background: var(--kull); aspect-ratio: 16 / 9; width: 100%; container-type: inline-size; overflow: hidden; }
   .video-ramme.staende { aspect-ratio: 9 / 16; width: min(100%, 420px); }
   .video-tekst .video-ramme.staende { width: min(100%, 360px); }
-  .tidindi-video { display: block; width: 100%; height: 100%; object-fit: contain; background: var(--kull); }
-  .tidindi-video.gra { filter: grayscale(1); }
+  .tidindi-video { display: block; width: 100%; height: 100%; object-fit: contain; background: var(--kull); filter: grayscale(1); }
   .tidindi-video::cue { font-family: 'Source Serif 4', Georgia, serif; color: #F5F4EF; background: rgba(28, 30, 32, 0.86); }
 
-  /* Tittel og byline nede i bildet de første sekundene av selve videoen */
+  /* Lagene oppå videoen. Mål i forhold til spillerens bredde (cqw), så de skalerer med spilleren.
+     Liggende: flaten er 4 av 12 kolonner (31,6 %), luft 2 %. Stående: én kolonne med mobilmarger (91,8 %), luft 6,1 %. */
+  .lag { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; opacity: 0; }
+  .vignett-felt { width: 31.6cqw; box-sizing: border-box; padding: 2cqw; background: var(--neon); display: flex; justify-content: center; }
+  .vignett-ord { font-family: 'UnifrakturMaguntia', serif; font-size: 9.26cqw; line-height: 1; white-space: nowrap; color: var(--kull); }
+  .vignett-t, .vignett-rest { display: inline-block; }
+  .slutt-merke { width: 7.4cqw; height: 7.4cqw; border-radius: 50%; background: var(--neon); color: var(--kull); display: flex; align-items: center; justify-content: center; font-family: 'UnifrakturMaguntia', serif; font-size: 5.5cqw; line-height: 1; }
+  .slutt-merke span { transform: translateY(3%); }
+  .staende .vignett-felt { width: 91.8cqw; padding: 6.1cqw; }
+  .staende .vignett-ord { font-size: 26.7cqw; }
+  .staende .slutt-merke { width: 21.4cqw; height: 21.4cqw; font-size: 15.8cqw; }
+
+  /* Tittel og byline nede i bildet */
   .video-tittel {
     position: absolute; left: 4%; bottom: 26%; max-width: 70%;
     background: var(--kull); color: var(--blyhvit); padding: 12px 16px 13px;

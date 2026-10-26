@@ -83,7 +83,7 @@ export const artikkel = defineType({
             defineField({ name: 'tittel', title: 'Tittel i videoen', type: 'string', description: 'Valgfritt. Kort tittel som vises nede i bildet de første sekundene.', validation: (R: any) => R.max(70).warning('Hold tittelen kort – den skal leses på et par sekunder.') }),
             defineField({ name: 'byline', title: 'Byline i videoen', type: 'string', description: 'Valgfritt, f.eks. «Ole Asbjørn Winther / Tidindi».' }),
             defineField({ name: 'teksting', title: 'Teksting (.vtt)', type: 'file', options: { accept: '.vtt,text/vtt' }, description: 'Valgfritt. Tekstfil i WebVTT-format. Vises automatisk – mange ser video uten lyd.' }),
-            defineField({ name: 'vignett', title: 'Vis Tidindi-vignett og sluttmerke', type: 'boolean', initialValue: true, description: 'Vignetten (1,3 s) før videoen og sluttmerket (2 s) etter.' }),
+            defineField({ name: 'vignett', title: 'Vis Tidindi-vignett og sluttmerke', type: 'boolean', initialValue: true, description: 'Vignetten legges oppå videoens første sekunder, og sluttmerket oppå de to siste.' }),
           ],
     }),
     defineField({
@@ -162,7 +162,7 @@ export const artikkel = defineType({
             defineField({ name: 'tittel', title: 'Tittel i videoen', type: 'string', description: 'Valgfritt. Kort tittel som vises nede i bildet de første sekundene.', validation: (R: any) => R.max(70).warning('Hold tittelen kort – den skal leses på et par sekunder.') }),
             defineField({ name: 'byline', title: 'Byline i videoen', type: 'string', description: 'Valgfritt, f.eks. «Ole Asbjørn Winther / Tidindi».' }),
             defineField({ name: 'teksting', title: 'Teksting (.vtt)', type: 'file', options: { accept: '.vtt,text/vtt' }, description: 'Valgfritt. Tekstfil i WebVTT-format. Vises automatisk – mange ser video uten lyd.' }),
-            defineField({ name: 'vignett', title: 'Vis Tidindi-vignett og sluttmerke', type: 'boolean', initialValue: true, description: 'Vignetten (1,3 s) før videoen og sluttmerket (2 s) etter.' }),
+            defineField({ name: 'vignett', title: 'Vis Tidindi-vignett og sluttmerke', type: 'boolean', initialValue: true, description: 'Vignetten legges oppå videoens første sekunder, og sluttmerket oppå de to siste.' }),
           ],
           preview: { select: { title: 'tekst', fil: 'fil.asset.originalFilename' }, prepare: ({ title, fil }: any) => ({ title: title || fil || 'Video', subtitle: 'Video' }) },
         }),
