@@ -3,6 +3,7 @@
 // og leveres i flere størrelser (srcset) og moderne filformat.
 // Uten bilde vises en nøytral flate med teksten «Bilde».
 import { bildeUrl, type Bildedata } from '../data/innhold';
+import type { Videodata } from '../data/testinnhold';
 
 interface Props {
   bilde?: Bildedata;
@@ -12,8 +13,9 @@ interface Props {
   posisjon?: string;
   laster?: 'eager' | 'lazy';
   storrelser?: string;
+  video?: Videodata; // saker med bare video: et bilde fra videoen brukes som illustrasjon
 }
-const { bilde, format, posisjon = 'center', laster = 'lazy', storrelser = '(max-width: 900px) 100vw, 800px' } = Astro.props;
+const { bilde, video, format, posisjon = 'center', laster = 'lazy', storrelser = '(max-width: 900px) 100vw, 800px' } = Astro.props;
 const alt = Astro.props.alt ?? bilde?.alt ?? '';
 
 const forhold = { '16-9': 9 / 16, '16-8': 8 / 16, '3-2': 2 / 3 }[format];
@@ -29,4 +31,6 @@ if (bilde?.sanity) {
 ---
 {src
   ? <img class={`bilde r-${format}`} src={src} srcset={srcset} sizes={srcset ? storrelser : undefined} alt={alt} loading={laster} decoding="async" style={`object-position: ${posisjon}`} />
-  : <div class={`bilde-tom r-${format}`} role="img" aria-label="Bilde kommer">Bilde</div>}
+  : video
+    ? <video class={`bilde r-${format}`} src={`${video.url}#t=0.5`} muted playsinline preload="metadata" aria-hidden="true" tabindex="-1"></video>
+    : <div class={`bilde-tom r-${format}`} role="img" aria-label="Bilde kommer">Bilde</div>}

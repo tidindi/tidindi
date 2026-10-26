@@ -62,17 +62,18 @@ export const artikkel = defineType({
       title: 'Hovedbilde',
       type: 'image',
       group: 'sak',
-      description: 'Vises i sort-hvitt på nettstedet. Velg utsnitt og fokuspunkt med blyanten. Bildet beskjæres til 16:9 på forsiden, 16:8 i artikkelen og 3:2 som bildesak.',
+      description: 'Vises i sort-hvitt på nettstedet. Velg utsnitt og fokuspunkt med blyanten. Bildet beskjæres til 16:9 på forsiden, 16:8 i artikkelen og 3:2 som bildesak. Kan stå tomt når saken har hovedvideo – da brukes videoen (eller stillbildet til videoen) som illustrasjon.',
       options: { hotspot: true },
       fields: bildefelt,
-      validation: (R) => R.required().error('Saken må ha et hovedbilde – det vises på forsiden.'),
+      validation: (R) => R.custom((verdi: any, ctx: any) =>
+        verdi?.asset || ctx.document?.hovedvideo?.fil?.asset ? true : 'Saken må ha et hovedbilde eller en hovedvideo – det vises på forsiden.'),
     }),
     defineField({
       name: 'hovedvideo',
       title: 'Hovedvideo (valgfritt)',
       type: 'object',
       group: 'sak',
-      description: 'Vises øverst i artikkelen i stedet for hovedbildet. Hovedbildet brukes fortsatt på forsiden og som stillbilde før avspilling.',
+      description: 'Vises øverst i artikkelen. Saken trenger da ikke hovedbilde: videoen blir hovedillustrasjonen. Legg gjerne inn et stillbilde – det brukes på forsiden og når saken deles.',
       options: { collapsible: true, collapsed: true },
       fields: [
             defineField({ name: 'fil', title: 'Videofil', type: 'file', options: { accept: 'video/mp4,video/webm,video/quicktime' }, description: 'MP4 (H.264) anbefales. Hold filen under ca. 100 MB – helst 1080p og kort.', }),

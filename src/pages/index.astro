@@ -32,7 +32,7 @@ const flere = artikler.filter((a) => !paForsiden.has(a.slug)).slice(0, 12);
       <article class="k8 kort hovedsak">
         <figure class="hovedsak-figur">
           <a href={artikkelUrl(hovedsak)} tabindex="-1" aria-hidden="true">
-            <Bilde bilde={hovedsak.bilde} alt="" format="16-9" laster="eager" storrelser="(max-width: 900px) 100vw, 790px" />
+            <Bilde bilde={hovedsak.bilde} video={hovedsak.video} alt="" format="16-9" laster="eager" storrelser="(max-width: 900px) 100vw, 790px" />
           </a>
         </figure>
         <Seksjonsmerke seksjon={hovedsak.seksjon} storrelse="stor" />
@@ -58,7 +58,7 @@ const flere = artikler.filter((a) => !paForsiden.has(a.slug)).slice(0, 12);
     <section class="rutenett strek-tykk tre" aria-label="Utvalgte saker">
       {treSaker.map((a) => (
         <article class="k4 kort tre-sak">
-          <a href={artikkelUrl(a)} tabindex="-1" aria-hidden="true" class="bildesak-bilde"><Bilde bilde={a.bilde} alt="" format="3-2" storrelser="(max-width: 900px) 100vw, 380px" /></a>
+          <a href={artikkelUrl(a)} tabindex="-1" aria-hidden="true" class="bildesak-bilde"><Bilde bilde={a.bilde} video={a.video} alt="" format="3-2" storrelser="(max-width: 900px) 100vw, 380px" /></a>
           <Seksjonsmerke seksjon={a.seksjon} />
           <h2 class="h-stor"><a href={artikkelUrl(a)}>{a.tittel}</a></h2>
           <p class="liten-ingress">{a.ingress}</p>
@@ -71,7 +71,7 @@ const flere = artikler.filter((a) => !paForsiden.has(a.slug)).slice(0, 12);
     <section class="rutenett bildesaker" aria-label="Bildesaker">
       {bildesaker.map((a) => (
         <article class="k4 kort">
-          <a href={artikkelUrl(a)} tabindex="-1" aria-hidden="true" class="bildesak-bilde"><Bilde bilde={a.bilde} alt="" format="3-2" storrelser="(max-width: 900px) 100vw, 380px" /></a>
+          <a href={artikkelUrl(a)} tabindex="-1" aria-hidden="true" class="bildesak-bilde"><Bilde bilde={a.bilde} video={a.video} alt="" format="3-2" storrelser="(max-width: 900px) 100vw, 380px" /></a>
           <Seksjonsmerke seksjon={a.seksjon} />
           <h3 class="h-mellom"><a href={artikkelUrl(a)}>{a.tittel}</a></h3>
         </article>
@@ -84,7 +84,7 @@ const flere = artikler.filter((a) => !paForsiden.has(a.slug)).slice(0, 12);
         <div class="rutenett flere-rutenett">
           {flere.map((a) => (
             <article class="k4 kort">
-              <a href={artikkelUrl(a)} tabindex="-1" aria-hidden="true" class="bildesak-bilde"><Bilde bilde={a.bilde} alt="" format="3-2" storrelser="(max-width: 900px) 100vw, 380px" /></a>
+              <a href={artikkelUrl(a)} tabindex="-1" aria-hidden="true" class="bildesak-bilde"><Bilde bilde={a.bilde} video={a.video} alt="" format="3-2" storrelser="(max-width: 900px) 100vw, 380px" /></a>
               <Seksjonsmerke seksjon={a.seksjon} />
               <h3 class="h-mellom"><a href={artikkelUrl(a)}>{a.tittel}</a></h3>
             </article>

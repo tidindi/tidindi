@@ -14,7 +14,8 @@ import { sluttmerkeHtml } from '../../src/data/monogram';
 
 type Visning = 'pc' | 'mobil';
 
-function Bilde({ bilde, forhold, bygger }: { bilde?: Bildedata; forhold: number; bygger: ReturnType<typeof createImageUrlBuilder> }) {
+function Bilde({ bilde, forhold, bygger, video }: { bilde?: Bildedata; forhold: number; bygger: ReturnType<typeof createImageUrlBuilder>; video?: Videodata }) {
+  if (!bilde?.sanity && video) return <video className="tf-bilde" src={`${video.url}#t=0.5`} muted playsInline preload="metadata" style={{ aspectRatio: `${1 / forhold}`, objectFit: 'cover', filter: 'grayscale(1)', width: '100%' }} />;
   if (!bilde?.sanity) return <div className="tf-bilde-tom" style={{ aspectRatio: `${1 / forhold}` }}>Bilde</div>;
   const src = bygger.image(bilde.sanity as any).width(1400).height(Math.round(1400 * forhold)).fit('crop').saturation(-100).auto('format').url();
   return <img className="tf-bilde" src={src} alt={bilde.alt} style={{ aspectRatio: `${1 / forhold}` }} />;
@@ -160,14 +161,14 @@ export function Forhandsvisning(props: { document: { displayed: any } }) {
           <div className="tf-kort-rad">
             <div className="tf-kort tf-kort-stor">
               <span className="tf-meta">Som hovedsak</span>
-              <Bilde bilde={hovedbilde} forhold={9 / 16} bygger={bygger} />
+              <Bilde bilde={hovedbilde ?? hovedvideo?.plakat} forhold={9 / 16} bygger={bygger} video={hovedvideo} />
               <Merke seksjon={a.seksjon} />
               <div className="tf-h-hoved">{a.tittel || 'Tittel'}</div>
               <p className="tf-ingress">{a.ingress || 'Ingress'}</p>
             </div>
             <div className="tf-kort">
               <span className="tf-meta">Som sak eller bildesak</span>
-              <Bilde bilde={hovedbilde} forhold={2 / 3} bygger={bygger} />
+              <Bilde bilde={hovedbilde ?? hovedvideo?.plakat} forhold={2 / 3} bygger={bygger} video={hovedvideo} />
               <Merke seksjon={a.seksjon} />
               <div className="tf-h-stor">{a.tittel || 'Tittel'}</div>
             </div>

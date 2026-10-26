@@ -25,7 +25,7 @@ const [forste, ...resten] = saker;
     {forste ? (
       <>
         <article class="rutenett strek-tykk forste">
-          <a href={artikkelUrl(forste)} class="k7" tabindex="-1" aria-hidden="true"><Bilde bilde={forste.bilde} alt="" format="16-9" laster="eager" storrelser="(max-width: 900px) 100vw, 690px" /></a>
+          <a href={artikkelUrl(forste)} class="k7" tabindex="-1" aria-hidden="true"><Bilde bilde={forste.bilde} video={forste.video} alt="" format="16-9" laster="eager" storrelser="(max-width: 900px) 100vw, 690px" /></a>
           <div class="k5 kort forste-tekst">
             <span class="meta"><time data-siste datetime={forste.publisert}>{sisteTid(forste.publisert)}</time></span>
             <h2 class="h-hoved"><a href={artikkelUrl(forste)}>{forste.tittel}</a></h2>

@@ -1,13 +1,12 @@
 ---
 // Video i artikkelen. Når «Vis Tidindi-vignett og sluttmerke» er på, legges merkevaren som et lag oppå selve videoen:
-//   – Vignett de første ca. 1,6 sekundene: neongul flate (4 av 12 kolonner, som på nettstedet; full kolonne
+//   – Vignett de første ca. 2,6 sekundene: neongul flate (4 av 12 kolonner, som på nettstedet; full kolonne
 //     i stående format) der T-en kommer først og så resten av ordmerket i sort. Flaten tones så ut.
 //   – Tittel og byline nede i bildet i fem sekunder etter vignetten.
 //   – Sluttmerket de to siste sekundene: neongul sirkel med sort T, midt i bildet.
 // Alt styres av videoens egen tid, så det følger med ved pause og spoling. Videoen vises i sort-hvitt;
 // lagene oppå beholder neongult. Ingen eksterne spillere eller sporing.
 import { bildeUrl } from '../data/innhold';
-import { seksjonsnavn } from '../data/seksjoner';
 import type { Bildedata, Videodata } from '../data/testinnhold';
 
 interface Props {
@@ -25,7 +24,7 @@ const harTittel = !!(video.tittel || video.byline);
 ---
 <figure class:list={['video-blokk', `video-${plassering}`]}>
   <div class:list={['video-ramme', { staende: video.staende }]} data-merkevare={video.vignett ? '1' : undefined}>
-    <video class="tidindi-video" src={video.url} poster={plakat} controls playsinline preload="metadata">
+    <video class="tidindi-video" src={plakat ? video.url : `${video.url}#t=0.1`} poster={plakat} controls playsinline preload="metadata">
       {teksting && <track kind="subtitles" srclang="nb" label="Norsk" src={teksting} default />}
       <a href={video.url}>Last ned videoen</a>
     </video>
@@ -39,7 +38,6 @@ const harTittel = !!(video.tittel || video.byline);
     )}
     {harTittel && (
       <div class="video-tittel" aria-hidden="true">
-        {seksjon && <p class="vt-merke"><span class="vt-rombe"></span>{seksjonsnavn(seksjon)}</p>}
         {video.tittel && <p class="vt-tittel">{video.tittel}</p>}
         {video.byline && <p class="vt-byline">{video.byline}</p>}
       </div>
@@ -63,15 +61,15 @@ const harTittel = !!(video.tittel || video.byline);
         var slutt = ramme.querySelector('.lag-slutt'), merke = ramme.querySelector('.slutt-merke');
         var tittel = ramme.querySelector('.video-tittel');
         var startet = false, rammeId;
-        var tittelFra = merkevare ? 1.6 : 0.2;
+        var tittelFra = merkevare ? 2.6 : 0.2;
 
         var tegn = function () {
           var t = v.currentTime, d = v.duration || 0;
           if (merkevare && startet) {
-            // Vignett: flate inn (0–0,22 s), T (0,14–0,46), resten av ordmerket (0,47–0,87), flate ut (1,25–1,6).
-            var inn = ease(t / 0.22), ut = ease((t - 1.25) / 0.35);
+            // Vignett: flate inn (0–0,22 s), T (0,14–0,46), resten av ordmerket (0,47–0,87), står, flate ut (2,25–2,6).
+            var inn = ease(t / 0.22), ut = ease((t - 2.25) / 0.35);
             var a = ease((t - 0.14) / 0.32), s = ease((t - 0.47) / 0.4);
-            vig.style.opacity = t < 1.6 ? inn * (1 - ut) : 0;
+            vig.style.opacity = t < 2.6 ? inn * (1 - ut) : 0;
             felt.style.transform = 'scale(' + (0.96 + 0.04 * inn) + ')';
             // T-en starter midt i flaten: halve forskjellen mellom ordbredden (2,98 em) og T-en (0,75 em).
             var forskyv = (1 - s) * 1.1155;
@@ -130,8 +128,6 @@ const harTittel = !!(video.tittel || video.byline);
   .staende .video-tittel { max-width: 88%; bottom: 28%; }
   .vis-tittel .video-tittel { opacity: 1; transform: none; }
   .video-tittel p { margin: 0; }
-  .vt-merke { display: flex; align-items: center; gap: 8px; font-family: var(--etikett); font-weight: 600; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--neon); }
-  .vt-rombe { width: 7px; height: 7px; background: var(--neon); transform: rotate(45deg); }
   .vt-tittel { font-family: var(--overskrift); font-weight: 700; font-size: clamp(17px, 2.2vw, 24px); line-height: 1.15; }
   .vt-byline { font-family: var(--etikett); font-weight: 600; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #A9ADB3; }
   figcaption { font-size: 15px; line-height: 1.45; color: var(--tekst-2); }

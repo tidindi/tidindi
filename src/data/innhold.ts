@@ -82,7 +82,8 @@ async function hent(): Promise<Innhold> {
       skribent: a.skribent ?? undefined,
       publisert: a.publisert,
       oppdatert: a.oppdatert ?? undefined,
-      bilde: bildedata(a.hovedbilde),
+      // Uten hovedbilde: stillbildet fra hovedvideoen brukes (forside, deling og søk).
+      bilde: bildedata(a.hovedbilde) ?? videodata(a.hovedvideo)?.plakat,
       video: videodata(a.hovedvideo),
       kilde: a.kilde ?? undefined,
       pressemelding: a.pressemelding ?? undefined,
