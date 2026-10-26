@@ -40,9 +40,16 @@ function avsnittHtml(blokk: any): string {
 
 const rentekst = (blokk: any) => (blokk.children ?? []).map((b: any) => b.text ?? '').join('');
 
+// Kreditering fra bildekilden (f.eks. Unsplash: «Navn by Unsplash» → «Navn / Unsplash»).
+// Brukes bare når «Foto»-feltet står tomt.
+function kildekreditering(linje?: string): string | undefined {
+  if (!linje) return undefined;
+  return linje.replace(/\s+by\s+Unsplash$/i, ' / Unsplash').trim() || undefined;
+}
+
 export function bildedata(bilde: any): Bildedata | undefined {
   if (!bilde?.asset?._ref) return undefined;
-  return { sanity: bilde, alt: bilde.alt ?? '', tekst: bilde.bildetekst, kreditering: bilde.kreditering };
+  return { sanity: bilde, alt: bilde.alt ?? '', tekst: bilde.bildetekst, kreditering: bilde.kreditering || kildekreditering(bilde.kildeKreditering) };
 }
 
 export function brodtekst(innhold: any[] | null | undefined): Blokk[] {

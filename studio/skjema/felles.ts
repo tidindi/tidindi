@@ -34,6 +34,6 @@ export const bildefelt = [
     name: 'kreditering',
     title: 'Foto',
     type: 'string',
-    description: 'Fotograf og eventuelt byrå, f.eks. «Ola Nordmann / NTB».',
+    description: 'Fotograf og eventuelt byrå, f.eks. «Ola Nordmann / NTB». Står feltet tomt for et bilde fra Unsplash, krediteres fotografen automatisk («Navn / Unsplash»).',
   },
 ];

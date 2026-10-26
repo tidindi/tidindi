@@ -37,7 +37,8 @@ const SPORRING = `{
       "slug": slug.current, seksjon, sted, tittel, ingress, kilde, pressemelding,
       "publisert": coalesce(publisert, _createdAt), oppdatert,
       "skribent": skribent->navn,
-      hovedbilde, brodtekst
+      "hovedbilde": hovedbilde{..., "kildeKreditering": asset->creditLine},
+      "brodtekst": brodtekst[]{..., _type == "bilde" => {"kildeKreditering": asset->creditLine}}
     },
   "forside": *[_id == "forside"][0] {
     "hovedsak": hovedsak->slug.current,

@@ -1,6 +1,7 @@
 import { defineConfig } from 'sanity';
 import { structureTool } from 'sanity/structure';
 import { nbNOLocale } from '@sanity/locale-nb-no';
+import { unsplashImageAsset } from 'sanity-plugin-asset-source-unsplash';
 import { artikkel } from './studio/skjema/artikkel';
 import { skribent } from './studio/skjema/skribent';
 import { forside } from './studio/skjema/forside';
@@ -19,7 +20,7 @@ export default defineConfig({
   basePath: '/studio',
   icon: Monogram,
 
-  plugins: [structureTool({ structure: struktur, defaultDocumentNode: standardvisning, title: 'Innhold' }), nbNOLocale()],
+  plugins: [structureTool({ structure: struktur, defaultDocumentNode: standardvisning, title: 'Innhold' }), nbNOLocale(), unsplashImageAsset()],
 
   schema: {
     types: [artikkel, skribent, forside],
