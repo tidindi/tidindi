@@ -1,14 +1,9 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
-import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://tidindi.no',
-  integrations: [
-    sitemap({
-      // Morgenbrief-siden ligger som statisk fil og skal også med
-      customPages: ['https://tidindi.no/morgenbrief/', 'https://tidindi.no/varde/'],
-    }),
-  ],
+  // Nettstedskartene lages i src/pages/sitemap-index.xml.ts, sitemap-0.xml.ts og news-sitemap.xml.ts
+  // (med tidspunkt for siste endring og Google News-kart).
   build: { format: 'directory' },
 });

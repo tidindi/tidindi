@@ -6,11 +6,10 @@
   "scripts": {
     "dev": "astro dev",
     "studio": "sanity dev",
-    "build": "astro build && sanity build dist/studio --yes",
+    "build": "astro build && sanity build dist/studio --yes && node scripts/indexnow.mjs",
     "preview": "astro preview"
   },
   "dependencies": {
-    "@astrojs/sitemap": "3.7.4",
     "@sanity/client": "8.9.0",
     "@sanity/icons": "5.2.3",
     "@sanity/image-url": "2.1.1",
