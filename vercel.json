@@ -33,5 +33,17 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/instagram",
+      "destination": "/?utm_source=instagram&utm_medium=social",
+      "permanent": false
+    },
+    {
+      "source": "/instagram/",
+      "destination": "/?utm_source=instagram&utm_medium=social",
+      "permanent": false
+    }
   ]
 }
