@@ -33,5 +33,15 @@
         }
       ]
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/tipsstrom",
+      "schedule": "5,35 4-5 * * *"
+    },
+    {
+      "path": "/api/tipsstrom",
+      "schedule": "5,35 10-11 * * *"
+    }
   ]
 }

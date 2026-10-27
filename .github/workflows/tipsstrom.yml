@@ -1,7 +1,9 @@
 # Tipsstrøm til redaksjonen: nye meldinger fra åpne kilder, sendt på e-post morgen og middag.
 #
-# GitHub forsinker eller dropper planlagte jobber, særlig på hele klokkeslett. Derfor:
-#   – jobben startes hvert 20. minutt i to tidsrom (minutt 7, 27 og 47, ikke på hel time),
+# Hovedklokken er Vercel Cron (vercel.json → api/tipsstrom.js), som starter arbeidsflyten med
+# planlagt=true kl. 06.05 og 12.05 norsk tid, med nye forsøk etter 30 og 60 minutter.
+# GitHubs egne planlagte jobber er bare reserve: de blir forsinket eller droppet. Derfor:
+#   – reserven startes hvert 20. minutt i to tidsrom (minutt 7, 27 og 47, ikke på hel time),
 #   – skriptet sender bare innenfor utgavevinduene i Oslo (morgen 06.00–09.59, middag 12.00–14.59),
 #   – en merkelapp i Actions-cachen sørger for at hver utgave bare sendes én gang per dag.
 # Mislykkes en sending, settes ingen merkelapp, og neste kjøring prøver igjen.
@@ -22,6 +24,10 @@ on:
         description: 'Timer bakover (tomt = standard)'
         required: false
         default: ''
+      planlagt:
+        description: 'Behandle som planlagt kjøring (brukes av Vercel Cron)'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -56,12 +62,12 @@ jobs:
           key: ${{ steps.utgave.outputs.nokkel }}
           lookup-only: true
 
-      # Planlagte kjøringer sender bare i et utgavevindu, og bare hvis utgaven ikke er sendt.
-      # Manuelle kjøringer sender alltid.
+      # Planlagte kjøringer (GitHub-reserven eller Vercel Cron med planlagt=true) sender bare i et
+      # utgavevindu, og bare hvis utgaven ikke er sendt. Andre manuelle kjøringer sender alltid.
       - name: Avgjør om det skal sendes
         id: skal
         run: |
-          if [ "${{ github.event_name }}" != "schedule" ]; then echo "kjor=ja" >> "$GITHUB_OUTPUT"
+          if [ "${{ github.event_name }}" != "schedule" ] && [ "${{ inputs.planlagt }}" != "true" ]; then echo "kjor=ja" >> "$GITHUB_OUTPUT"
           elif [ -z "${{ steps.utgave.outputs.utgave }}" ]; then echo "kjor=nei" >> "$GITHUB_OUTPUT"; echo "Utenfor utgavevinduene."
           elif [ "${{ steps.sendt.outputs.cache-hit }}" = "true" ]; then echo "kjor=nei" >> "$GITHUB_OUTPUT"; echo "Utgaven er alt sendt i dag."
           else echo "kjor=ja" >> "$GITHUB_OUTPUT"; fi
@@ -79,7 +85,7 @@ jobs:
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           SALO_KUNDER: ${{ secrets.SALO_KUNDER }}
-          TIDSSJEKK: ${{ github.event_name == 'schedule' && '1' || '0' }}
+          TIDSSJEKK: ${{ (github.event_name == 'schedule' || inputs.planlagt) && '1' || '0' }}
           TEST: ${{ github.event_name == 'workflow_dispatch' && inputs.test && '1' || '0' }}
           VINDU_TIMER: ${{ inputs.vindu }}
 
