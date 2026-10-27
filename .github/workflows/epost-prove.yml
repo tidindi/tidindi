@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       send:
-        description: 'Send prøvene til kontakt@tidindi.no'
+        description: 'Send prøvene til ole.winther@tidindi.no'
         type: boolean
         default: false
 

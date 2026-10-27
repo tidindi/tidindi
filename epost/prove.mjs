@@ -3,7 +3,7 @@
 //   node epost/prove.mjs          – lager HTML-filene i epost/ut/ (ingenting sendes)
 //   SEND=1 node epost/prove.mjs   – sender også de tre prøvene via Resend
 //
-// Miljøvariabler: RESEND_API_KEY, PROVE_TIL (standard kontakt@tidindi.no),
+// Miljøvariabler: RESEND_API_KEY, PROVE_TIL (standard ole.winther@tidindi.no),
 // BILDER=lenke (bruk https://tidindi.no/epost/ i stedet for innebygde bilder).
 //
 // Til prøvene bygges logoene inn i e-posten (cid), slik at de vises før bildene er
@@ -59,7 +59,7 @@ for (const [navn, e] of prover) {
     headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       from: avsender[navn],
-      to: [env.PROVE_TIL || 'kontakt@tidindi.no'],
+      to: [env.PROVE_TIL || 'ole.winther@tidindi.no'],
       subject: `[Prøve] ${e.emne}`,
       html: e.html,
       text: e.tekst,
