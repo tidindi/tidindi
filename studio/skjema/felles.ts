@@ -22,7 +22,11 @@ export const bildefelt = [
     title: 'Alternativ tekst',
     type: 'string',
     description: 'Beskriv hva bildet viser, for lesere som ikke ser det. Påkrevd for universell utforming.',
-    validation: (R: any) => R.required().error('Bildet må ha alternativ tekst.'),
+    // Påkrevd bare når et bilde faktisk er lastet opp. Uten dette slår kravet til på tomme
+    // bildefelt (f.eks. stillbildet under Hovedvideo), fordi «Vis i farger» har standardverdi.
+    validation: (R: any) =>
+      R.custom((verdi: any, ctx: any) =>
+        !ctx.parent?.asset || (typeof verdi === 'string' && verdi.trim()) ? true : 'Bildet må ha alternativ tekst.'),
   },
   {
     name: 'bildetekst',
@@ -34,7 +38,6 @@ export const bildefelt = [
     name: 'farger',
     title: 'Vis i farger',
     type: 'boolean',
-    initialValue: false,
     description: 'Tidindi viser bilder i sort-hvitt. Kryss av for å beholde fargene på dette bildet.',
   },
   {
