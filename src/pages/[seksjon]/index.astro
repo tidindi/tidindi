@@ -1,6 +1,7 @@
 ---
-// SEKSJONSSIDE – forslag (ikke tegnet i designet ennå): nyeste saker i seksjonen.
-// Rutenett: første sak bilde 7 + tekst 5; listen 8 kolonner (samme bredde som artikkelhodet).
+// SEKSJONSSIDE – samme oppsett som forsiden (Oles ønske 27.10.2026):
+// nyeste sak i seksjonen som hovedsak (8 kolonner, 16:9) med «Siste fra Tidindi» ved siden (4),
+// deretter resten av seksjonens saker i rader på tre med bilde (3:2), tid og ingress.
 import Base from '../../layouts/Base.astro';
 import Hovedmeny from '../../components/Hovedmeny.astro';
 import Bunn from '../../components/Bunn.astro';
@@ -14,37 +15,75 @@ export function getStaticPaths() {
 }
 
 const { seksjon } = Astro.params as { seksjon: string };
-const saker = (await hentArtikler()).filter((a) => a.seksjon === seksjon); // nyeste først
-const [forste, ...resten] = saker;
+const alle = await hentArtikler(); // nyeste først
+const saker = alle.filter((a) => a.seksjon === seksjon);
+const [hovedsak, ...resten] = saker;
+// «Siste fra Tidindi»: de nyeste sakene fra de andre seksjonene, så siden aldri står halvtom.
+const siste = alle.filter((a) => a.seksjon !== seksjon).slice(0, 5);
 ---
 <Base tittel={seksjonsnavn(seksjon)} beskrivelse={seksjonsbeskrivelse(seksjon) ?? `Nyheter fra ${seksjonsnavn(seksjon).toLowerCase()} i Tidindi.`}>
   <Hovedmeny aktiv={seksjon} />
   <main class="wrap seksjonsside">
     <h1 class="seksjon-tittel">{seksjonsnavn(seksjon)}</h1>
 
-    {forste ? (
+    {hovedsak ? (
       <>
-        <article class="rutenett strek-tykk forste">
-          <a href={artikkelUrl(forste)} class="k7" tabindex="-1" aria-hidden="true"><Bilde bilde={forste.bilde} video={forste.video} alt="" format="16-9" laster="eager" storrelser="(max-width: 900px) 100vw, 690px" /></a>
-          <div class="k5 kort forste-tekst">
-            <span class="meta"><time data-siste datetime={forste.publisert}>{sisteTid(forste.publisert)}</time></span>
-            <h2 class="h-hoved"><a href={artikkelUrl(forste)}>{forste.tittel}</a></h2>
-            <p class="ingress">{forste.ingress}</p>
-          </div>
-        </article>
-        <div class="rutenett">
-          <ul class="k8 liste">
+        <section class="rutenett strek-tykk topp">
+          <article class="k8 kort hovedsak">
+            <figure class="hovedsak-figur">
+              <a href={artikkelUrl(hovedsak)} tabindex="-1" aria-hidden="true">
+                <Bilde bilde={hovedsak.bilde} video={hovedsak.video} alt="" format="16-9" laster="eager" storrelser="(max-width: 900px) 100vw, 790px" />
+              </a>
+            </figure>
+            <span class="meta"><time data-siste datetime={hovedsak.publisert}>{sisteTid(hovedsak.publisert)}</time></span>
+            <h2 class="h-hoved"><a href={artikkelUrl(hovedsak)}>{hovedsak.tittel}</a></h2>
+            <p class="ingress">{hovedsak.ingress}</p>
+          </article>
+
+          {siste.length > 0 && (
+            <aside class="fra9 siste siste-bred" aria-labelledby="siste-tittel">
+              <h2 id="siste-tittel" class="etikett blokk-etikett">Siste fra Tidindi</h2>
+              <ul>
+                {siste.map((a) => (
+                  <li>
+                    <a href={artikkelUrl(a)} class="kort siste-sak">
+                      <span class="meta"><time data-siste datetime={a.publisert}>{sisteTid(a.publisert)}</time> · {seksjonsnavn(a.seksjon)}</span>
+                      <span class="h-siste">{a.tittel}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </aside>
+          )}
+        </section>
+
+        {resten.length > 0 && (
+          <section class="rutenett strek-tykk flere" aria-label={`Flere saker fra ${seksjonsnavn(seksjon).toLowerCase()}`}>
             {resten.map((a) => (
-              <li>
-                <a href={artikkelUrl(a)} class="kort">
-                  <span class="meta"><time data-siste datetime={a.publisert}>{sisteTid(a.publisert)}</time></span>
-                  <span class="h-stor">{a.tittel}</span>
-                  <span class="liste-ingress">{a.ingress}</span>
-                </a>
-              </li>
+              <article class="k4 kort sak">
+                <a href={artikkelUrl(a)} tabindex="-1" aria-hidden="true" class="sak-bilde"><Bilde bilde={a.bilde} video={a.video} alt="" format="3-2" storrelser="(max-width: 900px) 100vw, 380px" /></a>
+                <span class="meta"><time data-siste datetime={a.publisert}>{sisteTid(a.publisert)}</time></span>
+                <h3 class="h-stor"><a href={artikkelUrl(a)}>{a.tittel}</a></h3>
+                <p class="liten-ingress">{a.ingress}</p>
+              </article>
             ))}
-          </ul>
-        </div>
+          </section>
+        )}
+        {siste.length > 0 && (
+          <aside class="siste siste-mobil strek-tykk" aria-labelledby="siste-tittel-mobil">
+            <h2 id="siste-tittel-mobil" class="etikett blokk-etikett">Siste fra Tidindi</h2>
+            <ul>
+              {siste.map((a) => (
+                <li>
+                  <a href={artikkelUrl(a)} class="kort siste-sak">
+                    <span class="meta"><time data-siste datetime={a.publisert}>{sisteTid(a.publisert)}</time> · {seksjonsnavn(a.seksjon)}</span>
+                    <span class="h-siste">{a.tittel}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </aside>
+        )}
       </>
     ) : (
       <p class="tom">Det er ingen saker i denne seksjonen ennå.</p>
@@ -54,13 +93,27 @@ const [forste, ...resten] = saker;
 </Base>
 
 <style>
-  .seksjonsside { padding-top: var(--blokk); padding-bottom: var(--s8); display: flex; flex-direction: column; gap: var(--s6); }
-  .seksjon-tittel { font-family: var(--etikett); font-weight: 700; font-size: clamp(2.5rem, 6vw, 4rem); letter-spacing: 0.06em; text-transform: uppercase; line-height: 1; }
-  .forste { padding-top: var(--s5); row-gap: var(--s5); align-items: start; }
-  .forste-tekst { gap: var(--s4); }
-  .forste-tekst .h-hoved { font-size: clamp(2rem, 3.4vw, 2.875rem); }
-  .liste { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--kull); }
-  .liste li a { padding: var(--s5) 0; border-bottom: 1px solid var(--linje); }
-  .liste-ingress { font-size: 17px; color: var(--brodtekst); }
+  .seksjonsside { padding-top: var(--blokk); padding-bottom: var(--s8); display: flex; flex-direction: column; gap: var(--blokk); }
+  .seksjon-tittel { font-family: var(--etikett); font-weight: 700; font-size: clamp(2.5rem, 6vw, 4rem); letter-spacing: 0.06em; text-transform: uppercase; line-height: 1; margin-bottom: calc(var(--s4) * -1); }
+
+  /* Toppen: hovedsak 8 + Siste fra Tidindi 4, som på forsiden */
+  .topp { padding-top: var(--s5); align-items: start; }
+  .hovedsak { gap: var(--s4); }
+  .hovedsak-figur { display: flex; flex-direction: column; gap: var(--s2); margin-bottom: var(--s1); }
+  .hovedsak .ingress { max-width: 40em; }
+  .siste ul { list-style: none; margin: 0; padding: 0; }
+  .siste-sak { gap: var(--s2); padding: var(--s4) 0; border-bottom: 1px solid var(--linje); }
+
+  /* Resten: rader på tre med bilde, tid, tittel og ingress */
+  .flere { padding-top: var(--s5); row-gap: var(--blokk); }
+  .sak-bilde { margin-bottom: var(--s1); }
+  .liten-ingress { font-size: 17px; line-height: 1.5; color: var(--brodtekst); }
   .tom { color: var(--tekst-2); }
+
+  /* På mobil står «Siste fra Tidindi» nederst, så seksjonens egne saker kommer først. */
+  .siste-mobil { display: none; }
+  @media (max-width: 900px) {
+    .siste-bred { display: none; }
+    .siste-mobil { display: block; padding-top: var(--s5); }
+  }
 </style>
