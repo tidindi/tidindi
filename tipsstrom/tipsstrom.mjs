@@ -4,7 +4,7 @@
 // Miljøvariabler:
 //   RESEND_API_KEY  – nøkkel til Resend (GitHub-hemmelighet). Uten nøkkel sendes ingenting.
 //   SALO_KUNDER     – kommaseparert liste med navn som skal holdes utenfor (GitHub-hemmelighet, ikke i koden).
-//   TIPS_TIL        – mottaker (standard kontakt@tidindi.no)
+//   TIPS_TIL        – mottaker (standard ole.winther@tidindi.no)
 //   TIPS_FRA        – avsender (standard «Tidindi tipsstrøm <tips@tidindi.no>», krever at tidindi.no er bekreftet i Resend)
 //   TIDSSJEKK=1     – kjør bare innenfor utgavevinduene i Oslo: morgen 06.00–09.59, middag 12.00–14.59
 //                     (planlagte kjøringer; GitHub forsinker planlagte jobber, så vinduet er romslig)
@@ -203,7 +203,7 @@ const svar = await fetch('https://api.resend.com/emails', {
   headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
   body: JSON.stringify({
     from: env.TIPS_FRA || 'Tidindi tipsstrøm <tips@tidindi.no>',
-    to: [env.TIPS_TIL || 'kontakt@tidindi.no'],
+    to: [env.TIPS_TIL || 'ole.winther@tidindi.no'],
     subject: emne,
     html,
     text: tekst,
