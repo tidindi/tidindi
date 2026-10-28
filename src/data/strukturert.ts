@@ -13,7 +13,7 @@ export const organisasjon = {
   url: `${SITE}/`,
   logo: { '@type': 'ImageObject', url: `${SITE}/ikon-512.png`, width: 512, height: 512 },
   email: utgiver.epost,
-  sameAs: ['https://www.linkedin.com/company/tidindi', 'https://www.instagram.com/tidindinyheter/'],
+  sameAs: ['https://www.linkedin.com/company/tidindi', 'https://www.instagram.com/tidindi.no/'],
   publishingPrinciples: `${SITE}/redaksjonelle-prinsipper/`,
   ethicsPolicy: `${SITE}/redaksjonelle-prinsipper/`,
   correctionsPolicy: `${SITE}/redaksjonelle-prinsipper/`,
