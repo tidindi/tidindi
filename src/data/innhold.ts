@@ -115,28 +115,40 @@ async function hent(): Promise<Innhold> {
   const f = svar.forside;
   const mb = f?.morgenbrief ?? {};
 
-  let forside: Forsideoppsett;
-  if (f) {
-    forside = {
-      hovedsak: finnes(f.hovedsak) ? f.hovedsak : artikler[0].slug,
-      treSaker: (f.treSaker ?? []).filter(finnes),
-      bildesaker: (f.bildesaker ?? []).filter(finnes),
-      morgenbrief: {
-        tittel: mb.tittel || test.forside.morgenbrief.tittel,
-        tekst: mb.tekst || test.forside.morgenbrief.tekst,
-        knapp: mb.knapp || test.forside.morgenbrief.knapp,
-      },
-    };
-  } else {
-    // Forsiden er ikke satt opp ennå: nyeste sak øverst, de neste under.
-    const [forste, ...resten] = artikler;
-    forside = {
-      hovedsak: forste.slug,
-      treSaker: resten.slice(0, 3).map((a) => a.slug),
-      bildesaker: resten.slice(3, 6).map((a) => a.slug),
-      morgenbrief: test.forside.morgenbrief,
-    };
-  }
+  // Standard er automatikk: nyeste sak øverst, de neste under. Det redaksjonen har valgt i
+  // forsideoppsettet, overstyrer plassen sin; tomme plasser fylles med de nyeste sakene som ikke
+  // allerede står på forsiden.
+  const brukt = new Set<string>();
+  const nesteNyeste = () => artikler.find((a) => !brukt.has(a.slug))?.slug;
+  const valgt = (liste: (string | null)[] | null | undefined) =>
+    (liste ?? []).filter(finnes).filter((s, i, alle) => alle.indexOf(s) === i);
+
+  const valgtHoved = finnes(f?.hovedsak) ? f.hovedsak : undefined;
+  const valgteTre = valgt(f?.treSaker).filter((s) => s !== valgtHoved).slice(0, 3);
+  const valgteBilde = valgt(f?.bildesaker).filter((s) => s !== valgtHoved && !valgteTre.includes(s)).slice(0, 3);
+  [valgtHoved, ...valgteTre, ...valgteBilde].forEach((s) => s && brukt.add(s));
+
+  const fyll = (valgte: string[], antall: number) => {
+    const ut = [...valgte];
+    while (ut.length < antall) {
+      const s = nesteNyeste();
+      if (!s) break;
+      brukt.add(s);
+      ut.push(s);
+    }
+    return ut;
+  };
+  const hovedsak = valgtHoved ?? fyll([], 1)[0];
+  const forside: Forsideoppsett = {
+    hovedsak,
+    treSaker: fyll(valgteTre, 3),
+    bildesaker: fyll(valgteBilde, 3),
+    morgenbrief: {
+      tittel: mb.tittel || test.forside.morgenbrief.tittel,
+      tekst: mb.tekst || test.forside.morgenbrief.tekst,
+      knapp: mb.knapp || test.forside.morgenbrief.knapp,
+    },
+  };
 
   return { kilde: 'sanity', artikler, forside };
 }

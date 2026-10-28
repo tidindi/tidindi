@@ -1,7 +1,8 @@
 import { defineArrayMember, defineField, defineType } from 'sanity';
 import { HomeIcon } from '@sanity/icons/Home';
 
-// Forsideoppsettet – ett enkelt dokument. «Siste» står ikke her: den fylles automatisk.
+// Forsideoppsettet – ett enkelt dokument. Alt er automatisk (nyeste først) til redaksjonen
+// velger noe annet; valgte saker overstyrer plassen sin. «Siste» fylles alltid automatisk.
 export const forside = defineType({
   name: 'forside',
   title: 'Forsiden',
@@ -13,14 +14,13 @@ export const forside = defineType({
       title: 'Hovedsak',
       type: 'reference',
       to: [{ type: 'artikkel' }],
-      description: 'Saken øverst på forsiden. Står til du bytter den ut.',
-      validation: (R) => R.required().error('Velg en hovedsak.'),
+      description: 'La stå tomt for automatikk: da ligger nyeste sak alltid øverst. Velger du en sak, står den øverst til du fjerner den (trykk på de tre prikkene → Fjern).',
     }),
     defineField({
       name: 'treSaker',
       title: 'Tre saker',
       type: 'array',
-      description: 'Radene under hovedsaken. Dra for å endre rekkefølgen.',
+      description: 'Raden under hovedsaken. Tomme plasser fylles automatisk med de nyeste sakene. Velg saker her bare når du vil overstyre. Dra for å endre rekkefølgen.',
       of: [defineArrayMember({ type: 'reference', to: [{ type: 'artikkel' }] })],
       validation: (R) => R.max(3).unique(),
     }),
@@ -28,7 +28,7 @@ export const forside = defineType({
       name: 'bildesaker',
       title: 'Bildesaker',
       type: 'array',
-      description: 'Tre saker med bilde nederst på forsiden. Dra for å endre rekkefølgen.',
+      description: 'Tre saker med bilde under Morgenbrief-rammen. Tomme plasser fylles automatisk med de nyeste sakene som ikke allerede står på forsiden. Dra for å endre rekkefølgen.',
       of: [defineArrayMember({ type: 'reference', to: [{ type: 'artikkel' }] })],
       validation: (R) => R.max(3).unique(),
     }),
