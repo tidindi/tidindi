@@ -62,6 +62,12 @@ a:hover { color: var(--tekst-2); }
 img { display: block; max-width: 100%; }
 h1, h2, h3, p, figure, blockquote { margin: 0; }
 
+/* Linjefall (Oles beslutning 31.10.2026). Titler fordeles jevnt over linjene; i løpende tekst unngår nettleseren
+   enslige ord på siste linje. Lange ord og nettadresser brytes i stedet for å gå ut av skjermen.
+   Nettlesere uten støtte viser teksten som før. Harde mellomrom legges inn i src/data/typografi.ts. */
+h1, h2, h3 { text-wrap: balance; }
+p, li, blockquote, figcaption { text-wrap: pretty; overflow-wrap: break-word; }
+
 .wrap { max-width: var(--maks); margin: 0 auto; padding-left: var(--gutter); padding-right: var(--gutter); width: 100%; }
 
 /* 12-kolonners rutenett. Alle blokker plasseres på de samme kolonnene,

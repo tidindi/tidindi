@@ -3,6 +3,7 @@
 // Ingen avhengigheter til Node eller nettleser.
 
 import type { Blokk, Bildedata, Videodata } from './testinnhold';
+import { linjefall } from './typografi';
 
 // Sanity-prosjektet videofilene ligger i (offentlig CDN-adresse).
 const FILER = 'https://cdn.sanity.io/files/1ld4ddgo/production/';
@@ -24,7 +25,7 @@ function avsnittHtml(blokk: any): string {
   );
   return (blokk.children ?? [])
     .map((barn: any) => {
-      let html = esc(String(barn.text ?? '')).replace(/\n/g, '<br>');
+      let html = esc(linjefall(String(barn.text ?? ''))).replace(/\n/g, '<br>');
       for (const mark of barn.marks ?? []) {
         if (mark === 'strong') html = `<strong>${html}</strong>`;
         else if (mark === 'em') html = `<em>${html}</em>`;
@@ -91,16 +92,16 @@ export function brodtekst(innhold: any[] | null | undefined): Blokk[] {
         if (forrige?.type === 'liste') forrige.punkter.push(punkt);
         else ut.push({ type: 'liste', punkter: [punkt] });
       } else if (b.style === 'h2') {
-        const tekst = rentekst(b).trim();
+        const tekst = linjefall(rentekst(b).trim());
         if (tekst) ut.push({ type: 'mellomtittel', tekst });
       } else {
         const html = avsnittHtml(b);
         if (rentekst(b).trim()) ut.push({ type: 'avsnitt', html });
       }
     } else if (b._type === 'sitat' && b.tekst) {
-      ut.push({ type: 'sitat', tekst: b.tekst, kilde: b.kilde });
+      ut.push({ type: 'sitat', tekst: linjefall(b.tekst), kilde: b.kilde });
     } else if (b._type === 'faktaboks') {
-      ut.push({ type: 'fakta', tittel: b.tittel, punkter: (b.punkter ?? []).filter(Boolean), merknad: b.merknad?.trim() || undefined });
+      ut.push({ type: 'fakta', tittel: b.tittel, punkter: (b.punkter ?? []).filter(Boolean).map(linjefall), merknad: b.merknad?.trim() ? linjefall(b.merknad.trim()) : undefined });
     } else if (b._type === 'bilde') {
       const bilde = bildedata(b);
       if (bilde) ut.push({ type: 'bilde', bilde });

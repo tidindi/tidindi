@@ -11,6 +11,7 @@ import { seksjoner, type SeksjonSlug } from './seksjoner';
 import * as test from './testinnhold';
 import type { Artikkel, Bildedata, Forsideoppsett } from './testinnhold';
 import { bildedata, brodtekst, videodata } from './portabletekst';
+import { linjefall } from './typografi';
 
 export type { Artikkel, Blokk, Bildedata, Forsideoppsett } from './testinnhold';
 
@@ -78,9 +79,9 @@ async function hent(): Promise<Innhold> {
       slug: a.slug,
       seksjon: a.seksjon,
       sted: a.sted ?? undefined,
-      tittel: a.tittel,
-      // Sitatstrek (– eller —) bindes til ordet etter med hardt mellomrom, så den aldri står alene sist på en linje.
-      ingress: (a.ingress ?? '').trim().replace(/(^|\s)([–—]) +/g, '$1$2 '),
+      // Faste regler for linjefall (harde mellomrom der ord hører sammen), se typografi.ts.
+      tittel: linjefall(a.tittel.trim()),
+      ingress: linjefall((a.ingress ?? '').trim()),
       skribent: a.skribent ?? undefined,
       publisert: a.publisert,
       oppdatert: a.oppdatert ?? undefined,
