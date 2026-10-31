@@ -79,7 +79,8 @@ async function hent(): Promise<Innhold> {
       seksjon: a.seksjon,
       sted: a.sted ?? undefined,
       tittel: a.tittel,
-      ingress: a.ingress ?? '',
+      // Sitatstrek (– eller —) bindes til ordet etter med hardt mellomrom, så den aldri står alene sist på en linje.
+      ingress: (a.ingress ?? '').trim().replace(/(^|\s)([–—]) +/g, '$1$2 '),
       skribent: a.skribent ?? undefined,
       publisert: a.publisert,
       oppdatert: a.oppdatert ?? undefined,
