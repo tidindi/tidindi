@@ -1,5 +1,6 @@
 // Strukturerte data (schema.org, JSON-LD) for søkemotorer. Usynlig for leserne.
 // Forteller Google at Tidindi er et nyhetsmedium, og at sakene er nyhetsartikler.
+import { utenLinjefall } from './typografi';
 import { bildeUrl, artikkelUrl, type Artikkel } from './innhold';
 import { seksjonsnavn } from './seksjoner';
 import { utgiver } from './utgiver';
@@ -45,8 +46,8 @@ export function artikkelData(a: Artikkel) {
       '@id': `${url}#artikkel`,
       mainEntityOfPage: url,
       url,
-      headline: a.tittel.length > 110 ? a.tittel.slice(0, 107) + '…' : a.tittel,
-      description: a.ingress,
+      headline: ((t: string) => (t.length > 110 ? t.slice(0, 107) + '…' : t))(utenLinjefall(a.tittel)),
+      description: utenLinjefall(a.ingress),
       ...(bilder.length ? { image: bilder } : {}),
       datePublished: a.publisert,
       dateModified: a.oppdatert ?? a.publisert,

@@ -1,5 +1,6 @@
 ---
 // Grunnmalen for alle sider i magasinet: metadata, skrifter, Plausible.
+import { utenLinjefall } from '../data/typografi';
 import '../styles/global.css';
 
 interface Props {
@@ -26,7 +27,10 @@ const jsonLd = strukturert?.length
   ? JSON.stringify({ '@context': 'https://schema.org', '@graph': strukturert }).replace(/</g, '\\u003c')
   : undefined;
 
-const sidetittel = tittel ? `${tittel} – Tidindi` : 'Tidindi – Mer om det som skjer';
+// Metadata uten harde mellomrom og ordskjøter fra linjefallsreglene.
+const tittelRen = utenLinjefall(tittel);
+const beskrivelseRen = utenLinjefall(beskrivelse);
+const sidetittel = tittelRen ? `${tittelRen} – Tidindi` : 'Tidindi – Mer om det som skjer';
 const kanonisk = new URL(Astro.url.pathname, Astro.site).toString();
 ---
 <!doctype html>
@@ -35,7 +39,7 @@ const kanonisk = new URL(Astro.url.pathname, Astro.site).toString();
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{sidetittel}</title>
-  <meta name="description" content={beskrivelse}>
+  <meta name="description" content={beskrivelseRen}>
   <link rel="canonical" href={kanonisk}>
   <meta name="theme-color" content="#1C1E20">
   <meta name="color-scheme" content="light">
@@ -43,8 +47,8 @@ const kanonisk = new URL(Astro.url.pathname, Astro.site).toString();
   <meta property="og:type" content={type}>
   <meta property="og:locale" content="nb_NO">
   <meta property="og:site_name" content="Tidindi">
-  <meta property="og:title" content={tittel ?? 'Tidindi'}>
-  <meta property="og:description" content={beskrivelse}>
+  <meta property="og:title" content={tittelRen ?? 'Tidindi'}>
+  <meta property="og:description" content={beskrivelseRen}>
   <meta property="og:url" content={kanonisk}>
   {bilde && <meta property="og:image" content={bilde}>}
   <meta name="twitter:card" content={bilde ? 'summary_large_image' : 'summary'}>

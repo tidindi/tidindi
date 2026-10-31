@@ -2,6 +2,7 @@
 //   /sitemap-index.xml – oversikten Search Console og Bing leser
 //   /sitemap-0.xml     – alle sider, med tidspunkt for siste endring (lastmod)
 //   /news-sitemap.xml  – saker fra de siste 48 timene, i Google News-format
+import { utenLinjefall } from './typografi';
 import { hentArtikler, artikkelUrl, type Artikkel } from './innhold';
 import { seksjoner } from './seksjoner';
 
@@ -51,7 +52,7 @@ export async function nyheter(): Promise<string> {
     <news:news>
       <news:publication><news:name>${PUBLIKASJON}</news:name><news:language>no</news:language></news:publication>
       <news:publication_date>${new Date(a.publisert).toISOString()}</news:publication_date>
-      <news:title>${esc(a.tittel)}</news:title>
+      <news:title>${esc(utenLinjefall(a.tittel))}</news:title>
     </news:news>
   </url>`);
   return `<?xml version="1.0" encoding="UTF-8"?>

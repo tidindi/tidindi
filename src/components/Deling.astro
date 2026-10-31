@@ -1,4 +1,5 @@
 ---
+import { utenLinjefall } from '../data/typografi';
 // Deleknapper under artikkelen. Vanlige delingslenker – ingen skript fra Facebook, LinkedIn eller X,
 // og ingen informasjonskapsler. På mobil vises i tillegg «Del», som åpner telefonens egen delingsmeny
 // (Instagram, Messenger, SMS og andre apper).
@@ -6,7 +7,9 @@ interface Props {
   url: string;
   tittel: string;
 }
-const { url, tittel } = Astro.props;
+const { url } = Astro.props;
+// Deling bruker tittelen uten harde mellomrom og ordskjøter fra linjefallsreglene.
+const tittel = utenLinjefall(Astro.props.tittel);
 const u = encodeURIComponent(url);
 const t = encodeURIComponent(tittel);
 const lenker = [
