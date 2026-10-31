@@ -151,8 +151,8 @@ async function hent(): Promise<Innhold> {
     treSaker: fyll(valgteTre, 3),
     bildesaker: fyll(valgteBilde, 3),
     morgenbrief: {
-      tittel: mb.tittel || test.forside.morgenbrief.tittel,
-      tekst: mb.tekst || test.forside.morgenbrief.tekst,
+      tittel: linjefall(mb.tittel || test.forside.morgenbrief.tittel),
+      tekst: linjefall(mb.tekst || test.forside.morgenbrief.tekst),
       knapp: mb.knapp || test.forside.morgenbrief.knapp,
     },
   };

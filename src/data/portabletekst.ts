@@ -18,14 +18,36 @@ function tryggLenke(href: unknown): string | null {
   return null;
 }
 
+// Linjefallsreglene kjøres på hele avsnittet, ikke bit for bit, så de også virker der fet skrift eller en lenke
+// begynner eller slutter (for eksempel «som er <lenke>»). Resultatet fordeles tilbake på bitene: reglene bytter bare
+// mellomrom mot harde mellomrom og legger et usynlig ordskjøt (U+2060) etter sitatstreken.
+function linjefallPerBit(biter: string[]): string[] {
+  const hel = biter.join('');
+  const ut = linjefall(hel);
+  if (ut === hel) return biter;
+  const resultat: string[] = [];
+  let j = 0;
+  for (const bit of biter) {
+    let ny = '';
+    for (let i = 0; i < bit.length; i++) {
+      ny += ut[j++] ?? bit[i];
+      while (ut[j] === '\u2060' && bit[i] !== '\u2060') ny += ut[j++];
+    }
+    resultat.push(ny);
+  }
+  return resultat;
+}
+
 // Gjør om ett tekstavsnitt til HTML: fet, kursiv og lenker. All tekst escapes.
 function avsnittHtml(blokk: any): string {
   const lenker = new Map<string, string | null>(
     (blokk.markDefs ?? []).filter((m: any) => m._type === 'lenke').map((m: any) => [m._key, tryggLenke(m.href)]),
   );
-  return (blokk.children ?? [])
-    .map((barn: any) => {
-      let html = esc(linjefall(String(barn.text ?? ''))).replace(/\n/g, '<br>');
+  const barnene = blokk.children ?? [];
+  const tekster = linjefallPerBit(barnene.map((barn: any) => String(barn.text ?? '')));
+  return barnene
+    .map((barn: any, nr: number) => {
+      let html = esc(tekster[nr]).replace(/\n/g, '<br>');
       for (const mark of barn.marks ?? []) {
         if (mark === 'strong') html = `<strong>${html}</strong>`;
         else if (mark === 'em') html = `<em>${html}</em>`;
