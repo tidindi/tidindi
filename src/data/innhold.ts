@@ -92,13 +92,18 @@ async function hent(): Promise<Innhold> {
     }));
 
   // Teksting til videoer: .vtt-filene hentes når nettstedet bygges og legges inn i siden.
+  // Replikker uten egen plassering får luft ned til bunnen av bildet (underkant ved 88 % av høyden, Oles ønske 31.10.).
+  // Replikker som allerede har line: i filen, beholder sin plassering.
+  const luftUnder = (vtt: string) =>
+    vtt.replace(/^(\s*(?:\d{2}:)?\d{2}:\d{2}\.\d{3}\s+-->\s+(?:\d{2}:)?\d{2}:\d{2}\.\d{3})([^\r\n]*)$/gm,
+      (linje, tid: string, innst: string) => (/\bline:/.test(innst) ? linje : `${tid}${innst} line:88%,end`));
   const videoer = artikler.flatMap((a) => [a.video, ...a.brodtekst.map((b) => (b.type === 'video' ? b.video : undefined))])
     .filter((v): v is NonNullable<typeof v> => !!v?.tekstingUrl);
   await Promise.all(videoer.map(async (v) => {
     try {
       const r = await fetch(v.tekstingUrl!);
       const tekst = r.ok ? await r.text() : '';
-      if (tekst.trim().startsWith('WEBVTT')) v.teksting = tekst;
+      if (tekst.trim().startsWith('WEBVTT')) v.teksting = luftUnder(tekst);
       else console.warn(`[innhold] Tekstingen ${v.tekstingUrl} er ikke en gyldig .vtt-fil – hoppes over.`);
     } catch (e) {
       console.warn(`[innhold] Fikk ikke hentet tekstingen ${v.tekstingUrl} – videoen vises uten.`);
