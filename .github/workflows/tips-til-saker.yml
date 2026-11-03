@@ -1,0 +1,45 @@
+# «Tips til saker»: Claudes daglige idérunde, sendt på e-post til redaksjonen.
+#
+# Startes av Claude med tips/pakk.mjs (workflow_dispatch). Innholdet kommer kryptert med den offentlige
+# age-nøkkelen i tips/mottaker.txt, fordi repoet er offentlig. Arbeidsflyten dekrypterer med den private
+# nøkkelen i hemmeligheten TIPS_NOKKEL og sender via Resend. Innholdet skrives aldri til loggen.
+name: Tips til saker
+
+on:
+  workflow_dispatch:
+    inputs:
+      innhold:
+        description: 'Kryptert innhold (lages av tips/pakk.mjs)'
+        required: true
+      emne:
+        description: 'Emnefelt'
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: Dekrypter
+        env:
+          INNHOLD: ${{ inputs.innhold }}
+          TIPS_NOKKEL: ${{ secrets.TIPS_NOKKEL }}
+        run: |
+          if [ -z "$TIPS_NOKKEL" ]; then echo "::error title=Tips til saker::Hemmeligheten TIPS_NOKKEL mangler."; exit 1; fi
+          sudo apt-get install -y -qq age > /dev/null
+          printf '%s\n' "$TIPS_NOKKEL" > nokkel.txt
+          printf '%s' "$INNHOLD" | base64 -d | age -d -i nokkel.txt | gunzip > tips.html
+          rm -f nokkel.txt
+          echo "Dekryptert: $(wc -c < tips.html) byte"
+      - name: Send
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          EMNE: ${{ inputs.emne }}
+        run: node tips/send.mjs
