@@ -13,7 +13,7 @@
 <meta property="og:locale" content="nb_NO">
 <meta property="og:site_name" content="Tidindi">
 <meta property="og:title" content="Tidindi Varde">
-<meta property="og:description" content="Få vite det når virksomheten din blir omtalt.">
+<meta property="og:description" content="Få vite det når virksomheten din blir omtalt. 549 kr i måneden.">
 <meta property="og:url" content="https://tidindi.no/varde/">
 <meta name="twitter:card" content="summary">
 
@@ -154,7 +154,7 @@ p { margin: 0; }
   font-size: clamp(1.75rem, 3.2vw, 2.5rem); line-height: 1.12; letter-spacing: -0.01em;
 }
 .brod { display: flex; flex-direction: column; gap: 18px; color: var(--brodtekst); }
-.brod .lead { font-size: 1.25rem; line-height: 1.55; color: var(--kull); }
+.brod .lead { font-variant-numeric: lining-nums; font-size: 1.25rem; line-height: 1.55; color: var(--kull); }
 
 .liste { list-style: none; margin: 6px 0; padding: 0; border-top: 1px solid var(--linje); }
 .liste li {
@@ -249,6 +249,52 @@ body.mork .paamelding a { color: var(--kull); }
 body.mork .knapp-neon, body.mork .knapp-neon:hover { color: var(--kull); }
 body.mork .bunn nav a { color: var(--tekst-mork-flate); }
 body.mork .bunn nav a:hover { color: var(--neon); }
+
+/* ── Pris og USP-er (varde-pris, 3.11.2026) ── */
+.tall { font-variant-numeric: lining-nums; font-feature-settings: "lnum" 1; }
+.pris-etikett { font-family: var(--etikett); font-weight: 700; font-size: 14px; letter-spacing: 0.16em; text-transform: uppercase; }
+.pris { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-top: -4px; }
+.pris .belop { font-family: var(--overskrift); font-weight: 700; font-size: clamp(3.5rem, 6vw, 4.75rem); line-height: 1; letter-spacing: -0.02em; }
+.pris .per { font-family: var(--etikett); font-weight: 700; font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase; }
+.pris-aar { font-size: 17px; line-height: 1.45; border-top: 1px solid var(--kull); padding-top: 12px; }
+.pris-aar strong { font-weight: 700; }
+.pris-merk { font-size: 14px !important; line-height: 1.45 !important; }
+.paamelding .skille { border: 0; border-top: 3px solid var(--kull); margin: 6px 0 2px; }
+
+.usp { padding-top: clamp(8px, 2vw, 16px); padding-bottom: clamp(48px, 7vw, 88px); }
+.usp-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 clamp(24px, 3vw, 32px); }
+.usp-kort { border-top: 3px solid var(--blyhvit); padding-top: 18px; display: flex; flex-direction: column; gap: 10px; }
+.usp-kort .etikett { color: var(--neon); }
+.usp-kort h3 { font-variant-numeric: lining-nums; margin: 0; font-family: var(--overskrift); font-weight: 700; font-size: clamp(1.375rem, 2vw, 1.625rem); line-height: 1.15; letter-spacing: -0.01em; color: var(--blyhvit); text-wrap: balance; }
+.usp-kort p { color: #D9DBDE; font-size: 17px; line-height: 1.55; }
+
+.eksempel { background: #141618; border: 1px solid var(--linje-mork); max-width: 560px; }
+.eksempel .ex-topp { display: flex; justify-content: space-between; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--linje-mork); }
+.eksempel .ex-topp .etikett { font-size: 13px; }
+.eksempel .ex-topp .neon { color: var(--neon); }
+.eksempel .ex-topp .graa { color: var(--tekst-mork-flate); }
+.eksempel .ex-kropp { padding: 20px 20px 24px; display: flex; flex-direction: column; gap: 12px; }
+.eksempel .ex-medium { font-family: var(--etikett); font-weight: 600; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--tekst-mork-flate); }
+.eksempel .ex-tittel { font-family: var(--overskrift); font-weight: 700; font-size: 1.5rem; line-height: 1.2; color: var(--blyhvit); }
+.eksempel .ex-utdrag { color: #D9DBDE; font-size: 17px; line-height: 1.55; }
+.eksempel .ex-utdrag mark { background: transparent; color: var(--neon); font-weight: 600; }
+.eksempel .ex-knapp { align-self: flex-start; display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border: 1px solid var(--neon); color: var(--neon); font-family: var(--etikett); font-size: 14px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+.eksempel-merk { margin-top: 12px; font-size: 14px; color: var(--tekst-mork-flate); }
+
+.bort { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 clamp(24px, 3vw, 32px); border-top: 1px solid var(--linje-mork); }
+.bort li { padding: 14px 0; border-bottom: 1px solid var(--linje-mork); color: #D9DBDE; line-height: 1.5; }
+.bort li strong { color: var(--blyhvit); font-weight: 700; }
+
+.sos { border-top: 1px solid var(--linje-mork); }
+.sos details { border-bottom: 1px solid var(--linje-mork); }
+.sos summary { cursor: pointer; list-style: none; padding: 18px 40px 18px 0; position: relative; font-family: var(--overskrift); font-weight: 700; font-size: 1.25rem; line-height: 1.3; color: var(--blyhvit); }
+.sos summary::-webkit-details-marker { display: none; }
+.sos summary::after { content: "+"; position: absolute; right: 4px; top: 14px; font-family: var(--etikett); font-size: 28px; font-weight: 600; color: var(--neon); }
+.sos details[open] summary::after { content: "–"; }
+.sos details p { padding: 0 0 20px; color: #D9DBDE; max-width: 680px; }
+
+@media (max-width: 980px) { .usp-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px clamp(24px, 3vw, 32px); } }
+@media (max-width: 560px) { .usp-grid, .bort { grid-template-columns: minmax(0, 1fr); } .usp-grid { gap: 28px; } }
 </style>
 </head>
 <body class="mork">
@@ -267,13 +313,18 @@ body.mork .bunn nav a:hover { color: var(--neon); }
       <p class="lockup"><span class="l-logo">Tidindi</span><span class="l-navn">Varde</span></p>
       <h1 id="hero-tittel"><span>Få vite det når</span><span><em>virksomheten din blir omtalt.</em></span></h1>
       <div class="intro">
-        <p>Medieovervåkning trenger ikke være dyrt og komplisert.</p>
-        <p>Med Varde får du løpende varsler når virksomheten eller merkevaren din omtales i digitale redaksjonelle medier.</p>
+        <p>Varde gir deg beskjed når virksomheten eller merkevaren din omtales i digitale redaksjonelle medier. Hver morgen får du en rapport om omtalen, ett tema og to aktører du vil følge.</p>
+        <p>Pålitelig medieovervåking til en pris som står på siden. Vi har valgt bort det du ikke trenger, ikke det du trenger.</p>
       </div>
     </div>
-    <form class="paamelding" id="paamelding" novalidate>
+    <form class="paamelding" id="paamelding" novalidate aria-labelledby="pris-tittel">
+      <p class="pris-etikett" id="pris-tittel">Pris</p>
+      <p class="pris tall"><span class="belop">549&nbsp;kr</span><span class="per">per måned</span></p>
+      <p class="pris-aar tall">Eller <strong>5&nbsp;490&nbsp;kr per år</strong> – to måneder gratis.</p>
+      <p class="pris-merk">Prisene er oppgitt eks. mva. Alt under «Dette får du» er med.</p>
+      <hr class="skille">
       <h2>Meld interesse</h2>
-      <p>Legg igjen e-postadressen din, så gir vi beskjed når Tidindi Varde åpner.</p>
+      <p>Varde åpner snart. Legg igjen e‑postadressen din, så gir vi beskjed.</p>
       <div class="felt">
         <label for="epost">E-post</label>
         <input id="epost" name="EMAIL" type="email" autocomplete="email" inputmode="email" required placeholder="navn@eksempel.no">
@@ -288,18 +339,107 @@ body.mork .bunn nav a:hover { color: var(--neon); }
     </form>
   </section>
 
+  <section class="wrap usp" aria-label="Derfor Varde">
+    <div class="usp-grid">
+      <div class="usp-kort">
+        <span class="etikett">I tide</span>
+        <h3>Beskjed når saken publiseres.</h3>
+        <p>Ikke dagen etter. Du rekker å svare, følge opp eller forberede deg mens saken fortsatt er ny.</p>
+      </div>
+      <div class="usp-kort">
+        <span class="etikett">Oppgitt pris</span>
+        <h3>549&nbsp;kr i måneden. Det er hele prisen.</h3>
+        <p>Ingen tilbudsrunde og ingen tilleggsmoduler. Du ser hva det koster før du tar kontakt.</p>
+      </div>
+      <div class="usp-kort">
+        <span class="etikett">Redaksjonelle medier</span>
+        <h3>Bare det mediene skriver.</h3>
+        <p>Nettaviser, riksmedier, regionaviser, lokalaviser og fagpresse. Ikke kommentarfelt og ikke sosiale medier.</p>
+      </div>
+      <div class="usp-kort">
+        <span class="etikett">Rett i innboksen</span>
+        <h3>Ingen innlogging. Ingen opplæring.</h3>
+        <p>Varsler og morgenrapport kommer på e-post. Vi setter opp overvåkingen sammen med deg i en kort oppstartssamtale.</p>
+      </div>
+    </div>
+  </section>
+
   <section class="wrap produkt" aria-labelledby="innhold-tittel">
     <div class="produkt-grid">
       <div>
-        <h2 class="undertittel" id="innhold-tittel" style="margin-top:0">Alt rett i innboksen.</h2>
+        <h2 class="undertittel" id="innhold-tittel" style="margin-top:0">Dette får du.</h2>
       </div>
       <div class="brod">
         <ul class="liste">
-          <li><span class="etikett"><span class="rombe" aria-hidden="true"></span>Løpende varsler</span><span>Når virksomheten eller merkevaren din omtales i digitale redaksjonelle medier.</span></li>
-          <li><span class="etikett"><span class="rombe" aria-hidden="true"></span>Morgenrapport</span><span>Hver morgen en rapport som oppsummerer omtalen av virksomheten din, utviklingen innenfor et tema du velger, og hva mediene skriver om inntil to andre aktører – for eksempel konkurrentene dine.</span></li>
-          <li><span class="etikett"><span class="rombe" aria-hidden="true"></span>Enkelt</span><span>Uten omfattende systemer, unødvendige funksjoner eller tidkrevende gjennomgang av mediene.</span></li>
+          <li><span class="etikett"><span class="rombe" aria-hidden="true"></span>Varsler</span><span>Når virksomheten eller merkevaren din omtales i digitale redaksjonelle medier.</span></li>
+          <li><span class="etikett"><span class="rombe" aria-hidden="true"></span>Morgenrapport</span><span>Hver morgen: omtalen av virksomheten din, utviklingen innenfor et tema du velger, og hva mediene skriver om inntil to andre aktører – for eksempel konkurrentene dine.</span></li>
+          <li><span class="etikett"><span class="rombe" aria-hidden="true"></span>Personlig oppstart</span><span>Vi går gjennom navn, merkevarer, tema og aktører med deg, og justerer etter første uke.</span></li>
+          <li><span class="etikett"><span class="rombe" aria-hidden="true"></span>Rett til kilden</span><span>Hvert treff viser medium, tidspunkt, tittel og et kort utdrag rundt navnet – med lenke til saken hos mediet.</span></li>
         </ul>
         <p class="avslutt">Så kan du bruke tiden på det som faktisk trenger din oppmerksomhet.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap produkt" aria-labelledby="eksempel-tittel">
+    <div class="produkt-grid">
+      <div>
+        <h2 class="undertittel" id="eksempel-tittel" style="margin-top:0">Slik ser et varsel ut.</h2>
+      </div>
+      <div>
+        <div class="eksempel" role="img" aria-label="Eksempel på et varsel fra Tidindi Varde, med oppdiktet virksomhet og sak.">
+          <div class="ex-topp"><span class="etikett neon">Varsel</span><span class="etikett graa">Havbrynet Energi</span></div>
+          <div class="ex-kropp">
+            <p class="ex-medium tall">Fagavisen · i dag kl. 08.12</p>
+            <p class="ex-tittel">Utsetter beslutningen om nytt havvindfelt</p>
+            <p class="ex-utdrag">… etter møtet sier <mark>Havbrynet Energi</mark> at selskapet venter på departementets svar før det …</p>
+            <span class="ex-knapp">Les saken hos mediet</span>
+          </div>
+        </div>
+        <p class="eksempel-merk">Eksempel med oppdiktet virksomhet og sak.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap produkt" aria-labelledby="bort-tittel">
+    <div class="produkt-grid">
+      <div>
+        <h2 class="undertittel" id="bort-tittel" style="margin-top:0">Valgt bort – med vilje.</h2>
+      </div>
+      <div class="brod">
+        <p class="lead">Varde er bygget for én jobb: å si fra når du blir omtalt. Derfor er den rask, og derfor koster den 549&nbsp;kr.</p>
+        <ul class="bort">
+          <li><strong>Arkiv og historikk.</strong> Varde handler om det som skjer nå.</li>
+          <li><strong>Dashbord og analyseverktøy.</strong> Du får beskjed, ikke enda et system.</li>
+          <li><strong>Papir, radio og TV.</strong> Varde følger det som publiseres digitalt.</li>
+          <li><strong>Sosiale medier.</strong> Bare redaksjonelle medier, uten støy.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap produkt" aria-labelledby="sos-tittel">
+    <div class="produkt-grid">
+      <div>
+        <h2 class="undertittel" id="sos-tittel" style="margin-top:0">Spørsmål og svar.</h2>
+      </div>
+      <div class="sos">
+        <details>
+          <summary>Hvilke medier følger Varde?</summary>
+          <p>Norske digitale redaksjonelle medier: riksmedier, regionaviser, lokalaviser, nyhetsbyrå og fagpresse. Varde leser det som er åpent publisert. I saker bak betalingsmur ser Varde tittelen og den åpne delen – der virksomheten som regel er nevnt når den er tema i saken.</p>
+        </details>
+        <details>
+          <summary>Hva er med i prisen?</summary>
+          <p>Varsler når virksomheten eller merkevaren omtales, morgenrapport med ett tema og inntil to aktører, og personlig oppstart. 549&nbsp;kr i måneden eller 5&nbsp;490&nbsp;kr i året, eks. mva.</p>
+        </details>
+        <details>
+          <summary>Får jeg sammendrag av sakene?</summary>
+          <p>Du får medium, tidspunkt, tittel og et kort utdrag rundt navnet, med lenke til saken. Selve saken leser du hos mediet som har publisert den.</p>
+        </details>
+        <details>
+          <summary>Når åpner Varde?</summary>
+          <p>Snart. Meld interesse øverst på siden, så gir vi beskjed når du kan starte.</p>
+        </details>
       </div>
     </div>
   </section>
