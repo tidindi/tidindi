@@ -41,7 +41,6 @@ export const kilder = [
   { navn: 'WWD', gruppe: 'mote', urls: ['https://wwd.com/feed/'] },
   { navn: 'Vogue (mote)', gruppe: 'mote', urls: ['https://www.vogue.com/feed/rss'] },
   { navn: 'The Guardian (mote)', gruppe: 'mote', urls: ['https://www.theguardian.com/fashion/rss'] },
-  { navn: 'The Cut', gruppe: 'mote', urls: ['https://www.thecut.com/rss/index.xml'] },
 
   // Film og TV
   { navn: 'Variety', gruppe: 'film', urls: ['https://variety.com/feed/'] },
@@ -51,7 +50,6 @@ export const kilder = [
   { navn: 'Little White Lies', gruppe: 'film', urls: ['https://lwlies.com/feed/'] },
   { navn: 'Mubi Notebook', gruppe: 'film', urls: ['https://mubi.com/notebook/posts.rss', 'https://mubi.com/en/notebook/posts.rss'] },
   { navn: 'The Guardian (film)', gruppe: 'film', urls: ['https://www.theguardian.com/film/rss'] },
-  { navn: 'Vulture', gruppe: 'film', urls: ['https://www.vulture.com/rss/index.xml'] },
   { navn: 'Cineuropa', gruppe: 'film', urls: ['https://cineuropa.org/en/rss/', 'https://cineuropa.org/rss/en/'] },
 
   // Kunst, design og kultur
