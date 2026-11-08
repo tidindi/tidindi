@@ -23,34 +23,43 @@ export const kilder = [
   { navn: 'The Quietus', gruppe: 'musikk', urls: ['https://thequietus.com/feed'] },
   { navn: 'Crack Magazine', gruppe: 'musikk', urls: ['https://crackmagazine.net/feed/'] },
   { navn: 'Bandcamp Daily', gruppe: 'musikk', urls: ['https://daily.bandcamp.com/feed'] },
-  { navn: 'Resident Advisor', gruppe: 'musikk', urls: ['https://ra.co/xml/news.xml', 'https://ra.co/xml/rss_news.xml'] },
+
+  { navn: 'Clash', gruppe: 'musikk', urls: ['https://www.clashmusic.com/feed/'] },
+  { navn: 'Gorilla vs. Bear', gruppe: 'musikk', urls: ['https://www.gorillavsbear.net/feed/'] },
+  { navn: 'The Guardian (musikk)', gruppe: 'musikk', urls: ['https://www.theguardian.com/music/rss'] },
+  { navn: 'Soompi (K-pop og koreansk underholdning)', gruppe: 'musikk', maks: 8, urls: ['https://www.soompi.com/feed'] },
+  { navn: 'Remezcla (latinamerikansk kultur)', gruppe: 'musikk', urls: ['https://remezcla.com/feed/'] },
+  { navn: 'The Native (afrikansk musikk og kultur)', gruppe: 'musikk', urls: ['https://thenativemag.com/feed/'] },
 
   // Mote, livsstil og ungdomskultur
   { navn: 'Dazed', gruppe: 'mote', urls: ['https://www.dazeddigital.com/rss'] },
   { navn: 'i-D', gruppe: 'mote', urls: ['https://i-d.co/feed/'] },
-  { navn: 'The Face', gruppe: 'mote', urls: ['https://theface.com/feed', 'https://theface.com/rss'] },
   { navn: 'Highsnobiety', gruppe: 'mote', urls: ['https://www.highsnobiety.com/feed/'] },
   { navn: 'Hypebeast', gruppe: 'mote', maks: 10, urls: ['https://hypebeast.com/feed'] },
   { navn: 'The Business of Fashion', gruppe: 'mote', urls: ['https://www.businessoffashion.com/arc/outboundfeeds/rss/?outputType=xml', 'https://www.businessoffashion.com/arc/outboundfeeds/rss/'] },
   { navn: 'Vogue Business', gruppe: 'mote', urls: ['https://www.voguebusiness.com/feed/rss'] },
   { navn: 'WWD', gruppe: 'mote', urls: ['https://wwd.com/feed/'] },
   { navn: 'Vogue (mote)', gruppe: 'mote', urls: ['https://www.vogue.com/feed/rss'] },
-  { navn: 'Document Journal', gruppe: 'mote', urls: ['https://www.documentjournal.com/feed/'] },
+  { navn: 'The Guardian (mote)', gruppe: 'mote', urls: ['https://www.theguardian.com/fashion/rss'] },
+  { navn: 'The Cut', gruppe: 'mote', urls: ['https://www.thecut.com/rss/index.xml'] },
 
   // Film og TV
   { navn: 'Variety', gruppe: 'film', urls: ['https://variety.com/feed/'] },
   { navn: 'The Hollywood Reporter', gruppe: 'film', urls: ['https://www.hollywoodreporter.com/feed/'] },
   { navn: 'Deadline', gruppe: 'film', urls: ['https://deadline.com/feed/'] },
   { navn: 'IndieWire', gruppe: 'film', urls: ['https://www.indiewire.com/feed/'] },
-  { navn: 'Screen International', gruppe: 'film', urls: ['https://www.screendaily.com/full-rss/', 'https://www.screendaily.com/rss'] },
   { navn: 'Little White Lies', gruppe: 'film', urls: ['https://lwlies.com/feed/'] },
   { navn: 'Mubi Notebook', gruppe: 'film', urls: ['https://mubi.com/notebook/posts.rss', 'https://mubi.com/en/notebook/posts.rss'] },
+  { navn: 'The Guardian (film)', gruppe: 'film', urls: ['https://www.theguardian.com/film/rss'] },
+  { navn: 'Vulture', gruppe: 'film', urls: ['https://www.vulture.com/rss/index.xml'] },
+  { navn: 'Cineuropa', gruppe: 'film', urls: ['https://cineuropa.org/en/rss/', 'https://cineuropa.org/rss/en/'] },
 
   // Kunst, design og kultur
   { navn: 'Dezeen', gruppe: 'kunst', urls: ['https://www.dezeen.com/feed/'] },
-  { navn: "It's Nice That", gruppe: 'kunst', urls: ['https://www.itsnicethat.com/rss', 'https://www.itsnicethat.com/feed'] },
   { navn: 'Wallpaper', gruppe: 'kunst', urls: ['https://www.wallpaper.com/feeds/all', 'https://www.wallpaper.com/rss'] },
   { navn: 'Hyperallergic', gruppe: 'kunst', urls: ['https://hyperallergic.com/feed/'] },
   { navn: 'Artnet News', gruppe: 'kunst', urls: ['https://news.artnet.com/feed'] },
   { navn: 'Rest of World', gruppe: 'kunst', urls: ['https://restofworld.org/feed/latest', 'https://restofworld.org/feed/'] },
+  { navn: 'The Guardian (kunst og design)', gruppe: 'kunst', urls: ['https://www.theguardian.com/artanddesign/rss'] },
+  { navn: 'The Guardian (kultur)', gruppe: 'kunst', urls: ['https://www.theguardian.com/culture/rss'] },
 ];

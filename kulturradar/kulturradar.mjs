@@ -15,7 +15,7 @@ import { kilder, grupper } from './kilder.mjs';
 const env = process.env;
 const gruppeId = process.argv[2];
 const vinduTimer = Number(env.VINDU_TIMER) || 48;
-const maksTegn = Number(env.MAKS_TEGN) || 3500;
+const maksTegn = Number(env.MAKS_TEGN) || 3800;
 const fra = new Date(Date.now() - vinduTimer * 3600 * 1000);
 
 // ---------- Henting og tolking av RSS/Atom (samme metode som tipsstrømmen) ----------
@@ -87,6 +87,8 @@ async function hentKilde(k) {
 const dato = (d) => (d && !isNaN(d) ? d.toISOString().slice(0, 16).replace('T', ' ') + ' UTC' : 'uten dato');
 // Tegn som må kodes i GitHubs arbeidsflytkommandoer.
 const kod = (s) => s.replace(/%/g, '%25').replace(/\r/g, '%0D').replace(/\n/g, '%0A');
+// Egenskaper (som title) må i tillegg kode komma og kolon.
+const kodTittel = (s) => kod(s).replace(/:/g, '%3A').replace(/,/g, '%2C');
 
 const valgte = grupper.filter((g) => !gruppeId || g.id === gruppeId);
 if (!valgte.length) { console.error(`Ukjent gruppe: ${gruppeId}`); process.exit(1); }
@@ -96,13 +98,15 @@ for (const g of valgte) {
   const status = [];
   const blokker = [];
   let antall = 0;
+  const sett = new Set();
 
   for (const r of resultater) {
     if (r.feil) { status.push(`✗ ${r.navn} (${r.feil.join(' / ')})`); continue; }
     const nye = r.saker
       .filter((s, i) => (s.dato && !isNaN(s.dato) ? s.dato >= fra : i < 8))
       .sort((a, b) => (b.dato?.getTime() || 0) - (a.dato?.getTime() || 0))
-      .slice(0, r.maks ?? 15);
+      .filter((s) => { const n = s.lenke.split('?')[0]; if (sett.has(n)) return false; sett.add(n); return true; })
+      .slice(0, r.maks ?? 10);
     status.push(`✓ ${r.navn}: ${nye.length} nye av ${r.saker.length}`);
     if (!nye.length) continue;
     antall += nye.length;
@@ -115,7 +119,7 @@ for (const g of valgte) {
   if (!env.GITHUB_ACTIONS) continue;
 
   // Merknadene: én med status, så artiklene pakket i biter på høyst maksTegn tegn (høyst ni biter).
-  console.log(`::notice title=Kulturradar ${g.navn} – status::${kod(`${antall} artikler siste ${vinduTimer} t\n${status.join('\n')}`)}`);
+  console.log(`::notice title=${kodTittel(`Kulturradar ${g.navn} – status`)}::${kod(`${antall} artikler siste ${vinduTimer} t\n${status.join('\n')}`)}`);
   const biter = [];
   let bit = '';
   for (const b of blokker) {
@@ -127,6 +131,6 @@ for (const g of valgte) {
   }
   if (bit.trim()) biter.push(bit);
   const vist = biter.slice(0, 9);
-  vist.forEach((t, i) => console.log(`::notice title=Kulturradar ${g.navn} ${i + 1}/${vist.length}::${kod(t.trim())}`));
-  if (biter.length > vist.length) console.log(`::warning title=Kulturradar ${g.navn}::${biter.length - vist.length} biter fikk ikke plass i merknadene (se loggen).`);
+  vist.forEach((t, i) => console.log(`::notice title=${kodTittel(`Kulturradar ${g.navn} ${i + 1}/${vist.length}`)}::${kod(t.trim())}`));
+  if (biter.length > vist.length) console.log(`::warning title=${kodTittel(`Kulturradar ${g.navn}`)}::${biter.length - vist.length} biter fikk ikke plass i merknadene (se loggen).`);
 }
