@@ -1,0 +1,46 @@
+# Kulturradar: de siste artiklene fra internasjonale kultur-, mote-, musikk-, film- og designmagasiner.
+# Startes av Claudes daglige idérunde («Tips til saker»), som leser resultatet som merknader
+# (check-runs-API-et). Sender ingen e-post og publiserer ingenting. Bare åpne RSS-strømmer.
+name: Kulturradar
+
+on:
+  workflow_dispatch:
+    inputs:
+      vindu:
+        description: 'Timer bakover (standard 48)'
+        required: false
+        default: '48'
+  push:
+    branches: [kulturradar]
+    paths: ['kulturradar/**', '.github/workflows/kulturradar.yml']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kulturradar
+  cancel-in-progress: true
+
+jobs:
+  radar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      VINDU_TIMER: ${{ inputs.vindu || '48' }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      # Ett steg per gruppe, fordi GitHub bare tar vare på om lag ti merknader per steg.
+      - name: Musikk
+        run: node kulturradar/kulturradar.mjs musikk
+      - name: Mote, livsstil og ungdomskultur
+        if: always()
+        run: node kulturradar/kulturradar.mjs mote
+      - name: Film og TV
+        if: always()
+        run: node kulturradar/kulturradar.mjs film
+      - name: Kunst, design og kultur
+        if: always()
+        run: node kulturradar/kulturradar.mjs kunst
