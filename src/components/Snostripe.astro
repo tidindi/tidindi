@@ -7,7 +7,7 @@
 ---
 <section class="sno strek-tykk" aria-labelledby="sno-tittel" hidden data-sno>
   <div class="sno-topp">
-    <h2 id="sno-tittel" class="etikett sno-fane">Skiføret nå</h2>
+    <h2 id="sno-tittel" class="etikett sno-fane"><span class="rombe" aria-hidden="true"></span>Skiføret nå</h2>
     <p class="sno-antall" data-sno-antall></p>
   </div>
 
@@ -80,9 +80,10 @@
   .sno.strek-tykk { padding-top: 0; }
   .sno[hidden] { display: none; }
   .sno-topp { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; column-gap: var(--s5); row-gap: var(--s3); }
-  /* Fane som henger ned fra den tykke streken: neongul tekst på sort (neongult aldri direkte på blyhvitt) */
+  /* Neongul fane med sort tekst som henger ned fra den tykke streken (liten aksent, regel fra 9.11.) */
   .sno-fane {
-    background: var(--kull); color: var(--neon);
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--neon); color: var(--kull);
     padding: var(--s2) var(--s4) 7px;
     font-size: 15px; letter-spacing: 0.18em; line-height: 1.2;
   }
