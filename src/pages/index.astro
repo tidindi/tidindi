@@ -8,6 +8,7 @@ import Bunn from '../components/Bunn.astro';
 import Bilde from '../components/Bilde.astro';
 import Seksjonsmerke from '../components/Seksjonsmerke.astro';
 import MorgenbriefRamme from '../components/MorgenbriefRamme.astro';
+import Snostripe from '../components/Snostripe.astro';
 import { hentInnhold, artikkelUrl, type Artikkel } from '../data/innhold';
 import { sisteTid } from '../data/format';
 import { forsideData } from '../data/strukturert';
@@ -77,6 +78,8 @@ const flere = artikler.filter((a) => !paForsiden.has(a.slug)).slice(0, 12);
         </article>
       ))}
     </section>
+
+    <Snostripe />
 
     {flere.length > 0 && (
       <section class="strek-tykk flere" aria-labelledby="flere-tittel">

@@ -1,0 +1,125 @@
+---
+// Stripe med skiføret fra fnugg.no på forsiden.
+// Dataene hentes i nettleseren fra /api/fnugg (Vercel-funksjon med 15 minutters mellomlagring).
+// Stripen er skjult til dataene er på plass, og forblir skjult utenfor sesongen eller hvis
+// fnugg ikke svarer. Krediteringen følger fnuggs vilkår: godt synlig, i samme størrelse som
+// teksten ellers, med logo og lenke. Logoen hentes uendret via /fnugg/logo.svg (vercel.json).
+---
+<section class="sno strek-tykk" aria-labelledby="sno-tittel" hidden data-sno>
+  <div class="sno-topp">
+    <h2 id="sno-tittel" class="etikett blokk-etikett">Skiføret nå</h2>
+    <p class="sno-antall" data-sno-antall></p>
+  </div>
+
+  <ul class="sno-liste" data-sno-liste></ul>
+
+  <div class="sno-kilde">
+    <a class="sno-logo" href="https://fnugg.no/" aria-label="fnugg.no">
+      <img src="/fnugg/logo.svg" alt="fnugg" width="86" height="32" loading="lazy" decoding="async" />
+    </a>
+    <p>
+      <a href="https://fnugg.no/">Vær- og føredata er levert av fnugg, Yr, Meteorologisk institutt og NRK</a><span data-sno-tid></span>
+    </p>
+  </div>
+</section>
+
+<script is:inline>
+  (() => {
+    const stripe = document.querySelector('[data-sno]');
+    if (!stripe) return;
+    const VIS = 6;
+    const TALLORD = ['null', 'ett', 'to', 'tre', 'fire', 'fem', 'seks'];
+    const tidFmt = new Intl.DateTimeFormat('nb-NO', { timeZone: 'Europe/Oslo', hour: '2-digit', minute: '2-digit' });
+    const lag = (tag, klasse, tekst) => {
+      const el = document.createElement(tag);
+      if (klasse) el.className = klasse;
+      if (tekst != null) el.textContent = tekst;
+      return el;
+    };
+    const av = (o) => (o && o.apne != null && o.totalt ? `${o.apne} av ${o.totalt}` : null);
+
+    fetch('/api/fnugg', { headers: { Accept: 'application/json' } })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (!data || !Array.isArray(data.anlegg) || data.anlegg.length === 0) return;
+        const liste = stripe.querySelector('[data-sno-liste]');
+        data.anlegg.slice(0, VIS).forEach((a) => {
+          const li = lag('li', 'sno-anlegg');
+          const lenke = lag('a', 'sno-kort');
+          lenke.href = a.lenke;
+          if (a.region) lenke.append(lag('span', 'meta', a.region));
+          lenke.append(lag('span', 'sno-navn', a.navn));
+          const tall = lag('span', 'sno-tall');
+          tall.append(String(a.snoBakke), lag('span', 'sno-enhet', ' cm'));
+          lenke.append(tall);
+          lenke.append(lag('span', 'sno-forklaring', 'snø i bakken'));
+          const fakta = [];
+          if (av(a.heiser)) fakta.push(`Heiser ${av(a.heiser)}`);
+          if (av(a.bakker)) fakta.push(`bakker ${av(a.bakker)}`);
+          if (fakta.length) lenke.append(lag('span', 'sno-fakta', `${fakta.join(', ')} åpne`));
+          li.append(lenke);
+          liste.append(li);
+        });
+        const n = data.antall;
+        const tekst = n === 1 ? '1 skianlegg har åpne heiser og bakker' : `${n} skianlegg har åpne heiser og bakker`;
+        stripe.querySelector('[data-sno-antall]').textContent =
+          n > VIS ? `${tekst}. Her er de ${TALLORD[VIS]} med mest snø i bakken.` : `${tekst}.`;
+        if (data.oppdatert) {
+          const d = new Date(data.oppdatert);
+          if (!isNaN(d)) stripe.querySelector('[data-sno-tid]').textContent = `. Sist oppdatert kl. ${tidFmt.format(d).replace(':', '.')}.`;
+        }
+        stripe.hidden = false;
+      })
+      .catch(() => {});
+  })();
+</script>
+
+<style is:global>
+  /* Global fordi kortene lages i nettleseren og ikke får Astros avgrensede klasser. Alle klasser har prefikset sno-. */
+  .sno { display: flex; flex-direction: column; gap: var(--s4); }
+  .sno[hidden] { display: none; }
+  .sno-topp { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; column-gap: var(--s5); }
+  .sno-antall { font-size: 17px; line-height: 1.5; color: var(--brodtekst); }
+
+  .sno-liste {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); column-gap: var(--kol);
+  }
+  .sno-kort {
+    display: flex; flex-direction: column; gap: var(--s2);
+    height: 100%; padding: var(--s4) 0 var(--s5);
+    border-bottom: 1px solid var(--linje);
+  }
+  .sno-kort:hover .sno-navn { color: var(--tekst-2); }
+  .sno-navn { font-family: var(--overskrift); font-weight: 700; font-size: 19px; line-height: 1.25; letter-spacing: -0.01em; }
+  .sno-tall {
+    margin-top: auto; padding-top: var(--s2);
+    font-family: var(--overskrift); font-weight: 700; font-size: 44px; line-height: 1;
+    letter-spacing: -0.02em; font-variant-numeric: lining-nums;
+  }
+  .sno-enhet { font-size: 21px; letter-spacing: 0; }
+  .sno-forklaring, .sno-fakta { font-size: 15px; line-height: 1.4; color: var(--tekst-2); }
+  .sno-forklaring { margin-top: calc(-1 * var(--s1)); }
+
+  .sno-kilde { display: flex; align-items: center; gap: var(--s4); }
+  .sno-kilde p { font-size: 15px; line-height: 1.5; color: var(--tekst-2); }
+  .sno-kilde p a { color: var(--tekst-2); text-decoration: underline; text-decoration-color: var(--linje); text-underline-offset: 3px; }
+  .sno-kilde p a:hover { color: var(--kull); }
+  .sno-logo { flex-shrink: 0; display: block; line-height: 0; }
+  .sno-logo img { height: 32px; width: auto; }
+
+  @media (max-width: 1100px) {
+    .sno-liste { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: var(--s2); }
+  }
+  @media (max-width: 600px) {
+    /* På mobil: én rad som kan dras sideveis */
+    .sno-liste {
+      display: flex; gap: var(--s5); overflow-x: auto; scroll-snap-type: x mandatory;
+      margin: 0 calc(-1 * var(--gutter)); padding: 0 var(--gutter);
+      scroll-padding-inline: var(--gutter); scrollbar-width: none;
+    }
+    .sno-liste::-webkit-scrollbar { display: none; }
+    .sno-anlegg { flex: 0 0 44%; scroll-snap-align: start; }
+    .sno-kilde { align-items: flex-start; }
+  }
+</style>

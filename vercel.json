@@ -21,6 +21,10 @@
     {
       "source": "/static/manifest.webmanifest",
       "destination": "/studio/static/manifest.webmanifest"
+    },
+    {
+      "source": "/fnugg/logo.svg",
+      "destination": "https://fnugg.no/app/uploads/2015/10/Fnugg_logotype_horizontal_Pantone_306U.svg"
     }
   ],
   "headers": [
