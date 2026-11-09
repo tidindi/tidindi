@@ -108,15 +108,10 @@
   .sno-forklaring, .sno-fakta { font-size: 15px; line-height: 1.4; color: var(--tekst-2); }
   .sno-forklaring { margin-top: calc(-1 * var(--s1)); }
 
-  /* Krediteringen på sort bånd, blyhvit tekst */
-  .sno-kilde {
-    display: flex; align-items: center; gap: var(--s5);
-    background: var(--kull); padding: var(--s3) var(--s5); margin-top: var(--s2);
-  }
-  .sno-kilde p { font-size: 15px; line-height: 1.5; color: var(--blyhvit); }
-  .sno-kilde p a { color: var(--blyhvit); text-decoration: underline; text-decoration-color: var(--kull-lys); text-underline-offset: 3px; }
-  .sno-kilde p a:hover { color: var(--tekst-mork-flate); }
-  .sno-kilde [data-sno-tid] { color: var(--tekst-mork-flate); }
+  .sno-kilde { display: flex; align-items: center; gap: var(--s4); }
+  .sno-kilde p { font-size: 15px; line-height: 1.5; color: var(--tekst-2); }
+  .sno-kilde p a { color: var(--tekst-2); text-decoration: underline; text-decoration-color: var(--linje); text-underline-offset: 3px; }
+  .sno-kilde p a:hover { color: var(--kull); }
   .sno-logo { flex-shrink: 0; display: block; line-height: 0; }
   .sno-logo img { height: 32px; width: auto; }
 
@@ -132,6 +127,6 @@
     }
     .sno-liste::-webkit-scrollbar { display: none; }
     .sno-anlegg { flex: 0 0 44%; scroll-snap-align: start; }
-    .sno-kilde { align-items: flex-start; flex-direction: column; gap: var(--s2); padding: var(--s4); }
+    .sno-kilde { align-items: flex-start; }
   }
 </style>
