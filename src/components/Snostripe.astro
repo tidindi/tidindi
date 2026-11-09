@@ -38,32 +38,55 @@
     };
     const av = (o) => (o && o.apne != null && o.totalt ? `${o.apne} av ${o.totalt}` : null);
 
+    const datoFmt = new Intl.DateTimeFormat('nb-NO', { timeZone: 'UTC', day: 'numeric', month: 'short' });
+    const kort = (a, apent) => {
+      const li = lag('li', 'sno-anlegg');
+      const lenke = lag('a', 'sno-kort');
+      lenke.href = a.lenke;
+      lenke.append(lag('span', 'meta', a.region || '\u00a0'));
+      lenke.append(lag('span', 'sno-navn', a.navn));
+      const tall = lag('span', 'sno-tall');
+      if (apent) {
+        if (a.snoBakke > 0) {
+          tall.append(String(a.snoBakke), lag('span', 'sno-enhet', ' cm'));
+          lenke.append(tall, lag('span', 'sno-forklaring', 'snø i bakken'));
+        } else {
+          tall.append('Åpent');
+          lenke.append(tall);
+        }
+        const fakta = [];
+        if (av(a.heiser)) fakta.push(`Heiser ${av(a.heiser)}`);
+        if (av(a.bakker)) fakta.push(`bakker ${av(a.bakker)}`);
+        if (fakta.length) lenke.append(lag('span', 'sno-fakta', `${fakta.join(', ')} åpne`));
+      } else {
+        tall.classList.add('sno-dato');
+        tall.append(datoFmt.format(new Date(a.apner)).replace(/\s+/, '\u00a0'));
+        lenke.append(tall, lag('span', 'sno-forklaring', 'sesongstart'));
+      }
+      li.append(lenke);
+      return li;
+    };
+
     fetch('/api/fnugg', { headers: { Accept: 'application/json' } })
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
-        if (!data || !Array.isArray(data.anlegg) || data.anlegg.length === 0) return;
+        if (!data) return;
+        const apne = Array.isArray(data.apne) ? data.apne : [];
+        const snart = Array.isArray(data.snart) ? data.snart : [];
+        if (apne.length === 0 && snart.length === 0) return;
         const liste = stripe.querySelector('[data-sno-liste]');
-        data.anlegg.slice(0, VIS).forEach((a) => {
-          const li = lag('li', 'sno-anlegg');
-          const lenke = lag('a', 'sno-kort');
-          lenke.href = a.lenke;
-          if (a.region) lenke.append(lag('span', 'meta', a.region));
-          lenke.append(lag('span', 'sno-navn', a.navn));
-          const tall = lag('span', 'sno-tall');
-          tall.append(String(a.snoBakke), lag('span', 'sno-enhet', ' cm'));
-          lenke.append(tall);
-          lenke.append(lag('span', 'sno-forklaring', 'snø i bakken'));
-          const fakta = [];
-          if (av(a.heiser)) fakta.push(`Heiser ${av(a.heiser)}`);
-          if (av(a.bakker)) fakta.push(`bakker ${av(a.bakker)}`);
-          if (fakta.length) lenke.append(lag('span', 'sno-fakta', `${fakta.join(', ')} åpne`));
-          li.append(lenke);
-          liste.append(li);
-        });
-        const n = data.antall;
-        const tekst = n === 1 ? '1 skianlegg har åpne heiser og bakker' : `${n} skianlegg har åpne heiser og bakker`;
-        stripe.querySelector('[data-sno-antall]').textContent =
-          n > VIS ? `${tekst}. Her er de ${TALLORD[VIS]} med mest snø i bakken.` : `${tekst}.`;
+        const visApne = apne.slice(0, VIS);
+        const visSnart = snart.slice(0, VIS - visApne.length);
+        visApne.forEach((a) => liste.append(kort(a, true)));
+        visSnart.forEach((a) => liste.append(kort(a, false)));
+
+        const n = apne.length;
+        let tekst = n === 0 ? 'Ingen skianlegg har åpnet ennå.'
+          : n === 1 ? 'Ett skianlegg har åpent nå.'
+          : `${n} skianlegg har åpent nå.`;
+        if (n > VIS) tekst += ` Her er de ${TALLORD[VIS]} med mest snø i bakken.`;
+        else if (visSnart.length) tekst += n === 0 ? ' Her er de første som åpner.' : ' Her er også de neste som åpner.';
+        stripe.querySelector('[data-sno-antall]').textContent = tekst;
         if (data.oppdatert) {
           const d = new Date(data.oppdatert);
           if (!isNaN(d)) stripe.querySelector('[data-sno-tid]').textContent = `. Sist oppdatert kl. ${tidFmt.format(d).replace(':', '.')}.`;
@@ -79,7 +102,8 @@
   .sno { display: flex; flex-direction: column; gap: var(--s4); }
   .sno.strek-tykk { padding-top: 0; }
   .sno[hidden] { display: none; }
-  .sno-topp { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; column-gap: var(--s5); row-gap: var(--s3); }
+  /* Fane → ingress under, venstrestilt, som blokkmønsteret ellers på siden */
+  .sno-topp { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s4); }
   /* Neongul fane med sort tekst som henger ned fra den tykke streken (liten aksent, regel fra 9.11.) */
   .sno-fane {
     display: inline-flex; align-items: center; gap: 10px;
@@ -87,7 +111,7 @@
     padding: var(--s2) var(--s4) 7px;
     font-size: 15px; letter-spacing: 0.18em; line-height: 1.2;
   }
-  .sno-antall { font-size: 17px; line-height: 1.5; color: var(--brodtekst); }
+  .sno-antall { font-size: 19px; line-height: 1.45; color: var(--brodtekst); max-width: 40em; }
 
   .sno-liste {
     list-style: none; margin: 0; padding: 0;
@@ -106,6 +130,7 @@
     letter-spacing: -0.02em; font-variant-numeric: lining-nums;
   }
   .sno-enhet { font-size: 21px; letter-spacing: 0; }
+  .sno-dato { font-size: 34px; }
   .sno-forklaring, .sno-fakta { font-size: 15px; line-height: 1.4; color: var(--tekst-2); }
   .sno-forklaring { margin-top: calc(-1 * var(--s1)); }
 
