@@ -10,9 +10,6 @@ on:
         description: 'Timer bakover (standard 48)'
         required: false
         default: '48'
-  push:
-    branches: [kulturradar]
-    paths: ['kulturradar/**', '.github/workflows/kulturradar.yml']
 
 permissions:
   contents: read
