@@ -11,6 +11,7 @@ import { datoOgTid, klokkeslett } from '../../src/data/format';
 import type { Bildedata, Videodata } from '../../src/data/testinnhold';
 import { stiler } from './stiler';
 import { sluttmerkeHtml } from '../../src/data/monogram';
+import { linjefall } from '../../src/data/typografi';
 
 type Visning = 'pc' | 'mobil';
 
@@ -93,8 +94,8 @@ export function Forhandsvisning(props: { document: { displayed: any } }) {
               <Merke seksjon={a.seksjon} />
               {a.sted && <span className="tf-meta">{a.sted}</span>}
             </div>
-            <h1 className="tf-tittel">{a.tittel || 'Tittel'}</h1>
-            <p className="tf-ingress">{a.ingress || 'Ingress'}</p>
+            <h1 className="tf-tittel">{linjefall((a.tittel ?? '').trim()) || 'Tittel'}</h1>
+            <p className="tf-ingress tf-art-ingress">{linjefall((a.ingress ?? '').trim()) || 'Ingress'}</p>
             <div className="tf-byline">
               <span>{skribent ?? 'Tidindi'}</span>
               <span className="tf-meta">
@@ -164,14 +165,14 @@ export function Forhandsvisning(props: { document: { displayed: any } }) {
               <span className="tf-meta">Som hovedsak</span>
               <Bilde bilde={hovedbilde ?? hovedvideo?.plakat} forhold={9 / 16} bygger={bygger} video={hovedvideo} />
               <Merke seksjon={a.seksjon} />
-              <div className="tf-h-hoved">{a.tittel || 'Tittel'}</div>
-              <p className="tf-ingress">{a.ingress || 'Ingress'}</p>
+              <div className="tf-h-hoved">{linjefall((a.tittel ?? '').trim()) || 'Tittel'}</div>
+              <p className="tf-ingress">{linjefall((a.ingress ?? '').trim()) || 'Ingress'}</p>
             </div>
             <div className="tf-kort">
               <span className="tf-meta">Som sak eller bildesak</span>
               <Bilde bilde={hovedbilde ?? hovedvideo?.plakat} forhold={2 / 3} bygger={bygger} video={hovedvideo} />
               <Merke seksjon={a.seksjon} />
-              <div className="tf-h-stor">{a.tittel || 'Tittel'}</div>
+              <div className="tf-h-stor">{linjefall((a.tittel ?? '').trim()) || 'Tittel'}</div>
             </div>
           </div>
         </section>

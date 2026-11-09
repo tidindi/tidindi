@@ -39,6 +39,8 @@ export const stiler = `
 .tf-mobil .tf-tittel { font-size: 2.25rem; }
 .tf-ingress { font-size: 1.375rem; line-height: 1.5; color: var(--brodtekst); }
 .tf-mobil .tf-ingress { font-size: 1.1875rem; }
+/* Som på nettstedet: linjeskift skrevet i ingressen vises i artikkelen (ikke på forsiden). */
+.tf-art-ingress { white-space: pre-line; }
 .tf-byline {
   display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 24px;
   padding: 12px 0; border-top: 1px solid var(--kull); border-bottom: 1px solid var(--linje);

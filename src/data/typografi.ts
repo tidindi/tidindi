@@ -14,10 +14,13 @@ const MND = 'januar|februar|mars|april|mai|juni|juli|august|september|oktober|no
 export function linjefall(tekst: string): string {
   if (!tekst) return tekst;
   return tekst
-    // 1. Sitatstrek (først i teksten, etter linjeskift eller etter punktum o.l.) limes til ordet etter.
-    .replace(/(^|\n|[.!?:\u00bb"][ \t]+)([\u2013\u2014])[ \t]+/g, `$1$2${WJ}${H}`)
+    // 1. Sitatstrek (først i teksten, etter linjeskift eller etter punktum, tre prikker, sluttanførsel o.l.) limes til
+    //    ordet etter. Tåler mellomrom foran streken, hardt mellomrom eller ingen mellomrom etter, og bindestrek som
+    //    sitatstrek. Tegnene i teksten endres ikke; bare mellomrommet etter streken blir hardt.
+    .replace(/(^|[\r\n]|[.!?:\u00bb"\u201d\u2019\u2026)][ \t\u00a0]+)([ \t\u00a0]*)([\u2013\u2014\u2212-])([ \t\u00a0\u2009\u202f]*)(?=\S)/g,
+      (_m, foran: string, innrykk: string, strek: string, mellom: string) => `${foran}${innrykk}${strek}${WJ}${mellom ? H : ''}`)
     // 2. Tankestrek inne i en setning limes til ordet foran, så linjen aldri begynner med en strek.
-    .replace(/([^\s.!?:\u00bb"])[ \t]+([\u2013\u2014])(?=[ \t])/g, `$1${H}$2`)
+    .replace(/([^\s.!?:\u00bb"\u201d\u2019\u2026)])[ \t]+([\u2013\u2014])(?=[ \t])/g, `$1${H}$2`)
     // 3. Dato: «29. oktober».
     .replace(new RegExp(`(\\b\\d{1,2}\\.)[ \\t]+(?=(?:${MND})\\b)`, 'gi'), `$1${H}`)
     // 4. Forkortelse og tall: «kl. 21.05», «nr. 2», «ca. 3».
@@ -28,7 +31,7 @@ export function linjefall(tekst: string): string {
     .replace(/(\d)[ \t]+(?=[\p{L}%\u2030\u20ac$\u00a3])/gu, `$1${H}`)
     // 7. Korte ord (én eller to bokstaver) limes til ordet etter, så de ikke står sist på linjen.
     //    Ikke enheter rett etter et tall («375 hk», «605 km»): de hører til tallet foran, ikke ordet etter.
-    .replace(/(?<=^|[\s(\u00ab"])(?<!\d\u00a0)(\p{L}{1,2})[ \t]+(?=\S)/gu, `$1${H}`);
+    .replace(/(?<=^|[\s(\u00ab"\u2060])(?<!\d\u00a0)(\p{L}{1,2})[ \t]+(?=\S)/gu, `$1${H}`);
 }
 
 /** Tekst uten linjefallstegn, til metadata (sidetittel, beskrivelse, deling og strukturerte data). */
