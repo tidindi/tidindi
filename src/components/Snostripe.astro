@@ -18,8 +18,16 @@ const FOTO = 'Fra Raudalen, mot Beitostølen';
   <p class="sno-foto">{FOTO}</p>
   <div class="sno-topp">
     <h2 id="sno-tittel" class="etikett sno-fane"><span class="rombe" aria-hidden="true"></span>Skiføret nå</h2>
-    <p class="sno-antall" data-sno-antall></p>
-    <p class="sno-under" data-sno-under></p>
+    <div class="sno-hode">
+      <div>
+        <p class="sno-antall" data-sno-antall></p>
+        <p class="sno-under" data-sno-under></p>
+      </div>
+      <div class="sno-piler" data-sno-piler hidden>
+        <button type="button" class="sno-pil" data-sno-pil="-1" aria-label="Forrige anlegg">&larr;</button>
+        <button type="button" class="sno-pil" data-sno-pil="1" aria-label="Neste anlegg">&rarr;</button>
+      </div>
+    </div>
   </div>
 
   <ul class="sno-liste" data-sno-liste></ul>
@@ -38,8 +46,6 @@ const FOTO = 'Fra Raudalen, mot Beitostølen';
   (() => {
     const stripe = document.querySelector('[data-sno]');
     if (!stripe) return;
-    const VIS = 6;
-    const TALLORD = ['null', 'ett', 'to', 'tre', 'fire', 'fem', 'seks'];
     const tidFmt = new Intl.DateTimeFormat('nb-NO', { timeZone: 'Europe/Oslo', hour: '2-digit', minute: '2-digit' });
     const lag = (tag, klasse, tekst) => {
       const el = document.createElement(tag);
@@ -89,22 +95,40 @@ const FOTO = 'Fra Raudalen, mot Beitostølen';
         const snart = Array.isArray(data.snart) ? data.snart : [];
         if (apne.length === 0 && snart.length === 0) return;
         const liste = stripe.querySelector('[data-sno-liste]');
-        const visApne = apne.slice(0, VIS);
-        const visSnart = snart.slice(0, VIS - visApne.length);
-        visApne.forEach((a) => liste.append(kort(a, true)));
-        visSnart.forEach((a) => liste.append(kort(a, false)));
+        // Hele oversikten fra fnugg: alle åpne (mest snø først), så alle som åpner snart (nærmeste først)
+        apne.forEach((a) => liste.append(kort(a, true)));
+        snart.forEach((a) => liste.append(kort(a, false)));
 
         const n = apne.length;
         const ORD = ['Ingen', 'Ett', 'To', 'Tre', 'Fire', 'Fem', 'Seks', 'Sju', 'Åtte', 'Ni', 'Ti'];
         const antall = n < ORD.length ? ORD[n] : String(n);
         stripe.querySelector('[data-sno-antall]').textContent =
           n === 0 ? 'Ingen skianlegg har åpnet ennå' : `${antall} skianlegg har åpent nå`;
-        if (n > VIS) stripe.querySelector('[data-sno-under]').textContent = `De ${TALLORD[VIS]} med mest snø i bakken.`;
+        const m = snart.length;
+        const ord = (x) => (x < ORD.length ? ORD[x].toLowerCase() : String(x));
+        if (m > 0) stripe.querySelector('[data-sno-under]').textContent =
+          n > 0 ? `Ytterligere ${ord(m)} åpner i ukene som kommer.` : `${ord(m).replace(/^./, (c) => c.toUpperCase())} åpner i ukene som kommer.`;
         if (data.oppdatert) {
           const d = new Date(data.oppdatert);
           if (!isNaN(d)) stripe.querySelector('[data-sno-tid]').textContent = `. Sist oppdatert kl. ${tidFmt.format(d).replace(':', '.')}.`;
         }
         stripe.hidden = false;
+
+        // Piler på PC når raden er bredere enn plassen
+        const piler = stripe.querySelector('[data-sno-piler]');
+        const knapper = piler.querySelectorAll('[data-sno-pil]');
+        const oppdaterPiler = () => {
+          const maks = liste.scrollWidth - liste.clientWidth;
+          piler.hidden = maks < 4;
+          knapper[0].disabled = liste.scrollLeft <= 2;
+          knapper[1].disabled = liste.scrollLeft >= maks - 2;
+        };
+        knapper.forEach((k) => k.addEventListener('click', () => {
+          liste.scrollBy({ left: Number(k.dataset.snoPil) * liste.clientWidth * 0.9, behavior: 'smooth' });
+        }));
+        liste.addEventListener('scroll', oppdaterPiler, { passive: true });
+        window.addEventListener('resize', oppdaterPiler);
+        oppdaterPiler();
       })
       .catch(() => {});
   })();
@@ -149,13 +173,26 @@ const FOTO = 'Fra Raudalen, mot Beitostølen';
     font-size: 15px; letter-spacing: 0.18em; line-height: 1.2;
   }
   .sno-antall { font-family: var(--overskrift); font-weight: 700; font-size: 26px; line-height: 1.2; letter-spacing: -0.01em; text-wrap: balance; }
-  .sno-under { font-size: 15px; color: var(--tekst-2); margin-top: calc(-1 * var(--s3)); }
+  .sno-hode { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s4); width: 100%; }
+  .sno-under { font-size: 15px; line-height: 1.45; color: var(--tekst-2); margin-top: var(--s1); }
+  .sno-piler { display: flex; gap: var(--s2); flex-shrink: 0; }
+  .sno-piler[hidden] { display: none; }
+  .sno-pil {
+    width: 44px; height: 44px; border: 1px solid var(--kull); background: transparent; color: var(--kull);
+    font-size: 20px; line-height: 1; cursor: pointer; display: grid; place-items: center;
+  }
+  .sno-pil:hover:not(:disabled) { background: var(--kull); color: var(--blyhvit); }
+  .sno-pil:disabled { opacity: 0.3; cursor: default; }
   .sno-under:empty { display: none; }
 
+  /* Én rad som kan rulles sideveis: seks kort synlige på PC, tre på nettbrett, to på mobil */
   .sno-liste {
     list-style: none; margin: 0; padding: 0;
-    display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); column-gap: var(--kol);
+    display: flex; gap: var(--kol); overflow-x: auto; scroll-snap-type: x mandatory;
+    scrollbar-width: none; overscroll-behavior-x: contain;
   }
+  .sno-liste::-webkit-scrollbar { display: none; }
+  .sno-anlegg { flex: 0 0 calc((100% - 5 * var(--kol)) / 6); scroll-snap-align: start; }
   .sno-kort {
     display: flex; flex-direction: column; gap: var(--s2);
     height: 100%; padding: var(--s3) 0 var(--s4);
@@ -177,17 +214,17 @@ const FOTO = 'Fra Raudalen, mot Beitostølen';
   .sno-logo img { height: 32px; width: auto; }
 
   @media (max-width: 1100px) {
-    .sno-liste { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: var(--s2); }
+    .sno-anlegg { flex-basis: calc((100% - 2 * var(--kol)) / 3); }
   }
   @media (max-width: 600px) {
     /* På mobil: én rad som kan dras sideveis */
     .sno-liste {
-      display: flex; gap: var(--s5); overflow-x: auto; scroll-snap-type: x mandatory;
+      gap: var(--s5);
       margin: 0 calc(-1 * var(--sno-pad)); padding: 0 var(--sno-pad);
-      scroll-padding-inline: var(--sno-pad); scrollbar-width: none;
+      scroll-padding-inline: var(--sno-pad);
     }
-    .sno-liste::-webkit-scrollbar { display: none; }
-    .sno-anlegg { flex: 0 0 44%; scroll-snap-align: start; }
+    .sno-anlegg { flex-basis: 44%; }
+    .sno-piler { display: none; }
     .sno-kilde { align-items: flex-start; }
     .sno--bakgrunn { --sno-pad: var(--s4); }
     .sno--stripe .sno-bilde { aspect-ratio: 3 / 1; }

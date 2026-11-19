@@ -22,7 +22,7 @@ const KILDE = `https://api.fnugg.no/search?size=300&sourceFields=${FELT}`;
 const tall = (v) => (typeof v === 'number' && Number.isFinite(v) ? v : null);
 
 const DAG = 24 * 60 * 60 * 1000;
-const SNART_DAGER = 45; // vis sesongstart bare når den er nær
+const SNART_DAGER = 90; // sesongstart de neste tre månedene (hele forsesongen)
 
 function tilAnlegg(s) {
   const topp = s.conditions?.combined?.top || {};
@@ -43,7 +43,7 @@ function tilAnlegg(s) {
 
 // Bare anlegg fnugg selv melder som åpne (resort_open). Heis- og bakkestatus og snødybde
 // blir ofte stående fra forrige sesong ved stengte anlegg, så de brukes ikke til å avgjøre om
-// et anlegg er åpent. «Snart»: anlegg som ikke er åpne, med sesongstart de neste 45 dagene.
+// et anlegg er åpent. «Snart»: anlegg som ikke er åpne, med sesongstart de neste 90 dagene.
 export function velgAnlegg(treff, naa = new Date()) {
   const alle = treff.map((t) => tilAnlegg(t._source || {})).filter((a) => a.navn);
   const apne = alle
