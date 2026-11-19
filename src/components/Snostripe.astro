@@ -5,11 +5,11 @@
 // fnugg ikke svarer. Krediteringen følger fnuggs vilkår: godt synlig, i samme størrelse som
 // teksten ellers, med logo og lenke. Logoen hentes uendret via /fnugg/fnugg-logo.svg (vercel.json).
 //
-// Bilde (Oles eget, Raudalen i Beitostølen skisenter, i farger): variant «bakgrunn» legger det
+// Bilde (Oles eget, tatt i Raudalen mot Beitostølen, i farger, uten fotokreditt etter Oles ønske): variant «bakgrunn» legger det
 // dust bak hele seksjonen, variant «stripe» viser det som et panoramafelt øverst.
 interface Props { variant?: 'bakgrunn' | 'stripe' }
-const { variant = 'bakgrunn' } = Astro.props;
-const FOTO = 'Foto: Ole Asbjørn Winther';
+const { variant = 'stripe' } = Astro.props;
+const FOTO = 'Fra Raudalen, mot Beitostølen';
 ---
 <section class={`sno sno--${variant} strek-tykk`} aria-labelledby="sno-tittel" hidden data-sno>
   <figure class="sno-bilde" aria-hidden="true">
