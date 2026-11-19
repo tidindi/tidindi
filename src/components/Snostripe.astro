@@ -19,6 +19,7 @@ const FOTO = 'Fra Raudalen, mot Beitostølen';
   <div class="sno-topp">
     <h2 id="sno-tittel" class="etikett sno-fane"><span class="rombe" aria-hidden="true"></span>Skiføret nå</h2>
     <p class="sno-antall" data-sno-antall></p>
+    <p class="sno-under" data-sno-under></p>
   </div>
 
   <ul class="sno-liste" data-sno-liste></ul>
@@ -46,33 +47,36 @@ const FOTO = 'Fra Raudalen, mot Beitostølen';
       if (tekst != null) el.textContent = tekst;
       return el;
     };
-    const av = (o) => (o && o.apne != null && o.totalt ? `${o.apne} av ${o.totalt}` : null);
+    const av = (o) => (o && o.apne != null && o.totalt ? `${o.apne}\u00a0av\u00a0${o.totalt}` : null);
 
     const datoFmt = new Intl.DateTimeFormat('nb-NO', { timeZone: 'UTC', day: 'numeric', month: 'short' });
+    const dagFmt = new Intl.DateTimeFormat('nb-NO', { timeZone: 'UTC', weekday: 'long', day: 'numeric', month: 'long' });
+    const nbsp = (t) => t.replace(/(\d+\.) /g, '$1\u00a0');
+    // Kortet: etikett (status · region) → navn → én linje brødtekst. Ingen store tall.
     const kort = (a, apent) => {
       const li = lag('li', 'sno-anlegg');
       const lenke = lag('a', 'sno-kort');
       lenke.href = a.lenke;
-      lenke.append(lag('span', 'meta', a.region || '\u00a0'));
-      lenke.append(lag('span', 'sno-navn', a.navn));
-      const tall = lag('span', 'sno-tall');
+      const status = apent ? 'Åpent' : `Åpner ${nbsp(datoFmt.format(new Date(a.apner)))}`;
+      const etikett = lag('span', 'meta sno-status');
+      etikett.append(lag('span', apent ? 'sno-prikk sno-prikk--apen' : 'sno-prikk'), status);
+      lenke.append(etikett, lag('span', 'sno-navn', a.navn));
+      let linje;
       if (apent) {
-        if (a.snoBakke > 0) {
-          tall.append(String(a.snoBakke), lag('span', 'sno-enhet', ' cm'));
-          lenke.append(tall, lag('span', 'sno-forklaring', 'snø i bakken'));
-        } else {
-          tall.append('Åpent');
-          lenke.append(tall);
-        }
-        const fakta = [];
-        if (av(a.heiser)) fakta.push(`Heiser ${av(a.heiser)}`);
-        if (av(a.bakker)) fakta.push(`bakker ${av(a.bakker)}`);
-        if (fakta.length) lenke.append(lag('span', 'sno-fakta', `${fakta.join(', ')} åpne`));
+        const deler = [];
+        if (a.snoBakke > 0) deler.push(`${a.snoBakke}\u00a0cm snø i bakken`);
+        const ap = [];
+        if (av(a.heiser)) ap.push(`${av(a.heiser)} heiser`);
+        if (av(a.bakker)) ap.push(`${av(a.bakker)} bakker`);
+        if (ap.length) deler.push(`${ap.join(' og ')} åpne`);
+        linje = deler.length ? deler.join(', ') + '.' : 'Åpent i dag.';
+        linje = linje.charAt(0).toUpperCase() + linje.slice(1);
       } else {
-        tall.classList.add('sno-dato');
-        tall.append(datoFmt.format(new Date(a.apner)).replace(/\s+/, '\u00a0'));
-        lenke.append(tall, lag('span', 'sno-forklaring', 'sesongstart'));
+        const d = dagFmt.format(new Date(a.apner));
+        linje = `Sesongstart ${nbsp(d)}.`;
       }
+      lenke.append(lag('span', 'sno-linje', linje));
+      if (a.region) lenke.append(lag('span', 'sno-region', a.region));
       li.append(lenke);
       return li;
     };
@@ -91,12 +95,11 @@ const FOTO = 'Fra Raudalen, mot Beitostølen';
         visSnart.forEach((a) => liste.append(kort(a, false)));
 
         const n = apne.length;
-        let tekst = n === 0 ? 'Ingen skianlegg har åpnet ennå.'
-          : n === 1 ? 'Ett skianlegg har åpent nå.'
-          : `${n} skianlegg har åpent nå.`;
-        if (n > VIS) tekst += ` Her er de ${TALLORD[VIS]} med mest snø i bakken.`;
-        else if (visSnart.length) tekst += n === 0 ? ' Her er de første som åpner.' : ' Her er også de neste som åpner.';
-        stripe.querySelector('[data-sno-antall]').textContent = tekst;
+        const ORD = ['Ingen', 'Ett', 'To', 'Tre', 'Fire', 'Fem', 'Seks', 'Sju', 'Åtte', 'Ni', 'Ti'];
+        const antall = n < ORD.length ? ORD[n] : String(n);
+        stripe.querySelector('[data-sno-antall]').textContent =
+          n === 0 ? 'Ingen skianlegg har åpnet ennå' : `${antall} skianlegg har åpent nå`;
+        if (n > VIS) stripe.querySelector('[data-sno-under]').textContent = `De ${TALLORD[VIS]} med mest snø i bakken.`;
         if (data.oppdatert) {
           const d = new Date(data.oppdatert);
           if (!isNaN(d)) stripe.querySelector('[data-sno-tid]').textContent = `. Sist oppdatert kl. ${tidFmt.format(d).replace(':', '.')}.`;
@@ -145,7 +148,9 @@ const FOTO = 'Fra Raudalen, mot Beitostølen';
     padding: var(--s2) var(--s4) 7px;
     font-size: 15px; letter-spacing: 0.18em; line-height: 1.2;
   }
-  .sno-antall { font-size: 19px; line-height: 1.45; color: var(--brodtekst); max-width: 40em; }
+  .sno-antall { font-family: var(--overskrift); font-weight: 700; font-size: 26px; line-height: 1.2; letter-spacing: -0.01em; text-wrap: balance; }
+  .sno-under { font-size: 15px; color: var(--tekst-2); margin-top: calc(-1 * var(--s3)); }
+  .sno-under:empty { display: none; }
 
   .sno-liste {
     list-style: none; margin: 0; padding: 0;
@@ -153,20 +158,16 @@ const FOTO = 'Fra Raudalen, mot Beitostølen';
   }
   .sno-kort {
     display: flex; flex-direction: column; gap: var(--s2);
-    height: 100%; padding: var(--s4) 0 var(--s5);
-    border-bottom: 1px solid var(--linje);
+    height: 100%; padding: var(--s3) 0 var(--s4);
+    border-top: 1px solid var(--linje);
   }
   .sno-kort:hover .sno-navn { color: var(--tekst-2); }
-  .sno-navn { font-family: var(--overskrift); font-weight: 700; font-size: 19px; line-height: 1.25; letter-spacing: -0.01em; }
-  .sno-tall {
-    margin-top: auto; padding-top: var(--s2);
-    font-family: var(--overskrift); font-weight: 700; font-size: 44px; line-height: 1;
-    letter-spacing: -0.02em; font-variant-numeric: lining-nums;
-  }
-  .sno-enhet { font-size: 21px; letter-spacing: 0; }
-  .sno-dato { font-size: 34px; }
-  .sno-forklaring, .sno-fakta { font-size: 15px; line-height: 1.4; color: var(--tekst-2); }
-  .sno-forklaring { margin-top: calc(-1 * var(--s1)); }
+  .sno-status { display: inline-flex; align-items: center; gap: 7px; }
+  .sno-prikk { width: 7px; height: 7px; border-radius: 50%; border: 1.5px solid var(--kull); box-sizing: border-box; flex-shrink: 0; }
+  .sno-prikk--apen { background: var(--kull); }
+  .sno-navn { font-family: var(--overskrift); font-weight: 700; font-size: 19px; line-height: 1.25; letter-spacing: -0.01em; text-wrap: balance; }
+  .sno-linje { font-size: 15px; line-height: 1.45; color: var(--brodtekst); }
+  .sno-region { font-size: 15px; line-height: 1.45; color: var(--tekst-2); margin-top: calc(-1 * var(--s2)); }
 
   .sno-kilde { display: flex; align-items: center; gap: var(--s4); }
   .sno-kilde p { font-size: 15px; line-height: 1.5; color: var(--tekst-2); }
