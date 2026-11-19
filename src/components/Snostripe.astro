@@ -4,8 +4,18 @@
 // Stripen er skjult til dataene er på plass, og forblir skjult utenfor sesongen eller hvis
 // fnugg ikke svarer. Krediteringen følger fnuggs vilkår: godt synlig, i samme størrelse som
 // teksten ellers, med logo og lenke. Logoen hentes uendret via /fnugg/fnugg-logo.svg (vercel.json).
+//
+// Bilde (Oles eget, Raudalen i Beitostølen skisenter, i farger): variant «bakgrunn» legger det
+// dust bak hele seksjonen, variant «stripe» viser det som et panoramafelt øverst.
+interface Props { variant?: 'bakgrunn' | 'stripe' }
+const { variant = 'bakgrunn' } = Astro.props;
+const FOTO = 'Foto: Ole Asbjørn Winther';
 ---
-<section class="sno strek-tykk" aria-labelledby="sno-tittel" hidden data-sno>
+<section class={`sno sno--${variant} strek-tykk`} aria-labelledby="sno-tittel" hidden data-sno>
+  <figure class="sno-bilde" aria-hidden="true">
+    <img src="/bilder/raudalen-stripe.webp" alt="" width="1580" height="316" loading="lazy" decoding="async" />
+  </figure>
+  <p class="sno-foto">{FOTO}</p>
   <div class="sno-topp">
     <h2 id="sno-tittel" class="etikett sno-fane"><span class="rombe" aria-hidden="true"></span>Skiføret nå</h2>
     <p class="sno-antall" data-sno-antall></p>
@@ -100,7 +110,31 @@
 <style is:global>
   /* Global fordi kortene lages i nettleseren og ikke får Astros avgrensede klasser. Alle klasser har prefikset sno-. */
   .sno { display: flex; flex-direction: column; gap: var(--s4); }
-  .sno.strek-tykk { padding-top: 0; }
+  .sno.strek-tykk { padding-top: 0; position: relative; --sno-pad: var(--gutter); }
+  .sno-foto {
+    font-family: var(--etikett); font-weight: 600; font-size: 12px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--tekst-2);
+  }
+
+  /* Variant 1: dus bakgrunn bak hele seksjonen (bildet i farger, blyhvitt slør over) */
+  .sno--bakgrunn {
+    --sno-pad: var(--s5);
+    padding: 0 var(--sno-pad) var(--s5);
+    background:
+      linear-gradient(180deg, rgba(245,244,239,0.80) 0%, rgba(245,244,239,0.86) 45%, rgba(245,244,239,0.96) 100%),
+      url('/bilder/raudalen.webp') center 35% / cover no-repeat;
+  }
+  .sno--bakgrunn .sno-bilde { display: none; }
+  .sno--bakgrunn .sno-fane { margin-left: calc(-1 * var(--sno-pad)); }
+  .sno--bakgrunn .sno-foto { position: absolute; right: var(--sno-pad); top: var(--s3); }
+  .sno--bakgrunn .sno-kort { border-bottom-color: rgba(28,30,32,0.18); }
+
+  /* Variant 2: panoramastripe øverst, fanen oppå bildet */
+  .sno--stripe .sno-bilde { margin: 0; position: relative; aspect-ratio: 5 / 1; overflow: hidden; background: var(--flate); }
+  .sno--stripe .sno-bilde img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; display: block; }
+  .sno--stripe .sno-fane { position: absolute; top: 0; left: 0; z-index: 1; }
+  .sno--stripe .sno-foto { position: absolute; right: var(--s3); top: var(--s2); z-index: 1; color: var(--blyhvit); text-shadow: 0 0 6px rgba(0,0,0,0.45); }
+  .sno--stripe .sno-topp { margin-top: var(--s1); }
   .sno[hidden] { display: none; }
   /* Fane → ingress under, venstrestilt, som blokkmønsteret ellers på siden */
   .sno-topp { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s4); }
@@ -148,11 +182,14 @@
     /* På mobil: én rad som kan dras sideveis */
     .sno-liste {
       display: flex; gap: var(--s5); overflow-x: auto; scroll-snap-type: x mandatory;
-      margin: 0 calc(-1 * var(--gutter)); padding: 0 var(--gutter);
-      scroll-padding-inline: var(--gutter); scrollbar-width: none;
+      margin: 0 calc(-1 * var(--sno-pad)); padding: 0 var(--sno-pad);
+      scroll-padding-inline: var(--sno-pad); scrollbar-width: none;
     }
     .sno-liste::-webkit-scrollbar { display: none; }
     .sno-anlegg { flex: 0 0 44%; scroll-snap-align: start; }
     .sno-kilde { align-items: flex-start; }
+    .sno--bakgrunn { --sno-pad: var(--s4); }
+    .sno--stripe .sno-bilde { aspect-ratio: 3 / 1; }
+    .sno--bakgrunn .sno-foto { position: static; order: 10; }
   }
 </style>
