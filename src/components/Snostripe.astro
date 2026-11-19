@@ -8,7 +8,7 @@
 // Bilde (Oles eget, tatt i Raudalen mot Beitostølen, i farger, uten fotokreditt etter Oles ønske): variant «bakgrunn» legger det
 // dust bak hele seksjonen, variant «stripe» viser det som et panoramafelt øverst.
 interface Props { variant?: 'bakgrunn' | 'stripe' }
-const { variant = 'stripe' } = Astro.props;
+const { variant = 'bakgrunn' } = Astro.props;
 const FOTO = 'Fra Raudalen, mot Beitostølen';
 ---
 <section class={`sno sno--${variant} strek-tykk`} aria-labelledby="sno-tittel" hidden data-sno>
@@ -124,8 +124,8 @@ const FOTO = 'Fra Raudalen, mot Beitostølen';
     --sno-pad: var(--s5);
     padding: 0 var(--sno-pad) var(--s5);
     background:
-      linear-gradient(180deg, rgba(245,244,239,0.80) 0%, rgba(245,244,239,0.86) 45%, rgba(245,244,239,0.96) 100%),
-      url('/bilder/raudalen.webp') center 35% / cover no-repeat;
+      linear-gradient(180deg, rgba(245,244,239,0.62) 0%, rgba(245,244,239,0.78) 40%, rgba(245,244,239,0.86) 75%, rgba(245,244,239,0.92) 100%),
+      url('/bilder/raudalen.webp') center 8% / cover no-repeat; /* himmel, fjell og dal øverst i bildet */
   }
   .sno--bakgrunn .sno-bilde { display: none; }
   .sno--bakgrunn .sno-fane { margin-left: calc(-1 * var(--sno-pad)); }
