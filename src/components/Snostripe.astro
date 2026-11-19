@@ -61,6 +61,7 @@ const FOTO = 'Fra Raudalen, mot Beitostølen';
       const etikett = lag('span', 'meta sno-status');
       etikett.append(lag('span', apent ? 'sno-prikk sno-prikk--apen' : 'sno-prikk'), status);
       lenke.append(etikett, lag('span', 'sno-navn', a.navn));
+      lenke.append(lag('span', 'meta sno-region', a.region || '\u00a0')); // tom linje når region mangler, så kortene står på linje
       let linje;
       if (apent) {
         const deler = [];
@@ -76,7 +77,6 @@ const FOTO = 'Fra Raudalen, mot Beitostølen';
         linje = `Sesongstart ${nbsp(d)}.`;
       }
       lenke.append(lag('span', 'sno-linje', linje));
-      if (a.region) lenke.append(lag('span', 'sno-region', a.region));
       li.append(lenke);
       return li;
     };
@@ -167,7 +167,7 @@ const FOTO = 'Fra Raudalen, mot Beitostølen';
   .sno-prikk--apen { background: var(--kull); }
   .sno-navn { font-family: var(--overskrift); font-weight: 700; font-size: 19px; line-height: 1.25; letter-spacing: -0.01em; text-wrap: balance; }
   .sno-linje { font-size: 15px; line-height: 1.45; color: var(--brodtekst); }
-  .sno-region { font-size: 15px; line-height: 1.45; color: var(--tekst-2); margin-top: calc(-1 * var(--s2)); }
+  .sno-region { margin-top: calc(-1 * var(--s1)); }
 
   .sno-kilde { display: flex; align-items: center; gap: var(--s4); }
   .sno-kilde p { font-size: 15px; line-height: 1.5; color: var(--tekst-2); }
