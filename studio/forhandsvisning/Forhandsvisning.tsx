@@ -12,6 +12,7 @@ import type { Bildedata, Videodata } from '../../src/data/testinnhold';
 import { stiler } from './stiler';
 import { sluttmerkeHtml } from '../../src/data/monogram';
 import { linjefall } from '../../src/data/typografi';
+import { artikkelforhold, smalBredde } from '../../src/data/bildeformat';
 
 type Visning = 'pc' | 'mobil';
 
@@ -106,8 +107,8 @@ export function Forhandsvisning(props: { document: { displayed: any } }) {
           </header>
 
           {hovedvideo && <Video video={hovedvideo} />}
-          {!hovedvideo && <figure className="tf-hovedbilde">
-            <Bilde bilde={hovedbilde} forhold={8 / 16} bygger={bygger} />
+          {!hovedvideo && <figure className="tf-hovedbilde" style={{ maxWidth: smalBredde(hovedbilde, artikkelforhold(hovedbilde, 8 / 16)) }}>
+            <Bilde bilde={hovedbilde} forhold={artikkelforhold(hovedbilde, 8 / 16)} bygger={bygger} />
             {(hovedbilde?.tekst || hovedbilde?.kreditering) && (
               <figcaption>
                 {hovedbilde?.tekst} {hovedbilde?.kreditering && <span className="tf-meta">Foto: {hovedbilde.kreditering}</span>}
@@ -137,8 +138,8 @@ export function Forhandsvisning(props: { document: { displayed: any } }) {
                 </aside>
               );
               if (b.type === 'bilde') return (
-                <figure key={i} className="tf-innebilde">
-                  <Bilde bilde={b.bilde} forhold={2 / 3} bygger={bygger} />
+                <figure key={i} className="tf-innebilde" style={{ maxWidth: smalBredde(b.bilde, artikkelforhold(b.bilde, 2 / 3), '70vh') }}>
+                  <Bilde bilde={b.bilde} forhold={artikkelforhold(b.bilde, 2 / 3)} bygger={bygger} />
                   {(b.bilde.tekst || b.bilde.kreditering) && (
                     <figcaption>{b.bilde.tekst} {b.bilde.kreditering && <span className="tf-meta">Foto: {b.bilde.kreditering}</span>}</figcaption>
                   )}

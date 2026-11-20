@@ -6,6 +6,7 @@ import Base from '../../layouts/Base.astro';
 import Hovedmeny from '../../components/Hovedmeny.astro';
 import Bunn from '../../components/Bunn.astro';
 import Bilde from '../../components/Bilde.astro';
+import { artikkelforhold, smalBredde } from '../../data/bildeformat';
 import Seksjonsmerke from '../../components/Seksjonsmerke.astro';
 import Video from '../../components/Video.astro';
 import Deling from '../../components/Deling.astro';
@@ -25,6 +26,8 @@ const artikler = await hentArtikler();
 // Sluttmerket (den gotiske T-en) står alltid på egen linje under siste avsnitt.
 const merFra = artikler.filter((x) => x.seksjon === a.seksjon && x.slug !== a.slug).slice(0, 4);
 const kanonisk = new URL(artikkelUrl(a), Astro.site ?? 'https://tidindi.no').href;
+// Hovedbildet er liggende 16:8 som standard; «Format i artikkelen» i Studio kan gi stående, kvadratisk eller hele bildet.
+const hovedforhold = artikkelforhold(a.bilde, 8 / 16);
 const lesOgsa = artikler.filter((x) => x.slug !== a.slug && x.seksjon !== a.seksjon).slice(0, 3);
 ---
 <Base tittel={a.tittel} beskrivelse={a.ingress} bilde={delingsbilde(a.bilde)} type="article" publisert={a.publisert} oppdatert={a.oppdatert} strukturert={artikkelData(a)}>
@@ -53,8 +56,8 @@ const lesOgsa = artikler.filter((x) => x.slug !== a.slug && x.seksjon !== a.seks
           <Video video={a.video} reserveplakat={a.bilde} plassering="topp" seksjon={a.seksjon} />
         </div>
       ) : (
-        <figure class="k12 art-bilde">
-          <Bilde bilde={a.bilde} format="16-8" laster="eager" storrelser="(max-width: 1248px) 100vw, 1200px" />
+        <figure class="k12 art-bilde" style={smalBredde(a.bilde, hovedforhold) && `max-width: ${smalBredde(a.bilde, hovedforhold)}`}>
+          <Bilde bilde={a.bilde} format="16-8" forhold={hovedforhold === 8 / 16 ? undefined : hovedforhold} laster="eager" storrelser={smalBredde(a.bilde, hovedforhold) ? '(max-width: 900px) 100vw, 900px' : '(max-width: 1248px) 100vw, 1200px'} />
           {(a.bilde?.tekst || a.bilde?.kreditering) && (
             <figcaption>{a.bilde?.tekst} {a.bilde?.kreditering && <span class="meta">Foto: {a.bilde.kreditering}</span>}</figcaption>
           )}
@@ -66,8 +69,8 @@ const lesOgsa = artikler.filter((x) => x.slug !== a.slug && x.seksjon !== a.seks
           if (b.type === 'avsnitt') return b.html ? <p set:html={b.html} /> : <p>{b.tekst}</p>;
           if (b.type === 'liste') return <ul class="art-liste">{b.punkter.map((p) => <li set:html={p} />)}</ul>;
           if (b.type === 'bilde') return (
-            <figure class="art-innebilde">
-              <Bilde bilde={b.bilde} format="3-2" storrelser="(max-width: 900px) 100vw, 690px" />
+            <figure class="art-innebilde" style={smalBredde(b.bilde, artikkelforhold(b.bilde, 2 / 3), '70vh') && `max-width: ${smalBredde(b.bilde, artikkelforhold(b.bilde, 2 / 3), '70vh')}`}>
+              <Bilde bilde={b.bilde} format="3-2" forhold={b.bilde.format && b.bilde.format !== 'liggende' ? artikkelforhold(b.bilde, 2 / 3) : undefined} storrelser="(max-width: 900px) 100vw, 690px" />
               {(b.bilde.tekst || b.bilde.kreditering) && (
                 <figcaption>{b.bilde.tekst} {b.bilde.kreditering && <span class="meta">Foto: {b.bilde.kreditering}</span>}</figcaption>
               )}

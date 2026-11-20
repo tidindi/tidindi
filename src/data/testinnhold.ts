@@ -1,3 +1,4 @@
+import type { Bildeformat } from './bildeformat';
 // TESTINNHOLD – vises bare så lenge det ikke finnes publiserte artikler i Sanity
 // (og ved bygging uten nett, SANITY_OFFLINE=1). Typene her brukes av begge kildene.
 
@@ -11,6 +12,7 @@ export interface Bildedata {
   tekst?: string;
   kreditering?: string;
   farger?: boolean;      // false: vises i sort-hvitt («Vis i sort-hvitt» i Studio)
+  format?: Bildeformat;  // format i artikkelen (src/data/bildeformat.ts); tomt = liggende
 }
 
 // Video: lastes opp i Sanity og spilles av med Tidindi-vignetten først (hvis valgt).

@@ -54,3 +54,23 @@ export const bildefelt = [
     description: 'Fotograf og eventuelt byrå, f.eks. «Ola Nordmann / NTB». Står feltet tomt for et bilde fra Unsplash, krediteres fotografen automatisk («Navn / Unsplash»).',
   },
 ];
+
+// Formatvalg for bilder som vises i artikkelen (hovedbilde og bilder i brødteksten).
+// Ingen startverdi: tomt felt betyr liggende. (En startverdi lager et bildeobjekt uten bilde i tomme felt.)
+export const formatfelt = {
+  name: 'format',
+  title: 'Format i artikkelen',
+  type: 'string',
+  description: 'Standard er liggende. Velg et annet format når bildet tåler beskjæringen dårlig. Gjelder bare i artikkelen – på forsiden, i seksjonene og ved deling beskjæres bildet alltid liggende rundt fokuspunktet. «Hele bildet» viser utsnittet du har valgt med blyanten, uten ny beskjæring.',
+  options: {
+    list: [
+      { title: 'Liggende (standard)', value: 'liggende' },
+      { title: 'Hele bildet, uten beskjæring', value: 'hele' },
+      { title: 'Stående (4:5)', value: 'staaende' },
+      { title: 'Kvadratisk (1:1)', value: 'kvadrat' },
+    ],
+    layout: 'radio',
+  },
+};
+
+export const bildefeltMedFormat = [...bildefelt.slice(0, 3), formatfelt, ...bildefelt.slice(3)];

@@ -1,7 +1,7 @@
 import { defineArrayMember, defineField, defineType } from 'sanity';
 import { DocumentTextIcon } from '@sanity/icons/DocumentText';
 import { seksjoner } from '../../src/data/seksjoner';
-import { bildefelt, lagSlug } from './felles';
+import { bildefelt, bildefeltMedFormat, lagSlug } from './felles';
 
 export const artikkel = defineType({
   name: 'artikkel',
@@ -62,9 +62,9 @@ export const artikkel = defineType({
       title: 'Hovedbilde',
       type: 'image',
       group: 'sak',
-      description: 'Vises i farger på nettstedet (i sort-hvitt hvis «Vis i sort-hvitt» er krysset av). Velg utsnitt og fokuspunkt med blyanten. Bildet beskjæres til 16:9 på forsiden, 16:8 i artikkelen og 3:2 som bildesak. Kan stå tomt når saken har hovedvideo – da brukes videoen (eller stillbildet til videoen) som illustrasjon.',
+      description: 'Vises i farger på nettstedet (i sort-hvitt hvis «Vis i sort-hvitt» er krysset av). Velg utsnitt og fokuspunkt med blyanten. Bildet beskjæres til 16:9 på forsiden og 3:2 som bildesak. I artikkelen er det liggende 16:8, med mindre du velger et annet format under «Format i artikkelen». Kan stå tomt når saken har hovedvideo – da brukes videoen (eller stillbildet til videoen) som illustrasjon.',
       options: { hotspot: true },
-      fields: bildefelt,
+      fields: bildefeltMedFormat,
       validation: (R) => R.custom((verdi: any, ctx: any) =>
         verdi?.asset || ctx.document?.hovedvideo?.fil?.asset ? true : 'Saken må ha et hovedbilde eller en hovedvideo – det vises på forsiden.'),
     }),
@@ -151,7 +151,7 @@ export const artikkel = defineType({
           title: 'Bilde',
           type: 'image',
           options: { hotspot: true },
-          fields: bildefelt,
+          fields: bildefeltMedFormat,
         }),
         defineArrayMember({
           name: 'video',
