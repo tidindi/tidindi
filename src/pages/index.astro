@@ -1,6 +1,6 @@
 ---
 // FORSIDEN – automatisk med nyeste sak øverst; det redaksjonen velger i forsideoppsettet, overstyrer plassen sin. «Siste» fylles alltid automatisk.
-// Alt står på det felles 12-kolonners rutenettet: hovedsak 8 + Siste 4, deretter 4 + 4 + 4.
+// Alt står på det felles 12-kolonners rutenettet: hovedsak 8 + kolonne 4 (sak med bilde over «Siste»), deretter 4 + 4 + 4.
 import Base from '../layouts/Base.astro';
 import Topplinje from '../components/Topplinje.astro';
 import Masthead from '../components/Masthead.astro';
@@ -17,12 +17,15 @@ import { seksjonsnavn } from '../data/seksjoner';
 const { artikler, forside } = await hentInnhold();
 const hent = (slug: string) => artikler.find((a) => a.slug === slug) as Artikkel;
 const hovedsak = hent(forside.hovedsak);
+const sidesak = forside.sidesak ? hent(forside.sidesak) : undefined;
 const treSaker = forside.treSaker.map(hent);
 const bildesaker = forside.bildesaker.map(hent);
-const siste = artikler.slice(0, 5); // allerede sortert med nyeste først
-// «Flere saker»: de nyeste sakene som ikke allerede står på forsiden, maks fire rader à tre.
-const paForsiden = new Set([forside.hovedsak, ...forside.treSaker, ...forside.bildesaker]);
-const flere = artikler.filter((a) => !paForsiden.has(a.slug)).slice(0, 12);
+// «Siste»: de nyeste sakene (allerede sortert med nyeste først), uten de to som står rett ved siden av.
+const siste = artikler.filter((a) => a.slug !== forside.hovedsak && a.slug !== forside.sidesak).slice(0, 3);
+// «Flere saker»: alle saker som ikke allerede står på forsiden, nyeste først. Ingen øvre grense (Oles ønske 20.11.2026):
+// forsiden bygger seg nedover, så ingen saker forsvinner.
+const paForsiden = new Set([forside.hovedsak, forside.sidesak, ...forside.treSaker, ...forside.bildesaker]);
+const flere = artikler.filter((a) => !paForsiden.has(a.slug));
 ---
 <Base strukturert={forsideData()}>
   <Topplinje />
@@ -41,7 +44,15 @@ const flere = artikler.filter((a) => !paForsiden.has(a.slug)).slice(0, 12);
         <p class="ingress">{hovedsak.ingress}</p>
       </article>
 
-      <aside class="fra9 siste strek-tykk" aria-labelledby="siste-tittel">
+      <aside class="fra9 hoyre" aria-labelledby="siste-tittel">
+        {sidesak && (
+          <article class="kort sidesak">
+            <a href={artikkelUrl(sidesak)} tabindex="-1" aria-hidden="true" class="bildesak-bilde"><Bilde bilde={sidesak.bilde} video={sidesak.video} alt="" format="3-2" laster="eager" storrelser="(max-width: 900px) 100vw, 380px" /></a>
+            <Seksjonsmerke seksjon={sidesak.seksjon} />
+            <h2 class="h-stor"><a href={artikkelUrl(sidesak)}>{sidesak.tittel}</a></h2>
+          </article>
+        )}
+        <div class="siste strek-tykk">
         <h2 id="siste-tittel" class="etikett blokk-etikett">Siste</h2>
         <ul>
           {siste.map((a) => (
@@ -53,6 +64,7 @@ const flere = artikler.filter((a) => !paForsiden.has(a.slug)).slice(0, 12);
             </li>
           ))}
         </ul>
+        </div>
       </aside>
     </section>
 
@@ -108,7 +120,10 @@ const flere = artikler.filter((a) => !paForsiden.has(a.slug)).slice(0, 12);
   .hovedsak-figur { display: flex; flex-direction: column; gap: var(--s2); margin-bottom: var(--s1); }
   .hovedsak .ingress { max-width: 40em; }
 
-  /* Siste: starter på samme høyde som bildet, kolonnen står over tredje kolonne under */
+  /* Kolonnen til høyre: sak med bilde (bildet starter på samme høyde som hovedbildet), deretter «Siste».
+     Kolonnen står over tredje kolonne under. */
+  .hoyre { display: flex; flex-direction: column; gap: var(--blokk); }
+  .sidesak { gap: var(--s3); }
   .siste ul { list-style: none; margin: 0; padding: 0; }
   .siste-sak { gap: var(--s2); padding: var(--s4) 0; border-bottom: 1px solid var(--linje); }
 
@@ -120,7 +135,7 @@ const flere = artikler.filter((a) => !paForsiden.has(a.slug)).slice(0, 12);
   .flere-rutenett { row-gap: var(--blokk); padding-top: var(--s3); }
 
   @media (max-width: 900px) {
-    .siste { margin-top: var(--blokk); }
+    .hoyre { margin-top: var(--blokk); }
     .bildesaker { row-gap: var(--blokk); }
   }
 </style>

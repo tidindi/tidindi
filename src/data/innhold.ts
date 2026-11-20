@@ -45,6 +45,7 @@ const SPORRING = `{
     },
   "forside": *[_id == "forside"][0] {
     "hovedsak": hovedsak->slug.current,
+    "sidesak": sidesak->slug.current,
     "treSaker": treSaker[]->slug.current,
     "bildesaker": bildesaker[]->slug.current,
     morgenbrief
@@ -131,9 +132,10 @@ async function hent(): Promise<Innhold> {
     (liste ?? []).filter(finnes).filter((s, i, alle) => alle.indexOf(s) === i);
 
   const valgtHoved = finnes(f?.hovedsak) ? f.hovedsak : undefined;
-  const valgteTre = valgt(f?.treSaker).filter((s) => s !== valgtHoved).slice(0, 3);
-  const valgteBilde = valgt(f?.bildesaker).filter((s) => s !== valgtHoved && !valgteTre.includes(s)).slice(0, 3);
-  [valgtHoved, ...valgteTre, ...valgteBilde].forEach((s) => s && brukt.add(s));
+  const valgtSide = finnes(f?.sidesak) && f.sidesak !== valgtHoved ? f.sidesak : undefined;
+  const valgteTre = valgt(f?.treSaker).filter((s) => s !== valgtHoved && s !== valgtSide).slice(0, 3);
+  const valgteBilde = valgt(f?.bildesaker).filter((s) => s !== valgtHoved && s !== valgtSide && !valgteTre.includes(s)).slice(0, 3);
+  [valgtHoved, valgtSide, ...valgteTre, ...valgteBilde].forEach((s) => s && brukt.add(s));
 
   const fyll = (valgte: string[], antall: number) => {
     const ut = [...valgte];
@@ -145,9 +147,12 @@ async function hent(): Promise<Innhold> {
     }
     return ut;
   };
+  // Rekkefølgen avgjør automatikken: hovedsak = nyeste, sidesak = nest nyeste, deretter tre saker og bildesaker.
   const hovedsak = valgtHoved ?? fyll([], 1)[0];
+  const sidesak = valgtSide ?? fyll([], 1)[0];
   const forside: Forsideoppsett = {
     hovedsak,
+    sidesak,
     treSaker: fyll(valgteTre, 3),
     bildesaker: fyll(valgteBilde, 3),
     morgenbrief: {

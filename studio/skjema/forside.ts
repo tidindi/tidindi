@@ -17,10 +17,17 @@ export const forside = defineType({
       description: 'La stå tomt for automatikk: da ligger nyeste sak alltid øverst. Velger du en sak, står den øverst til du fjerner den (trykk på de tre prikkene → Fjern).',
     }),
     defineField({
+      name: 'sidesak',
+      title: 'Sak øverst til høyre',
+      type: 'reference',
+      to: [{ type: 'artikkel' }],
+      description: 'Saken med bilde øverst i kolonnen ved siden av hovedsaken, over «Siste». La stå tomt for automatikk: da står nest nyeste sak her.',
+    }),
+    defineField({
       name: 'treSaker',
       title: 'Tre saker',
       type: 'array',
-      description: 'Raden under hovedsaken. Tomme plasser fylles automatisk med de nyeste sakene. Velg saker her bare når du vil overstyre. Dra for å endre rekkefølgen.',
+      description: 'Raden under hovedsaken og saken til høyre. Tomme plasser fylles automatisk med de nyeste sakene. Velg saker her bare når du vil overstyre. Dra for å endre rekkefølgen.',
       of: [defineArrayMember({ type: 'reference', to: [{ type: 'artikkel' }] })],
       validation: (R) => R.max(3).unique(),
     }),

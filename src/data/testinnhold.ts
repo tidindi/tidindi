@@ -55,6 +55,7 @@ export interface Artikkel {
 
 export interface Forsideoppsett {
   hovedsak: string;
+  sidesak?: string;      // øverst i kolonnen til høyre for hovedsaken, med bilde
   treSaker: string[];
   bildesaker: string[];
   morgenbrief: { tittel: string; tekst: string; knapp: string };
@@ -140,6 +141,7 @@ export const artikler: Artikkel[] = [
 // «Siste» står ikke her: den fylles automatisk med de nyeste artiklene.
 export const forside: Forsideoppsett = {
   hovedsak: 'testsak-hovedsak',
+  sidesak: 'testsak-samfunnet-2',
   treSaker: ['testsak-pengene-1', 'testsak-verden-1', 'testsak-kulturen-1'],
   bildesaker: ['testsak-verden-2', 'testsak-sporten-2', 'testsak-kulturen-2'],
   morgenbrief: {
