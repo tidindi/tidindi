@@ -10,7 +10,7 @@ export interface Bildedata {
   alt: string;
   tekst?: string;
   kreditering?: string;
-  farger?: boolean;      // true: vises i farger (unntak fra sort-hvitt)
+  farger?: boolean;      // false: vises i sort-hvitt («Vis i sort-hvitt» i Studio)
 }
 
 // Video: lastes opp i Sanity og spilles av med Tidindi-vignetten først (hvis valgt).

@@ -168,7 +168,7 @@ for (const g of grupper) {
 if (!antall) html += `<p style="margin-top:24px;">Ingen nye meldinger i perioden.</p>`;
 
 const notat = [
-  'Husk: sjekk avsender (SALOs kunder omtales ikke), bildevilkår (bildene vises i sort-hvitt) og eventuell embargo. Skriv saken i egne ord og oppgi kilden.',
+  'Husk: sjekk avsender (SALOs kunder omtales ikke), bildevilkår og eventuell embargo. Skriv saken i egne ord og oppgi kilden.',
   utelatt ? `${utelatt} melding(er) er holdt utenfor fordi de nevner SALO-kunder.` : '',
   feilet.length ? `Kilder som ikke svarte denne gangen: ${feilet.map((f) => f.navn).join(', ')}.` : '',
 ].filter(Boolean);

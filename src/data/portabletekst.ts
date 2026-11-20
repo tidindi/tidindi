@@ -75,7 +75,7 @@ function kildekreditering(linje?: string): string | undefined {
 
 export function bildedata(bilde: any): Bildedata | undefined {
   if (!bilde?.asset?._ref) return undefined;
-  return { sanity: bilde, alt: bilde.alt ?? '', tekst: bilde.bildetekst ? linjefall(bilde.bildetekst.trim()) : undefined, kreditering: bilde.kreditering || kildekreditering(bilde.kildeKreditering), farger: !!bilde.farger };
+  return { sanity: bilde, alt: bilde.alt ?? '', tekst: bilde.bildetekst ? linjefall(bilde.bildetekst.trim()) : undefined, kreditering: bilde.kreditering || kildekreditering(bilde.kildeKreditering), farger: !bilde.sortHvitt };
 }
 
 // Videofil fra Sanity: referansen «file-<id>-<filtype>» blir til adressen på Sanitys CDN.
@@ -96,7 +96,7 @@ export function videodata(v: any): Videodata | undefined {
     tekst: v.tekst ? linjefall(v.tekst.trim()) : undefined,
     kreditering: v.kreditering || undefined,
     staende: !!v.staende,
-    farger: !!v.farger,
+    farger: !v.sortHvitt,
     vignett: v.vignett !== false,
     tittel: v.tittel || undefined,
     byline: v.byline || undefined,

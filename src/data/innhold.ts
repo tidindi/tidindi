@@ -20,12 +20,12 @@ export const sanityProsjekt = { projectId: '1ld4ddgo', dataset: 'production' };
 const bildebygger = createImageUrlBuilder(sanityProsjekt);
 
 /** Adresse til et Sanity-bilde beskåret til gitt bredde og forhold (høyde/bredde) rundt fokuspunktet.
- *  Bilder vises i sort-hvitt (Tidindis bildeprofil), med mindre «Vis i farger» er valgt. Originalen i Sanity beholdes i farger. */
+ *  Bilder vises i farger, eller i sort-hvitt når «Vis i sort-hvitt» er valgt i Studio (fra 20.11.2026; før det var sort-hvitt standard). */
 export function bildeUrl(bilde: Bildedata | undefined, bredde: number, forhold: number): string | undefined {
   if (!bilde) return undefined;
   if (!bilde.sanity) return bilde.src;
   const b = bildebygger.image(bilde.sanity as any).width(bredde).height(Math.round(bredde * forhold)).fit('crop');
-  return (bilde.farger ? b : b.saturation(-100)).auto('format').quality(80).url();
+  return (bilde.farger !== false ? b : b.saturation(-100)).auto('format').quality(80).url();
 }
 
 /** Bilde til deling i sosiale medier (1200 × 630). */

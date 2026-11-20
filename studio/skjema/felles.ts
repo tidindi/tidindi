@@ -23,7 +23,7 @@ export const bildefelt = [
     type: 'string',
     description: 'Beskriv hva bildet viser, for lesere som ikke ser det. Påkrevd for universell utforming.',
     // Påkrevd bare når et bilde faktisk er lastet opp. Uten dette slår kravet til på tomme
-    // bildefelt (f.eks. stillbildet under Hovedvideo), fordi «Vis i farger» har standardverdi.
+    // bildefelt (f.eks. stillbildet under Hovedvideo), fordi avkrysningsfeltene kan ha verdi uten bilde.
     validation: (R: any) =>
       R.custom((verdi: any, ctx: any) =>
         !ctx.parent?.asset || (typeof verdi === 'string' && verdi.trim()) ? true : 'Bildet må ha alternativ tekst.'),
@@ -35,10 +35,17 @@ export const bildefelt = [
     rows: 2,
   },
   {
-    name: 'farger',
-    title: 'Vis i farger',
+    name: 'sortHvitt',
+    title: 'Vis i sort-hvitt',
     type: 'boolean',
-    description: 'Tidindi viser bilder i sort-hvitt. Kryss av for å beholde fargene på dette bildet.',
+    description: 'Tidindi viser bilder i farger. Kryss av for å vise dette bildet i sort-hvitt.',
+  },
+  {
+    // Utgått: fra da sort-hvitt var standard. Beholdes skjult så eldre bilder ikke får varsel om ukjent felt.
+    name: 'farger',
+    title: 'Vis i farger (utgått)',
+    type: 'boolean',
+    hidden: true,
   },
   {
     name: 'kreditering',
